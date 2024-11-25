@@ -29,10 +29,12 @@
     </style>
 </head>
 <body>
-    <svg xmlns="http://www.w3.org/2000/svg" width="1115" height="791" style="border: 1px solid black;" id="svg-content">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1115" height="791" style="border: 1px solid black;" id="svg-content" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image x="10" y="10" width="100" height="100" xlink:href="sistem-sop.vercel.app/img/Logo BPS.png" alt="Logo BPS"></image>
         <text x="150" y="110" text-anchor="left" dominant-baseline="left" font-size="12px" fill="black" id="editable-text">Edit Me</text>
         <text x="150" y="130" text-anchor="left" dominant-baseline="left" font-size="12px" fill="black" id="editable-text2">Edit Me Too</text>
     </svg>
+
 
     <!-- Tombol untuk mencetak SVG -->
     <button class="print-btn" onclick="printSVG()">Print SVG</button>
