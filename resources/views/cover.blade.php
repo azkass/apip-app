@@ -15,7 +15,8 @@
             background: transparent;
             position: absolute;
             font-family: inherit; /* Gunakan font yang sama dengan teks */
-            font-size: 12px;
+            font-size: 14px;
+            width: 100px;
         }
         /* Menyembunyikan tombol print */
         .print-btn {
@@ -29,10 +30,33 @@
     </style>
 </head>
 <body>
-    <svg xmlns="http://www.w3.org/2000/svg" width="1115" height="791" style="border: 1px solid black;" id="svg-content" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image x="10" y="10" width="100" height="100" xlink:href="sistem-sop.vercel.app/img/Logo BPS.png" alt="Logo BPS"></image>
-        <text x="150" y="110" text-anchor="left" dominant-baseline="left" font-size="12px" fill="black" id="editable-text">Edit Me</text>
-        <text x="150" y="130" text-anchor="left" dominant-baseline="left" font-size="12px" fill="black" id="editable-text2">Edit Me Too</text>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1115" height="791" style="border: 1px solid gray;" id="svg-content" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path fill="none" stroke="black" d="M 50,60 H 1065 V 290 H 50 V 60"  />
+        <image x="225" y="80" width="120" height="120" xlink:href="https://sistem-sop.vercel.app/img/Logo%20BPS.png" alt="Logo BPS"></image>
+        <text x="135" y="230" text-anchor="left" dominant-baseline="left" font-size="24px" font-weight= "bold" font-style= "italic" fill="black">BADAN PUSAT STATISTIK</text>
+        <text x="150" y="260" text-anchor="left" dominant-baseline="left" font-size="24px" font-weight= "bold" fill="black">INSPEKTORAT UTAMA</text>
+        <path fill="none" stroke="black" d="M 525,60 V 290" />
+        <path fill="none" stroke="black" d="M 690,60 V 290" />
+
+        <text x="540" y="75" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Nomor SOP</text>
+        <text x="700" y="75" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text1">EditMe</text>
+        <path fill="none" stroke="black" d="M 525,79 H 1065" />
+        <text x="540" y="92" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Tanggal Pembuatan</text>
+        <text x="700" y="92" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text2">EditMe</text>
+        <path fill="none" stroke="black" d="M 525,96 H 1065" />
+        <text x="540" y="109" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Tanggal Revisi</text>
+        <text x="700" y="109" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text3">EditMe</text>
+        <path fill="none" stroke="black" d="M 525,113 H 1065" />
+        <text x="540" y="126" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Tanggal Efektif</text>
+        <text x="700" y="126" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text4">EditMe</text>
+        <path fill="none" stroke="black" d="M 525,130 H 1065" />
+        <text x="540" y="143" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Disahkan Oleh</text>
+        <text x="700" y="143" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text5">Plt. Inspektur Utama</text>
+        <text x="700" y="225" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text6">Drs. Akhmad Jaelani, M.Si</text>
+        <text x="700" y="240" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text7">NIP 196306211986011001</text>
+        <path fill="none" stroke="black" d="M 525,245 H 1065" />
+        <text x="540" y="270" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Nama SOP</text>
+        <text x="700" y="260" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black" id="editable-text8">EditMe</text>
     </svg>
 
 
@@ -59,7 +83,8 @@
                 // Atur posisi dan ukuran input sesuai dengan teks
                 input.style.left = `${bbox.left}px`;
                 input.style.top = `${bbox.top}px`;
-                input.style.width = `${bbox.width}px`;
+                input.style.width = `200px`;
+
                 // input.style.height = `${bbox.height}px`;
                 input.style.fontSize = `${fontSize}px`;
                 input.style.textAlign = 'left'; // Sesuaikan dengan properti `text-anchor`
@@ -85,8 +110,9 @@
             });
         };
 
-        setupEditableText('editable-text');
-        setupEditableText('editable-text2');
+        for (let i = 1; i <= 10; i++) {
+            setupEditableText(`editable-text${i}`);
+        }
 
         // Fungsi untuk mencetak SVG
         function printSVG() {
