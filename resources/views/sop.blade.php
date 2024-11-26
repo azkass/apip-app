@@ -3,78 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Flowchart with Table</title>
+    <title>Edit SVG Text</title>
+    <style>
+        /* Tombol print */
+        .print-btn {
+            margin: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <table class="border-collapse border border-slate-400 ...">
-        <thead>
-            <tr>
-                <th class="border border-slate-300">State</th>
-                <th class="border border-slate-300">City</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="border border-slate-300">
-                    <div id="shape1" class="w-24 h-24 border-[3px] border-black flex items-center justify-center text-black font-bold">
-                    Kotak 1
-                    </div></td>
-                <td class="border border-slate-300">Indianapolis</td>
-            </tr>
-            <tr>
-                <td class="border border-slate-300">Ohio</td>
-                <td class="border border-slate-300">Columbus</td>
-            </tr>
-            <tr>
-                <td class="border border-slate-300">Michigan</td>
-                <td class="border border-slate-300 pl-2">
-                    <div id="shape2" class="w-24 h-24 border-[3px] border-black flex items-center justify-center text-black font-bold">
-                    Kotak 2
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div><br><br><br></div>
+    {{-- SOP --}}
+    <svg xmlns="http://www.w3.org/2000/svg" width="296mm" height="208mm" style="border: 1px solid gray;" id="svg-sop" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path fill="none" stroke="black" d="M 50,60 H 1065 V 741 H 50 V 60" />
+        <text x="540" y="270" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Nama SOP</text>
+    </svg>
 
-    <div id="shape-container" class="relative">
-        <!-- Kotak Pertama -->
-        {{-- <div id="shape1" class="w-24 h-24 border-[3px] border-black flex items-center justify-center text-black font-bold">
-            Kotak 1
-        </div>
-
-        <div><br><br><br></div>
-
-        <!-- Kotak Kedua -->
-        <div id="shape2" class="w-24 h-24 border-[3px] border-black flex items-center justify-center text-black font-bold">
-            Kotak 2
-        </div> --}}
-
-        <!-- Canvas untuk Garis -->
-        <svg id="connector" class="absolute top-0 left-0 w-full h-full">
-            <line x1="0" y1="0" x2="0" y2="0" stroke="black" stroke-width="2" />
-        </svg>
-    </div>
+    <!-- Tombol untuk mencetak SOP -->
+    <button class="print-btn" style="position: absolute; top: 10px;" onclick="PrintSOP()">Print SOP</button>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const shape1 = document.getElementById('shape1').getBoundingClientRect();
-            const shape2 = document.getElementById('shape2').getBoundingClientRect();
-            const connector = document.querySelector('#connector line');
+        const setupEditableText = (id) => {
+            const textElement = document.getElementById(id);
 
-            // Hitung posisi tengah setiap shape
-            const x1 = shape1.left + shape1.width / 2;
-            const y1 = shape1.height;
-            const x2 = shape2.left + shape2.width / 2;
-            const y2 = shape2.top;
+            textElement.addEventListener('click', () => {
+                const bbox = textElement.getBoundingClientRect(); // Mendapatkan dimensi elemen teks
+                const fontSize = textElement.getAttribute('font-size'); // Mendapatkan ukuran font
 
-            // Set koordinat garis
-            connector.setAttribute('x1', x1);
-            connector.setAttribute('y1', y1);
-            connector.setAttribute('x2', x2);
-            connector.setAttribute('y2', y2);
-        });
+                // Sembunyikan elemen teks
+                textElement.style.visibility = 'hidden';
+
+                // Buat elemen input untuk menggantikan teks
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'editable-input';
+                input.value = textElement.textContent;
+
+                // Atur posisi dan ukuran input sesuai dengan teks
+                input.style.left = `${bbox.left}px`;
+                input.style.top = `${bbox.top}px`;
+                input.style.width = `200px`;
+
+                // input.style.height = `${bbox.height}px`;
+                input.style.fontSize = `${fontSize}px`;
+                input.style.textAlign = 'left'; // Sesuaikan dengan properti `text-anchor`
+
+                document.body.appendChild(input);
+                input.focus();
+
+                // Simpan perubahan saat kehilangan fokus
+                input.addEventListener('blur', () => {
+                    if (input.value.trim() !== '') {
+                        textElement.textContent = input.value;
+                    }
+                    document.body.removeChild(input);
+                    textElement.style.visibility = 'visible'; // Tampilkan kembali teks asli
+                });
+
+                // Simpan perubahan saat tekan Enter
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        input.blur();
+                    }
+                });
+            });
+        };
+
+        for (let i = 1; i <= 20; i++) {
+            setupEditableText(`editable-text${i}`);
+        }
+
+        function PrintSOP() {
+    const sop = document.getElementById('svg-sop').outerHTML;
+
+    // Simpan konten asli halaman
+    const originalContent = document.body.innerHTML;
+
+    // Ganti konten halaman dengan konten yang ingin dicetak
+    document.body.innerHTML = `
+        <html>
+            <head>
+                <style>
+                    @page {
+                        size: A4 landscape;
+                        margin: 0;
+                    }
+
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        text-align: center;
+                    }
+
+                    svg {
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                </style>
+            </head>
+            <body>
+                ${sop}
+            </body>
+        </html>
+    `;
+
+    // Cetak halaman
+    window.print();
+
+    // Kembalikan konten asli
+    document.body.innerHTML = originalContent;
+}
     </script>
 </body>
 </html>
