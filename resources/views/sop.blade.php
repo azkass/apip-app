@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit SVG Text</title>
+    <title>Print SOP</title>
     <style>
         /* Tombol print */
         .print-btn {
@@ -18,9 +18,44 @@
 </head>
 <body>
     {{-- SOP --}}
-    <svg xmlns="http://www.w3.org/2000/svg" width="296mm" height="208mm" style="border: 1px solid gray;" id="svg-sop" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1115" height="788" style="border: 1px solid gray;" id="svg-sop" xmlns:xlink="http://www.w3.org/1999/xlink">
         <path fill="none" stroke="black" d="M 50,60 H 1065 V 741 H 50 V 60" />
-        <text x="540" y="270" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Nama SOP</text>
+        <text x="65" y="100" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">No</text>
+        <path fill="none" stroke="black" d="M 100,60 V 741" />
+        <text x="200" y="100" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Aktivitas</text>
+        <path fill="none" stroke="black" d="M 350,60 V 741" />
+        <text x="500" y="75" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Pelaksana</text>
+        <path fill="none" stroke="black" d="M 350,80 H 685" />
+        <text x="370" y="100" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Inspektur</text>
+        <text x="375" y="115" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Wilayah</text>
+        <path fill="none" stroke="black" d="M 450,80 V 741" />
+        <text x="500" y="95" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Tim Audit</text>
+        <path fill="none" stroke="black" d="M 450,100 H 616" />
+        <text x="460" y="115" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Pengendali</text>
+        <text x="470" y="130" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Teknis</text>
+        <path fill="none" stroke="black" d="M 535,100 V 741" />
+        <text x="555" y="115" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Ketua</text>
+        <text x="560" y="130" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Tim</text>
+        {{-- <text x="500" y="75" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Anggota Tim</text> --}}
+        <path fill="none" stroke="black" d="M 615,80 V 741" />
+        <text x="620" y="100" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Inspektur</text>
+        <text x="625" y="115" text-anchor="left" dominant-baseline="left" font-size="14px" font-weight="bold" fill="black">Wilayah</text>
+
+        <path fill="none" stroke="black" d="M 685,60 V 741" />
+
+        <path fill="none" stroke="black" d="M 1015,60 V 741" />
+        <path fill="none" stroke="black" d="M 50,135 H 1065" />
+        <path fill="none" stroke="black" d="M 50,150 H 1065" />
+        <text x="70" y="180" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">1</text>
+        <text x="110" y="170" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Merima surat permintaan reviu dan </text>
+        <text x="110" y="185" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">menerbitkan surat tugas</text>
+        <path fill="none" stroke="black" d="M 50,205 H 1065" />
+        <image x="375" y="165" width="50" xlink:href="https://upload.wikimedia.org/wikipedia/commons/a/ad/Flowchart_Terminal.svg" alt="Logo BPS"></image>
+        <path fill="none" stroke="black" d="M 425,175 H 495 V 220" />
+        <text x="70" y="230" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">2</text>
+        <text x="110" y="225" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">Menetapkan ruang lingkup dan menyusun</text>
+        <text x="110" y="240" text-anchor="left" dominant-baseline="left" font-size="14px" fill="black">konsep surat tugas </text>
+        <path fill="none" stroke="black" d="M 460,220 H 525 V 250 H 460 V 220" />
     </svg>
 
     <!-- Tombol untuk mencetak SOP -->
