@@ -21,11 +21,14 @@
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Aktivitas</th>
-                <th>Simbol 1</th>
-                <th>Simbol 2</th>
-                <th>Durasi (jam)</th>
+                <th rowspan="2">No</th>
+                <th rowspan="2">Aktivitas</th>
+                <th rowspan="2">Durasi (jam)</th>
+                <th colspan="2">Aktor</th>
+            </tr>
+            <tr>
+                <th>Aktor 1</th>
+                <th>Aktor 2</th>
             </tr>
         </thead>
         <tbody>
@@ -33,9 +36,9 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $activity }}</td>
-                    <td>{{ $symbols1[$index] }}</td>
-                    <td>{{ $symbols2[$index] }}</td>
                     <td>{{ $durations[$index] }}</td>
+                    <td>{{ $actor1[$index] }}</td>
+                    <td>{{ $actor2[$index] }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -46,14 +49,14 @@
         @foreach ($activities as $activity)
             <input type="hidden" name="activities[]" value="{{ $activity }}">
         @endforeach
-        @foreach ($symbols1 as $symbol1)
-            <input type="hidden" name="symbols1[]" value="{{ $symbol1 }}">
-        @endforeach
-        @foreach ($symbols2 as $symbol2)
-            <input type="hidden" name="symbols2[]" value="{{ $symbol2 }}">
-        @endforeach
         @foreach ($durations as $duration)
             <input type="hidden" name="durations[]" value="{{ $duration }}">
+        @endforeach
+        @foreach ($actor1 as $value)
+            <input type="hidden" name="actor1[]" value="{{ $value }}">
+        @endforeach
+        @foreach ($actor2 as $value)
+            <input type="hidden" name="actor2[]" value="{{ $value }}">
         @endforeach
         <button type="submit">Download PDF</button>
     </form>

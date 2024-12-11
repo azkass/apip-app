@@ -25,21 +25,34 @@ Route::get('/sop-dompdf', function () {
 
 Route::post('/generate-table', function (Illuminate\Http\Request $request) {
     $activities = $request->input('activities');
-    $symbols1 = $request->input('symbols1');
-    $symbols2 = $request->input('symbols2');
     $durations = $request->input('durations');
-    $data = compact('activities', 'symbols1', 'symbols2', 'durations');
+    $actor_roles = $request->input('actor_roles'); // Aktor 1 atau Aktor 2
+    $actors = $request->input('actors'); // Start, Process, Decision, End
 
+    // Pisahkan data aktor ke Aktor 1 dan Aktor 2
+    $actor1 = [];
+    $actor2 = [];
+    foreach ($actor_roles as $index => $role) {
+        if ($role === 'Aktor 1') {
+            $actor1[$index] = $actors[$index];
+            $actor2[$index] = '';
+        } else {
+            $actor1[$index] = '';
+            $actor2[$index] = $actors[$index];
+        }
+    }
+
+    $data = compact('activities', 'durations', 'actor1', 'actor2');
     return view('table', $data);
 })->name('generate-table');
 
 Route::post('/generate-pdf', function (Illuminate\Http\Request $request) {
     $activities = $request->input('activities');
-    $symbols1 = $request->input('symbols1');
-    $symbols2 = $request->input('symbols2');
     $durations = $request->input('durations');
-    $data = compact('activities', 'symbols1', 'symbols2', 'durations');
+    $actor1 = $request->input('actor1');
+    $actor2 = $request->input('actor2');
 
+    $data = compact('activities', 'durations', 'actor1', 'actor2');
     $html = view('table', $data)->render();
     $pdf = new PDF();
     $pdf->loadHtml($html);
@@ -47,3 +60,4 @@ Route::post('/generate-pdf', function (Illuminate\Http\Request $request) {
     $pdf->render();
     return $pdf->stream('aktivitas.pdf');
 })->name('generate-pdf');
+

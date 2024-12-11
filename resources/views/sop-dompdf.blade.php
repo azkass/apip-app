@@ -11,22 +11,19 @@
             <div class="activity-row">
                 <label>Aktivitas:</label>
                 <input type="text" name="activities[]" required>
-                <label>Aktor 1</label>
-                <select name="symbols1[] required">
-                    <option value="start">Start</option>
-                    <option value="process">Process</option>
-                    <option value="decision">Decision</option>
-                    <option value="end">End</option>
+                <label>Durasi (jam):</label>
+                <input type="number" name="durations[]" required min="1" step="0.1">
+                <label>Aktor:</label>
+                <select name="actor_roles[]" required>
+                    <option value="Aktor 1">Aktor 1</option>
+                    <option value="Aktor 2">Aktor 2</option>
                 </select>
-                <label>Aktor 2</label>
-                <select name="symbols2[]">
-                    <option value="start">Start</option>
-                    <option value="process">Process</option>
-                    <option value="decision">Decision</option>
-                    <option value="end">End</option>
+                <select name="actors[]" required>
+                    <option value="Start">Start</option>
+                    <option value="Process">Process</option>
+                    <option value="Decision">Decision</option>
+                    <option value="End">End</option>
                 </select>
-                <label>Durasi (jam)</label>
-                <input type="number" name="durations[]" required min="1" step="1">
             </div>
         </div>
         <button type="button" onclick="addActivity()">Tambah Aktivitas</button>
@@ -41,22 +38,19 @@
             newRow.innerHTML = `
                 <label>Aktivitas:</label>
                 <input type="text" name="activities[]" required>
-                <label>Aktor 1</label>
-                <select name="symbols1[] required">
-                    <option value="start">Start</option>
-                    <option value="process">Process</option>
-                    <option value="decision">Decision</option>
-                    <option value="end">End</option>
-                </select>
-                <label>Aktor 2</label>
-                <select name="symbols2[]">
-                    <option value="start">Start</option>
-                    <option value="process">Process</option>
-                    <option value="decision">Decision</option>
-                    <option value="end">End</option>
-                </select>
                 <label>Durasi (jam):</label>
-                <input type="number" name="durations[]" required min="1" step="1">
+                <input type="number" name="durations[]" required min="1" step="0.1">
+                <label>Aktor:</label>
+                <select name="actor_roles[]" required>
+                    <option value="Aktor 1">Aktor 1</option>
+                    <option value="Aktor 2">Aktor 2</option>
+                </select>
+                <select name="actors[]" required>
+                    <option value="Start">Start</option>
+                    <option value="Process">Process</option>
+                    <option value="Decision">Decision</option>
+                    <option value="End">End</option>
+                </select>
             `;
             container.appendChild(newRow);
         }
