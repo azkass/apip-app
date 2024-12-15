@@ -5,19 +5,10 @@ use Illuminate\Support\Facades\Route;
 // require __DIR__ . '/../vendor/autoload.php';
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', ['title' => 'Home Page']);
 });
 Route::get('/cover', function () {
     return view('cover');
-});
-Route::get('/sop', function () {
-    return view('sop');
-});
-Route::get('/sop-alpine', function () {
-    return view('sop-alpine');
-});
-Route::get('/sop-css', function () {
-    return view('sop-css');
 });
 Route::get('/sop-dompdf', function () {
     return view('sop-dompdf');

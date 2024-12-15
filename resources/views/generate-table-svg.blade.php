@@ -1,5 +1,11 @@
-@extends('layouts.app')
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Table</title>
+</head>
+<body>
     <h1>Generated Table</h1>
     <svg id="resultSvg" width="800" height="600" xmlns="http://www.w3.org/2000/svg" style="border:1px solid #000;"></svg>
     <script>
@@ -145,4 +151,5 @@
             }
         }
     </script>
-@endsection
+</body>
+</html>
