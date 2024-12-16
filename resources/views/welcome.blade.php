@@ -7,8 +7,10 @@
             <div class="activity-row">
                 <label>Aktivitas:</label>
                 <input type="text" name="activities[]" required class="border-2 border-blue-400 rounded-md mb-2">
+                <br class="inline sm:hidden">
                 <label>Durasi (jam):</label>
                 <input type="number" name="durations[]" required min="1" step="1" class="border-2 border-blue-400 rounded-md mb-2">
+                <br class="inline sm:hidden">
                 <label>Aktor:</label>
                 <select name="actor_roles[]" required class="border-2 border-blue-400 rounded-md mb-2">
                     <option value="Aktor 1">Aktor 1</option>

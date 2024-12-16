@@ -7,8 +7,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome', ['title' => 'Home Page']);
 });
+Route::get('/login', function () {
+    return view('login', ['title' => 'Login Page']);
+});
+Route::get('/reviu', function () {
+    return view('riviu', ['title' => 'Riviu Page']);
+});
+Route::get('/upload-instrumen', function () {
+    return view('upload-instrumen', ['title' => 'Upload Instrumen Page']);
+});
 Route::get('/cover', function () {
-    return view('cover');
+    return view('cover', ['title' => 'Cover Page']);
 });
 Route::get('/sop-dompdf', function () {
     return view('sop-dompdf');
