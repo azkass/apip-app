@@ -85,7 +85,7 @@
             </svg>
         </div>
         <div class="flex-auto">
-            <button class="print-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="PrintSOP()">Print Cover</button>
+            <button class="print-btn bg-blue-500 text-white px-4 py-2 rounded-sm hover:bg-blue-600" onclick="PrintSOP()">Print Cover</button>
         </div>
     </div>
 
@@ -119,7 +119,7 @@
                 input.focus();
 
                 // Simpan perubahan saat kehilangan fokus
-                input.addEventListener('blur', () => {
+                input.addEventListener('blur-sm', () => {
                     if (input.value.trim() !== '') {
                         textElement.textContent = input.value;
                     }
