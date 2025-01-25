@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 /* Gunakan font Inter sebagai default */
 body {
     font-family: 'Inter', sans-serif;
