@@ -14,8 +14,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "@tailwindcss/cli": "^4.0.0",
-        "@tailwindcss/postcss": "^4.0.0",
+        "@tailwindcss/vite": "^4.0.0",
         "autoprefixer": "^10.4.20",
         "tailwindcss": "^4.0.0"
     }
