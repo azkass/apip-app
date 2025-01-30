@@ -25,6 +25,10 @@
                             up
                         </a>.
                     </p>
+                    <br>
+                    <a href="/auth/redirect" class="bg-red-500 text-white p-2 rounded-lg">
+                        Login dengan Google
+                    </a>
                 </form>
             </div>
         </div>

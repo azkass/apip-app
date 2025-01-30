@@ -1,12 +1,38 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
 
-Route::get('/', function () {
-    return view('welcome', ['title' => 'Home Page']);
+// Login
+Route::get('/auth/redirect', [SocialiteController::class, 'redirect']);
+Route::get('/auth/google/callback', [SocialiteController::class, 'callback']);
+
+Route::middleware('auth')->group(function () {
+    // Route yang membutuhkan login
+    Route::get('/', function () {
+        $user = Auth::user();
+        if ($user->role == 'admin') {
+            return redirect('/admin/dashboard');
+        } elseif ($user->role == 'pegawai') {
+            return redirect('/pegawai/dashboard');
+        }
+        return redirect('/login');
+    });
 });
+Route::middleware('auth','role:admin')->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    });
+});
+Route::middleware('auth','role:pegawai')->group(function () {
+    Route::get('/pegawai/dashboard', function () {
+        return view('pegawai.dashboard');
+    });
+});
+
 Route::get('/login', function () {
     return view('login', ['title' => 'Login Page']);
 });

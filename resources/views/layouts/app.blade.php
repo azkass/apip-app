@@ -11,15 +11,13 @@
     </style>
 </head>
 <body class="font-inter">
-    <!-- Navbar -->
-    @include('components.navbar')
+    @include('components.sidebar')
+    @include('components.header')
 
-    <!-- Main Content -->
     <div class="container m-4">
         @yield('content')
     </div>
 
-    <!-- Footer -->
     @include('components.footer')
 </body>
 </html>
