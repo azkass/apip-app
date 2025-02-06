@@ -11,7 +11,7 @@
     </style>
 </head>
 <body class="font-inter">
-    @include('components.sidebar')
+    {{-- @include('components.sidebar') --}}
     @include('components.header')
 
     <div class="container m-4">

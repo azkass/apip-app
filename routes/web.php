@@ -3,12 +3,16 @@
 use App\Http\Controllers\Auth\SocialiteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
+
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
 
 // Login
 Route::get('/auth/redirect', [SocialiteController::class, 'redirect']);
 Route::get('/auth/google/callback', [SocialiteController::class, 'callback']);
+// Route untuk logout
+Route::post('/logout', [SocialiteController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     // Route yang membutuhkan login

@@ -43,4 +43,13 @@ class SocialiteController extends Controller
             return redirect('/pegawai/dashboard');
         }
     }
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Logout pengguna
+
+        $request->session()->invalidate(); // Menghapus session
+        $request->session()->regenerateToken(); // Regenerasi token CSRF
+
+        return redirect('/login'); // Redirect ke halaman login setelah logout
+    }
 }
