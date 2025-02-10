@@ -27,10 +27,22 @@ Route::middleware('auth')->group(function () {
     });
 });
 Route::middleware('auth','role:admin')->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
+    Route::get('/admin/dashboard', function () {return view('admin.dashboard');});
+    Route::get('/admin/list', [SocialiteController::class, 'list'])->name('admin.list');
+    Route::get('/admin/editrole/{id}', [SocialiteController::class, 'edit'])->name('admin.editrole');
+    Route::put('/admin/update/{id}', [SocialiteController::class, 'update'])->name('admin.update');
+});
+Route::middleware('auth','role:pjk')->group(function () {
+    Route::get('/penanggungjawab/dashboard', function () {
+        return view('penanggungjawab.dashboard');
     });
 });
+Route::middleware('auth','role:perencana')->group(function () {
+    Route::get('/perencana/dashboard', function () {
+        return view('perencana.dashboard');
+    });
+});
+
 Route::middleware('auth','role:pegawai')->group(function () {
     Route::get('/pegawai/dashboard', function () {
         return view('pegawai.dashboard');

@@ -1,30 +1,29 @@
-<div class="bg-gray-100">
-    <div class="flex">
-        <!-- Sidebar -->
-        <div id="sidebar" class="fixed left-0 top-0 w-64 h-full bg-gray-800 text-white transform -translate-x-full transition-transform duration-300">
-            <div class="p-4 text-lg font-bold">Sidebar</div>
-            <ul>
-                <li class="p-4 hover:bg-gray-700"><a href="#">Home</a></li>
-                <li class="p-4 hover:bg-gray-700"><a href="#">About</a></li>
-                <li class="p-4 hover:bg-gray-700"><a href="#">Services</a></li>
-                <li class="p-4 hover:bg-gray-700"><a href="#">Contact</a></li>
-            </ul>
-        </div>
-
-        <!-- Main Content -->
-        <div id="content" class="flex-1 p-4 transition-transform duration-300">
-            <button id="toggleButton" class="bg-blue-500 text-white px-4 py-2 rounded transition-transform duration-300">Toggle Sidebar</button>
-        </div>
+<aside id="sidebar" class="w-16 bg-blue-500 text-white transition-all duration-300">
+    <div class="p-4">
+        <h2 class="text-2xl font-bold">AP</h2>
     </div>
-
-    <script>
-        const sidebar = document.getElementById('sidebar');
-        const toggleButton = document.getElementById('toggleButton');
-        const content = document.getElementById('content');
-
-        toggleButton.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
-            content.classList.toggle('ml-64');
-        });
-    </script>
-</div>
+    <nav class="mt-4">
+        <ul>
+            <li class="px-4 py-2 hover:bg-gray-700">
+                <a href="#" class="block">Menu 1</a>
+            </li>
+            <li class="px-4 py-2 hover:bg-gray-700">
+                <a href="#" class="block">Menu 2</a>
+            </li>
+            <li class="px-4 py-2 hover:bg-gray-700">
+                <a href="#" class="block">Menu 3</a>
+            </li>
+        </ul>
+    </nav>
+    @if (Auth::check())
+        @if (Auth::user()->role == 'admin')
+            <p>Hai Admin</p>
+        @elseif (Auth::user()->role == 'pjk')
+            <p>Hai Penanggungjawab Kegiatan</p>
+        @elseif (Auth::user()->role == 'perencana')
+            <p>Hai Perencana</p>
+        @elseif (Auth::user()->role == 'pegawai')
+            <p>Hai Pegawai</p>
+        @endif
+    @endif
+</aside>

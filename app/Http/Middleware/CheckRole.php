@@ -18,7 +18,7 @@ class CheckRole
         // Periksa role pengguna
         $user = Auth::user();
         if ($user->role != $role) {
-            abort(403, 'Unauthorized action.'); // Jika role tidak sesuai, tampilkan error 403
+            abort(403, 'Mohon Maaf, Anda Tidak Diizinkan'); // Jika role tidak sesuai, tampilkan error 403
         }
 
         return $next($request);

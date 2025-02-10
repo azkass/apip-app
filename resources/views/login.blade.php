@@ -1,6 +1,17 @@
-@extends('layouts.app')
-@section('content')
-    <div class="relative mx-auto w-full max-w-md bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ $title ?? 'Default Title' }}</title>
+    @vite('resources/css/app.css')
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+    </style>
+</head>
+<body>
+    <div class="relative mx-auto w-full max-w-md bg-white px-6 pt-10 pb-8 mt-20 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
         <div class="w-full">
             <div class="text-center">
                 <h1 class="text-3xl font-semibold text-gray-900">Sign in</h1>
@@ -33,4 +44,5 @@
             </div>
         </div>
     </div>
-@endsection
+</body>
+</html>
