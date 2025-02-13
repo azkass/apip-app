@@ -12,13 +12,13 @@
             {{-- User Role --}}
             @if (Auth::check())
                 @if (Auth::user()->role == 'admin')
-                    <p>Hai Admin</p>
+                    <p>Hai, Admin</p>
                 @elseif (Auth::user()->role == 'pjk')
-                    <p>Hai Penanggung Jawab Kegiatan</p>
+                    <p>Hai, Penanggung Jawab Kegiatan</p>
                 @elseif (Auth::user()->role == 'perencana')
-                    <p>Hai Perencana</p>
+                    <p>Hai, Perencana</p>
                 @elseif (Auth::user()->role == 'pegawai')
-                    <p>Hai Pegawai</p>
+                    <p>Hai, Pegawai</p>
                 @endif
             @endif
 
