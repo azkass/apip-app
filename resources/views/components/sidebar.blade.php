@@ -8,9 +8,9 @@
         @elseif (Auth::user()->role == 'pjk')
             <a href="/penanggungjawab/daftarinstrumenpengawasan">Instrumen Pengawasan</a>
         @elseif (Auth::user()->role == 'perencana')
-            <a href="/perencana/daftarinstrumenpengawasan">Instrumen Pengawasan</a>
+        <a href="/perencana/daftarinstrumenpengawasan">Instrumen Pengawasan</a>
         @elseif (Auth::user()->role == 'pegawai')
-            <p>Hai Pegawai</p>
+            <a href="/pegawai/daftarinstrumenpengawasan">Instrumen Pengawasan</a>
         @endif
     </div>
 </aside>

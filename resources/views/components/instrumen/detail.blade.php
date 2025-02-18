@@ -8,7 +8,9 @@
             <p class="card-text"><strong>Nama Perencana:</strong> {{ $instrumenPengawasan->perencana_nama }}</p>
             <p class="card-text"><strong>Isi:</strong> {{ $instrumenPengawasan->isi }}</p>
 
+            @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
             <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumenPengawasan->id) }}" class="">Edit</a>
+            @endif
             @if (Auth::user()->role == 'perencana')
                 <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" style="display:inline;">
                     @csrf
