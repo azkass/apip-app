@@ -37,6 +37,7 @@ class SocialiteController extends Controller
             Auth::login($registeredUser);
             // return redirect('/');
         }
+
         // Redirect after login
         if (Auth::user()->role == 'admin') {
             return redirect('/admin/dashboard');
@@ -52,10 +53,8 @@ class SocialiteController extends Controller
     public function logout(Request $request)
     {
         Auth::logout(); // Logout pengguna
-
         $request->session()->invalidate(); // Menghapus session
         $request->session()->regenerateToken(); // Regenerasi token CSRF
-
         return redirect('/login'); // Redirect ke halaman login setelah logout
     }
 
@@ -67,9 +66,7 @@ class SocialiteController extends Controller
 
     public function edit($id)
     {
-        $user = DB::select("SELECT id, name, email, role FROM users WHERE id = ?", [$id]);
-        // Karena DB::select() mengembalikan array, ambil elemen pertama
-        $user = $user ? $user[0] : null;
+        $user = DB::selectOne("SELECT id, name, email, role FROM users WHERE id = ?", [$id]);
         return view('admin.editrole', compact('user'));
     }
 

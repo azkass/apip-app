@@ -4,7 +4,7 @@
     </div>
     <div class="p-2">
         @if (Auth::user()->role == 'admin')
-            <p>Hai Admin</p>
+            <a href="/admin/list">Manajemen Role</a>
         @elseif (Auth::user()->role == 'pjk')
             <a href="/penanggungjawab/daftarinstrumenpengawasan">Instrumen Pengawasan</a>
         @elseif (Auth::user()->role == 'perencana')

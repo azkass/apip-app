@@ -12,10 +12,8 @@
     <div class="form-group">
         <label for="petugas_pengelola_id">Petugas Pengelola</label>
         <select name="petugas_pengelola_id" class="form-control" required>
-            @foreach ($users as $user)
-                <option value="{{ $user->id }}" {{ $user->id == $instrumenPengawasan->petugas_pengelola_id ? 'selected' : '' }}>
-                    {{ $user->name }}
-                </option>
+            @foreach ($is_pjk as $user)
+                <option value="{{ $user->id }}">{{ $user->name }}</option>
             @endforeach
         </select>
     </div>

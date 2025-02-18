@@ -23,17 +23,14 @@
                     <td>{{ $instrumen->perencana_nama }}</td>
                     <td>{{ $instrumen->updated_at }}</td>
                     <td>
+                        <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumen->id) }}" class="">Edit</a>
+                        <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.detail', $instrumen->id) }}" class="">Detail</a>
                         @if (Auth::user()->role == 'perencana')
-                            <a href="{{ route('instrumen-pengawasan.detail', $instrumen->id) }}" class="">Detail</a>
-                            <a href="{{ route('instrumen-pengawasan.edit', $instrumen->id) }}" class="">Edit</a>
                             <form action="{{ route('instrumen-pengawasan.delete', $instrumen->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="cursor-pointer">Delete</button>
                             </form>
-                        @elseif (Auth::user()->role == 'pjk')
-                            <a href="{{ route('pjk-instrumen-pengawasan.detail', $instrumen->id) }}" class="">Detail</a>
-                            <a href="{{ route('pjk-instrumen-pengawasan.edit', $instrumen->id) }}" class="">Edit</a>
                         @endif
                     </td>
                 </tr>

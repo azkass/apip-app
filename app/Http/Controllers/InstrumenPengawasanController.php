@@ -40,14 +40,24 @@ class InstrumenPengawasanController extends Controller
     public function show($id)
     {
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
-        return view('perencana.detailinstrumenpengawasan', compact('instrumenPengawasan'));
+        // return view('perencana.detailinstrumenpengawasan', compact('instrumenPengawasan'));
+        if (Auth::user()->role == 'perencana') {
+            return view('perencana.detailinstrumenpengawasan', compact('instrumenPengawasan'));
+        } elseif (Auth::user()->role == 'pjk') {
+            return view('penanggungjawab.detailinstrumenpengawasan', compact('instrumenPengawasan'));
+        }
+
     }
 
     public function edit($id)
     {
         $instrumenPengawasan = InstrumenPengawasan::find($id);
-        $users = DB::select('SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'); // Ambil data user untuk dropdown
-        return view('perencana.editinstrumenpengawasan', compact('instrumenPengawasan', 'users'));
+        $is_pjk = DB::select('SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'); // Ambil data user untuk dropdown
+        if (Auth::user()->role == 'perencana') {
+            return view('perencana.editinstrumenpengawasan', compact('instrumenPengawasan', 'is_pjk'));
+        } elseif (Auth::user()->role == 'pjk') {
+            return view('penanggungjawab.editinstrumenpengawasan', compact('instrumenPengawasan', 'is_pjk'));
+        }
     }
 
     public function update(Request $request, $id)
@@ -61,7 +71,11 @@ class InstrumenPengawasanController extends Controller
         ]);
         InstrumenPengawasan::update($id, $request->all());
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
-        return view('perencana.detailinstrumenpengawasan', compact('instrumenPengawasan'));
+        if (Auth::user()->role == 'perencana') {
+            return view('perencana.detailinstrumenpengawasan', compact('instrumenPengawasan'));
+        } elseif (Auth::user()->role == 'pjk') {
+            return view('penanggungjawab.detailinstrumenpengawasan', compact('instrumenPengawasan'));
+        }
     }
 
     public function delete($id)

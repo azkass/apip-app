@@ -8,15 +8,13 @@
             <p class="card-text"><strong>Nama Perencana:</strong> {{ $instrumenPengawasan->perencana_nama }}</p>
             <p class="card-text"><strong>Isi:</strong> {{ $instrumenPengawasan->isi }}</p>
 
+            <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumenPengawasan->id) }}" class="">Edit</a>
             @if (Auth::user()->role == 'perencana')
-                <a href="{{ route('instrumen-pengawasan.edit', $instrumenPengawasan->id) }}" class="">Edit</a>
                 <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="">Delete</button>
                 </form>
-            @elseif (Auth::user()->role == 'pjk')
-                <a href="{{ route('pjk-instrumen-pengawasan.edit', $instrumenPengawasan->id) }}" class="">Edit</a>
             @endif
 
         </div>

@@ -10,17 +10,17 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Edit Role</th>
+                    <th class="w-8">ID</th>
+                    <th class="w-40">Nama</th>
+                    <th class="w-64">Email</th>
+                    <th class="">Role</th>
+                    <th class="40">Edit Role</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{$user->id}}</td>
-                    <td>{{ $user->name }}</td>
+                    <td class="text-center">{{$user->id}}</td>
+                    <td class="pl-4">{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ ucfirst($user->role) }}</td>
                     <td>
