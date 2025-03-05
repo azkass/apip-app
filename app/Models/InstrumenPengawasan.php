@@ -27,12 +27,12 @@ class InstrumenPengawasan
     public static function detail($id)
     {
         return DB::selectOne(
-            '
+            "
             SELECT instrumen_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
             FROM instrumen_pengawasan
             INNER JOIN users u1 ON instrumen_pengawasan.petugas_pengelola_id = u1.id
             INNER JOIN users u2 ON instrumen_pengawasan.perencana_id = u2.id
-            WHERE instrumen_pengawasan.id = ?',
+            WHERE instrumen_pengawasan.id = ?",
             [$id]
         );
     }

@@ -14,6 +14,7 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
+        "@maxgraph/core": "^0.15.1",
         "tailwindcss": "^4.0.0"
     }
 }

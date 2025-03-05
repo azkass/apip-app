@@ -13,7 +13,9 @@ Route::get("/auth/redirect", [SocialiteController::class, "redirect"]);
 Route::get("/auth/google/callback", [SocialiteController::class, "callback"]);
 // Logout
 Route::post("/logout", [SocialiteController::class, "logout"])->name("logout");
-
+Route::get("/login", function () {
+    return view("login", ["title" => "Login"]);
+});
 Route::middleware("auth")->group(function () {
     // Route yang membutuhkan login
     Route::get("/", function () {
@@ -66,6 +68,12 @@ Route::middleware("auth", "role:pjk")->group(function () {
         InstrumenPengawasanController::class,
         "update",
     ])->name("pjk-instrumen-pengawasan.update");
+
+    Route::get("/penanggungjawab/daftarprosedurpengawasan", function () {
+        return view("penanggungjawab.daftarprosedurpengawasan", [
+            "title" => "Daftar Prosedur Pengawasan",
+        ]);
+    });
 });
 Route::middleware("auth", "role:perencana")->group(function () {
     Route::get("/perencana/dashboard", function () {
@@ -99,6 +107,22 @@ Route::middleware("auth", "role:perencana")->group(function () {
         InstrumenPengawasanController::class,
         "delete",
     ])->name("instrumen-pengawasan.delete");
+
+    Route::get("/perencana/daftarprosedurpengawasan", function () {
+        return view("perencana.daftarprosedurpengawasan", [
+            "title" => "Daftar Prosedur Pengawasan",
+        ]);
+    });
+    Route::get("/perencana/daftarprosedurpengawasan/create", function () {
+        return view("perencana.createprosedurpengawasan", [
+            "title" => "Buat Prosedur Pengawasan",
+        ]);
+    });
+    Route::get("/perencana/daftarprosedurpengawasan/create-cover", function () {
+        return view("perencana.cover", [
+            "title" => "Buat Prosedur Pengawasan",
+        ]);
+    });
 });
 
 Route::middleware("auth", "role:pegawai")->group(function () {
@@ -115,14 +139,13 @@ Route::middleware("auth", "role:pegawai")->group(function () {
     ])->name("pegawai.instrumen-pengawasan.detail");
 });
 
-Route::get("/login", function () {
-    return view("login", ["title" => "Login"]);
+// MaxGraph
+Route::get("/maxgraph", function () {
+    return view("maxGraph", ["title" => "maxgraph"]);
 });
+
 Route::get("/reviu", function () {
     return view("riviu", ["title" => "Riviu Page"]);
-});
-Route::get("/upload-instrumen", function () {
-    return view("upload-instrumen", ["title" => "Upload Instrumen Page"]);
 });
 Route::get("/cover", function () {
     return view("cover", ["title" => "Cover Page"]);
