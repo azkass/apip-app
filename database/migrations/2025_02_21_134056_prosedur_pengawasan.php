@@ -5,25 +5,32 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create("prosedur_pengawasan", function (Blueprint $table) {
-            $table->id(); // Kolom `id` sebagai primary key (BIGINT, AUTO_INCREMENT)
-            $table->string("name"); // Kolom `name` untuk menyimpan nama prosedur (VARCHAR)
-            $table->text("description")->nullable(); // Kolom `description` untuk deskripsi (TEXT, opsional)
-            $table->json("data"); // Kolom `data` untuk menyimpan struktur flowchart dalam format JSON
-            $table->timestamps(); // Kolom `created_at` dan `updated_at` untuk timestamp
+            $table->id();
+            $table->string("judul");
+            $table->text("deskripsi")->nullable();
+            $table->json("data");
+            $table->unsignedBigInteger("petugas_pengelola_id");
+            $table->unsignedBigInteger("perencana_id");
+            $table->timestamps();
+
+            $table
+                ->foreign("petugas_pengelola_id")
+                ->references("id")
+                ->on("users")
+                ->onDelete("cascade");
+            $table
+                ->foreign("perencana_id")
+                ->references("id")
+                ->on("users")
+                ->onDelete("cascade");
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists("prosedur_pengawasan"); // Hapus tabel jika migration di-rollback
+        Schema::dropIfExists("prosedur_pengawasan");
     }
 };
