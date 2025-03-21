@@ -46,7 +46,7 @@
             // Set ikon ke tengah dan hapus margin
             sidebarIcons.forEach(icon => {
                 icon.classList.remove('w-6');
-                icon.classList.remove('ml-2');
+                icon.classList.remove('ml-3');
                 icon.classList.add('mx-auto');
             });
 
@@ -73,7 +73,7 @@
             // Atur ikon agar sesuai mode besar dengan margin
             sidebarIcons.forEach(icon => {
                 icon.classList.add('w-6');
-                icon.classList.add('ml-4');
+                icon.classList.add('ml-3');
                 icon.classList.remove('mx-auto');
             });
 

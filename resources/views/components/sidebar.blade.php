@@ -34,7 +34,7 @@
                 <i class="fa-solid fa-file-signature mx-auto sidebar-icon fa-lg my-4" title="Instrumen Pengawasan"></i>
                 <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
             </a>
-            <a href="" class="flex items-center py-2 justify-center sidebar-item">
+            <a href="/perencana/daftarregulasi" class="flex items-center py-2 justify-center sidebar-item">
                 <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Daftar Regulasi"></i>
                 <span class="ml-2 hidden sidebar-text">Daftar Regulasi</span>
             </a>

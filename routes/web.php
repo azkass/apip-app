@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\SocialiteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InstrumenPengawasanController;
+use App\Http\Controllers\RegulasiController;
 
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
@@ -48,6 +49,7 @@ Route::middleware("auth", "role:admin")->group(function () {
         "update",
     ])->name("admin.update");
 });
+
 Route::middleware("auth", "role:pjk")->group(function () {
     Route::get("/penanggungjawab/dashboard", function () {
         return view("penanggungjawab.dashboard", ["title" => "Dashboard"]);
@@ -55,7 +57,7 @@ Route::middleware("auth", "role:pjk")->group(function () {
     Route::get("/penanggungjawab/daftarinstrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
-    ])->name("instrumen-pengawasan.index");
+    ])->name("pjk.instrumen-pengawasan.index");
     Route::get("/penanggungjawab/daftarinstrumenpengawasan/{id}", [
         InstrumenPengawasanController::class,
         "show",
@@ -82,7 +84,7 @@ Route::middleware("auth", "role:perencana")->group(function () {
     Route::get("/perencana/daftarinstrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
-    ])->name("instrumen-pengawasan.index");
+    ])->name("perencana.instrumen-pengawasan.index");
     Route::get("/perencana/daftarinstrumenpengawasan/create", [
         InstrumenPengawasanController::class,
         "create",
@@ -123,6 +125,35 @@ Route::middleware("auth", "role:perencana")->group(function () {
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
+
+    Route::get("/perencana/daftarregulasi", [
+        RegulasiController::class,
+        "index",
+    ])->name("perencana.regulasi.index");
+    Route::get("/perencana/daftarregulasi/create", [
+        RegulasiController::class,
+        "create",
+    ])->name("perencana.regulasi.create");
+    Route::get("/perencana/daftarregulasi/{id}", [
+        RegulasiController::class,
+        "detail",
+    ])->name("perencana.regulasi.detail");
+    Route::post("/perencana/daftarregulasi", [
+        RegulasiController::class,
+        "store",
+    ])->name("perencana.regulasi.store");
+    Route::get("/perencana/daftarregulasi/{id}/edit", [
+        RegulasiController::class,
+        "edit",
+    ])->name("perencana.regulasi.edit");
+    Route::put("/perencana/daftarregulasi/{id}", [
+        RegulasiController::class,
+        "update",
+    ])->name("perencana.regulasi.update");
+    Route::delete("/perencana/daftarregulasi/{id}", [
+        RegulasiController::class,
+        "delete",
+    ])->name("perencana.regulasi.delete");
 });
 
 Route::middleware("auth", "role:pegawai")->group(function () {

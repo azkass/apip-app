@@ -24,17 +24,17 @@ class InstrumenPengawasanController extends Controller
 
         if (Auth::user()->role == "perencana") {
             return view(
-                "perencana.daftarinstrumenpengawasan",
+                "perencana.instrumen.daftarinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         } elseif (Auth::user()->role == "pjk") {
             return view(
-                "penanggungjawab.daftarinstrumenpengawasan",
+                "penanggungjawab.instrumen.daftarinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         } elseif (Auth::user()->role == "pegawai") {
             return view(
-                "pegawai.daftarinstrumenpengawasan",
+                "pegawai.instrumen.daftarinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         }
@@ -49,7 +49,7 @@ class InstrumenPengawasanController extends Controller
             'SELECT id, name, role FROM users WHERE role IN ("perencana")'
         ); // Ambil data user untuk dropdown
         return view(
-            "perencana.createinstrumenpengawasan",
+            "perencana.instrumen.createinstrumenpengawasan",
             compact("is_pjk", "is_perencana")
         );
     }
@@ -61,33 +61,41 @@ class InstrumenPengawasanController extends Controller
             "petugas_pengelola_id" => "required|exists:users,id",
             "isi" => "nullable|string",
             "status" => "required|in:draft,diajukan,disetujui",
-            "perencana_id" => "required|exists:users,id",
         ]);
 
-        InstrumenPengawasan::create($request->all());
+        $request->merge(["perencana_id" => Auth::id()]);
+
+        InstrumenPengawasan::create(
+            $request->only([
+                "judul",
+                "petugas_pengelola_id",
+                "isi",
+                "status",
+                "perencana_id",
+            ])
+        );
 
         return redirect()
-            ->route("instrumen-pengawasan.index")
+            ->route("perencana.instrumen-pengawasan.index")
             ->with("success", "Instrumen Pengawasan created successfully.");
     }
 
     public function show($id)
     {
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
-        // return view('perencana.detailinstrumenpengawasan', compact('instrumenPengawasan'));
         if (Auth::user()->role == "perencana") {
             return view(
-                "perencana.detailinstrumenpengawasan",
+                "perencana.instrumen.detailinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         } elseif (Auth::user()->role == "pjk") {
             return view(
-                "penanggungjawab.detailinstrumenpengawasan",
+                "penanggungjawab.instrumen.detailinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         } elseif (Auth::user()->role == "pegawai") {
             return view(
-                "pegawai.detailinstrumenpengawasan",
+                "pegawai.instrumen.detailinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         }
@@ -101,12 +109,12 @@ class InstrumenPengawasanController extends Controller
         ); // Ambil data user untuk dropdown
         if (Auth::user()->role == "perencana") {
             return view(
-                "perencana.editinstrumenpengawasan",
+                "perencana.instrumen.editinstrumenpengawasan",
                 compact("instrumenPengawasan", "is_pjk")
             );
         } elseif (Auth::user()->role == "pjk") {
             return view(
-                "penanggungjawab.editinstrumenpengawasan",
+                "penanggungjawab.instrumen.editinstrumenpengawasan",
                 compact("instrumenPengawasan", "is_pjk")
             );
         }
@@ -121,16 +129,25 @@ class InstrumenPengawasanController extends Controller
             "status" => "required|in:draft,diajukan,disetujui",
             "perencana_id" => "required|exists:users,id",
         ]);
-        InstrumenPengawasan::update($id, $request->all());
+        InstrumenPengawasan::update(
+            $id,
+            $request->only([
+                "judul",
+                "petugas_pengelola_id",
+                "isi",
+                "status",
+                "perencana_id",
+            ])
+        );
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
         if (Auth::user()->role == "perencana") {
             return view(
-                "perencana.detailinstrumenpengawasan",
+                "perencana.instrumen.detailinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         } elseif (Auth::user()->role == "pjk") {
             return view(
-                "penanggungjawab.detailinstrumenpengawasan",
+                "penanggungjawab.instrumen.detailinstrumenpengawasan",
                 compact("instrumenPengawasan")
             );
         }
@@ -140,7 +157,7 @@ class InstrumenPengawasanController extends Controller
     {
         InstrumenPengawasan::delete($id);
         return redirect()
-            ->route("instrumen-pengawasan.index")
+            ->route("perencana.instrumen-pengawasan.index")
             ->with("success", "Instrumen Pengawasan deleted successfully");
     }
 }

@@ -90,12 +90,14 @@
     </div>
 
     <script>
-        const setupEditableText = (id) => {
-            const textElement = document.getElementById(id);
+    const setupEditableText = (id) => {
+        const textElement = document.getElementById(id);
 
+        // Check if the element exists before adding event listener
+        if (textElement) {
             textElement.addEventListener('click', () => {
                 const bbox = textElement.getBoundingClientRect(); // Mendapatkan dimensi elemen teks
-                const fontSize = textElement.getAttribute('font-size'); // Mendapatkan ukuran font
+                const fontSize = textElement.getAttribute('font-size') || getComputedStyle(textElement).fontSize; // Mendapatkan ukuran font
 
                 // Sembunyikan elemen teks
                 textElement.style.visibility = 'hidden';
@@ -107,19 +109,20 @@
                 input.value = textElement.textContent;
 
                 // Atur posisi dan ukuran input sesuai dengan teks
+                input.style.position = 'absolute';
                 input.style.left = `${bbox.left}px`;
                 input.style.top = `${bbox.top}px`;
                 input.style.width = `200px`;
 
                 // input.style.height = `${bbox.height}px`;
-                input.style.fontSize = `${fontSize}px`;
+                input.style.fontSize = fontSize;
                 input.style.textAlign = 'left'; // Sesuaikan dengan properti `text-anchor`
 
                 document.body.appendChild(input);
                 input.focus();
 
                 // Simpan perubahan saat kehilangan fokus
-                input.addEventListener('blur-sm', () => {
+                input.addEventListener('blur', () => {  // Fixed: Changed 'blur-sm' to 'blur'
                     if (input.value.trim() !== '') {
                         textElement.textContent = input.value;
                     }
@@ -134,11 +137,61 @@
                     }
                 });
             });
-        };
+        }
+    };
 
+    // Execute the code only after the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
         for (let i = 1; i <= 20; i++) {
             setupEditableText(`editable-text${i}`);
         }
+    });
+
+    function PrintSOP() {
+        const cover = document.getElementById('svg-cover').outerHTML;
+
+        // Simpan konten asli halaman
+        const originalContent = document.body.innerHTML;
+
+        // Ganti konten halaman dengan konten yang ingin dicetak
+        document.body.innerHTML = `
+            <html>
+                <head>
+                    <style>
+                        @page {
+                            size: A4 landscape;
+                            margin: 0;
+                        }
+
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            text-align: center;
+                        }
+
+                        svg {
+                            max-width: 100%;
+                            max-height: 100%;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${cover}
+                </body>
+            </html>
+        `;
+
+        // Cetak halaman
+        window.print();
+
+        // Kembalikan konten asli
+        document.body.innerHTML = originalContent;
+
+        // Reinitialize click handlers after restoring original content
+        for (let i = 1; i <= 20; i++) {
+            setupEditableText(`editable-text${i}`);
+        }
+    }
 
         function PrintSOP() {
             const cover = document.getElementById('svg-cover').outerHTML;
