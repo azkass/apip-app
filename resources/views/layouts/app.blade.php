@@ -11,7 +11,7 @@
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
     </style>
 </head>
-
+@stack('scripts')
 <body class="bg-gray-100">
     <div class="flex h-screen">
         @include('components.sidebar')
@@ -19,6 +19,7 @@
     </div>
 
     <script>
+    // Kode untuk mekanisme sidebar
     document.getElementById('toggleSidebar').addEventListener('click', function() {
         const sidebar = document.getElementById('sidebar');
         const sidebarTexts = document.querySelectorAll('.sidebar-text');

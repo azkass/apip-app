@@ -1,46 +1,31 @@
 @extends('layouts.app')
 @section('content')
-    <h1>Daftar Regulasi</h1>
-    <a href="{{ route('perencana.regulasi.create') }}" class="">Tambah Regulasi</a>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Judul</th>
-                <th>Tautan</th>
-                <th>File</th>
-                <th>Perencana</th>
-                <th>Terakhir diubah</th>
-                @if (Auth::user()->role == 'perencana')
-                    <th>Actions</th>
-                @endif
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($regulasi as $regulasi)
-                <tr>
-                    <td>{{ $regulasi->id }}</td>
-                    <td>
-                        <a href="{{ route(Auth::user()->role . '.regulasi.detail', $regulasi->id) }}">
-                            {{ $regulasi->judul }}
-                        </a>
-                    </td>
-                    <td>{{ $regulasi->tautan }}</td>
-                    <td>FILE</td>
-                    <td> {{ $regulasi->perencana_nama }}</td>
-                    <td>{{ $regulasi->updated_at }}</td>
-                    <td>
-                        @if (Auth::user()->role == 'perencana')
-                        <a href="{{ route('perencana.regulasi.edit', $regulasi->id) }}" class="">Edit</a>
-                            <form action="{{ route('perencana.regulasi.delete', $regulasi->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="cursor-pointer">Delete</button>
-                            </form>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+<div class="container p-4">
+    <div class="flex justify-between items-center mb-4">
+        <!-- Search Bar -->
+        <div class="flex border-2 border-blue-500 overflow-hidden rounded-lg max-w-lg h-10 mr-4">
+            <input type="text" placeholder="Cari Regulasi"
+                class="w-full outline-none bg-white text-gray-600 text-sm px-4 py-3" />
+            <button type='button' class="flex items-center justify-center bg-[#007bff] px-5 text-sm text-white cursor-pointer">
+                Cari
+            </button>
+        </div>
+
+        <!-- Tombol Tambah -->
+        <div class="mb-4">
+            <a href="{{ route('perencana.regulasi.create') }}" class="bg-blue-500 p-2 rounded-md text-white font-medium">Tambah</a>
+        </div>
+    </div>
+
+    @foreach ($regulasi as $regulasi)
+    <div class="border-1 border-blue-500 rounded-lg w-72 h-40 mb-4 hover:bg-gray-50 transition relative px-4 py-2">
+        <a href="{{ route(Auth::user()->role . '.regulasi.detail', $regulasi->id) }}" class="absolute inset-0"></a>
+                <h1 class="font-bold text-xl">
+                    {{ $regulasi->judul }}
+                </h1>
+                <td class="">{{ $regulasi->perencana_nama }}</td> <br>
+                <td class="">{{ $regulasi->updated_at }}</td> <br>
+            </div>
+    @endforeach
+</div>
 @endsection

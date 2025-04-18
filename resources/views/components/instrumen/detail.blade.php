@@ -1,5 +1,4 @@
 <div class="container p-4">
-    <h1 class="text-2xl font-medium mb-4">Detail Instrumen Pengawasan</h1>
     <div class="card">
         <div class="card-body">
             <p class="card-text"><strong>Judul:</strong> {{ $instrumenPengawasan->judul }}</p>

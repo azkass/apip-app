@@ -12,18 +12,26 @@ class RegulasiController extends Controller
     public function index()
     {
         $regulasi = Regulasi::getAll();
-        return view("perencana.regulasi.daftarregulasi", compact("regulasi"));
+        return view("perencana.regulasi.daftarregulasi", [
+            "regulasi" => $regulasi,
+            "title" => "Daftar Regulasi",
+        ]);
     }
 
     public function detail($id)
     {
         $regulasi = Regulasi::detail($id);
-        return view("perencana.regulasi.detailregulasi", compact("regulasi"));
+        return view("perencana.regulasi.detailregulasi", [
+            "regulasi" => $regulasi,
+            "title" => "Detail Regulasi",
+        ]);
     }
 
     public function create()
     {
-        return view("perencana.regulasi.createregulasi");
+        return view("perencana.regulasi.createregulasi", [
+            "title" => "Tambah Regulasi",
+        ]);
     }
 
     public function store(Request $request)
@@ -44,7 +52,10 @@ class RegulasiController extends Controller
     public function edit($id)
     {
         $regulasi = Regulasi::find($id);
-        return view("perencana.regulasi.editregulasi", compact("regulasi"));
+        return view("perencana.regulasi.editregulasi", [
+            "regulasi" => $regulasi,
+            "title" => "Edit Regulasi",
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -61,7 +72,10 @@ class RegulasiController extends Controller
         );
 
         $regulasi = Regulasi::detail($id);
-        return view("perencana.regulasi.detailregulasi", compact("regulasi"));
+        return view("perencana.regulasi.detailregulasi", [
+            "regulasi" => $regulasi,
+            "title" => "Detail Regulasi",
+        ]);
     }
 
     public function delete($id)

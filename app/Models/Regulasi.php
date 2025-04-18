@@ -34,6 +34,8 @@ class Regulasi
 
     public static function create($data)
     {
+        // Mengubah judul menjadi title case sebelum insert
+        $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::insert(
             "INSERT INTO regulasi (judul, tautan, perencana_id, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
             [$data["judul"], $data["tautan"], $data["perencana_id"]]
@@ -42,6 +44,8 @@ class Regulasi
 
     public static function update($id, $data)
     {
+        // Mengubah judul menjadi title case sebelum insert
+        $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::update(
             "UPDATE regulasi SET judul = ?, tautan = ?, perencana_id = ?, updated_at = NOW() WHERE id = ?",
             [$data["judul"], $data["tautan"], $data["perencana_id"], $id]

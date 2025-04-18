@@ -9,35 +9,32 @@ use Illuminate\Support\Facades\DB;
 
 class InstrumenPengawasanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $instrumenPengawasan = InstrumenPengawasan::getAll();
+        $status = $request->query("status", "semua");
+        $activeTab = $status;
+        $instrumenPengawasan = InstrumenPengawasan::getByStatus($status);
 
-        // Pegawai hanya dapat melihat instrumen pengawasan yang sudah disetujui
         if (Auth::user()->role == "pegawai") {
-            $instrumenPengawasan = array_filter($instrumenPengawasan, function (
-                $instrumen
-            ) {
-                return $instrumen->status == "disetujui";
-            });
+            $instrumenPengawasan = array_filter(
+                $instrumenPengawasan,
+                fn($i) => $i->status == "disetujui"
+            );
         }
 
-        if (Auth::user()->role == "perencana") {
-            return view(
-                "perencana.instrumen.daftarinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
-        } elseif (Auth::user()->role == "pjk") {
-            return view(
-                "penanggungjawab.instrumen.daftarinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
-        } elseif (Auth::user()->role == "pegawai") {
-            return view(
-                "pegawai.instrumen.daftarinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
-        }
+        $viewData = [
+            "title" => "Instrumen Pengawasan",
+            "activeTab" => $activeTab,
+            "instrumenPengawasan" => $instrumenPengawasan,
+        ];
+
+        $viewPath = match (Auth::user()->role) {
+            "perencana" => "perencana.instrumen.daftarinstrumenpengawasan",
+            "pjk" => "penanggungjawab.instrumen.daftarinstrumenpengawasan",
+            "pegawai" => "pegawai.instrumen.daftarinstrumenpengawasan",
+        };
+
+        return view($viewPath, $viewData);
     }
 
     public function create()
@@ -48,10 +45,11 @@ class InstrumenPengawasanController extends Controller
         $is_perencana = DB::select(
             'SELECT id, name, role FROM users WHERE role IN ("perencana")'
         ); // Ambil data user untuk dropdown
-        return view(
-            "perencana.instrumen.createinstrumenpengawasan",
-            compact("is_pjk", "is_perencana")
-        );
+        return view("perencana.instrumen.createinstrumenpengawasan", [
+            "is_pjk" => $is_pjk,
+            "is_perencana" => $is_perencana,
+            "title" => "Tambah Instrumen Pengawasan",
+        ]);
     }
 
     public function store(Request $request)
@@ -84,20 +82,20 @@ class InstrumenPengawasanController extends Controller
     {
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
         if (Auth::user()->role == "perencana") {
-            return view(
-                "perencana.instrumen.detailinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
+            return view("perencana.instrumen.detailinstrumenpengawasan", [
+                "instrumenPengawasan" => $instrumenPengawasan,
+                "title" => "Detail Instrumen Pengawasan",
+            ]);
         } elseif (Auth::user()->role == "pjk") {
-            return view(
-                "penanggungjawab.instrumen.detailinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
+            return view("penanggungjawab.instrumen.detailinstrumenpengawasan", [
+                "instrumenPengawasan" => $instrumenPengawasan,
+                "title" => "Detail Instrumen Pengawasan",
+            ]);
         } elseif (Auth::user()->role == "pegawai") {
-            return view(
-                "pegawai.instrumen.detailinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
+            return view("pegawai.instrumen.detailinstrumenpengawasan", [
+                "instrumenPengawasan" => $instrumenPengawasan,
+                "title" => "Detail Instrumen Pengawasan",
+            ]);
         }
     }
 
@@ -108,15 +106,17 @@ class InstrumenPengawasanController extends Controller
             'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
         ); // Ambil data user untuk dropdown
         if (Auth::user()->role == "perencana") {
-            return view(
-                "perencana.instrumen.editinstrumenpengawasan",
-                compact("instrumenPengawasan", "is_pjk")
-            );
+            return view("perencana.instrumen.editinstrumenpengawasan", [
+                "instrumenPengawasan" => $instrumenPengawasan,
+                "is_pjk" => $is_pjk,
+                "title" => "Edit Instrumen Pengawasan",
+            ]);
         } elseif (Auth::user()->role == "pjk") {
-            return view(
-                "penanggungjawab.instrumen.editinstrumenpengawasan",
-                compact("instrumenPengawasan", "is_pjk")
-            );
+            return view("penanggungjawab.instrumen.editinstrumenpengawasan", [
+                "instrumenPengawasan" => $instrumenPengawasan,
+                "is_pjk" => $is_pjk,
+                "title" => "Edit Instrumen Pengawasan",
+            ]);
         }
     }
 
@@ -141,15 +141,15 @@ class InstrumenPengawasanController extends Controller
         );
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
         if (Auth::user()->role == "perencana") {
-            return view(
-                "perencana.instrumen.detailinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
+            return view("perencana.instrumen.detailinstrumenpengawasan", [
+                "instrumenPengawasan" => $instrumenPengawasan,
+                "title" => "Detail Instrumen Pengawasan",
+            ]);
         } elseif (Auth::user()->role == "pjk") {
-            return view(
-                "penanggungjawab.instrumen.detailinstrumenpengawasan",
-                compact("instrumenPengawasan")
-            );
+            return view("penanggungjawab.instrumen.detailinstrumenpengawasan", [
+                "instrumenPengawasan" => $instrumenPengawasan,
+                "title" => "Detail Instrumen Pengawasan",
+            ]);
         }
     }
 

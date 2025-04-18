@@ -16,6 +16,24 @@ class InstrumenPengawasan
             INNER JOIN users u2 ON instrumen_pengawasan.perencana_id = u2.id');
     }
 
+    public static function getByStatus($status = null)
+    {
+        $query = 'SELECT instrumen_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
+            FROM instrumen_pengawasan
+            INNER JOIN users u1 ON instrumen_pengawasan.petugas_pengelola_id = u1.id
+            INNER JOIN users u2 ON instrumen_pengawasan.perencana_id = u2.id';
+
+        // Filter berdasarkan status jika diberikan
+        if ($status) {
+            if ($status === "semua") {
+                // Tidak perlu menambahkan filter status
+            } else {
+                $query .= " WHERE instrumen_pengawasan.status = '$status'";
+            }
+        }
+        return DB::select($query);
+    }
+
     public static function find($id)
     {
         return DB::selectOne(
@@ -39,6 +57,8 @@ class InstrumenPengawasan
 
     public static function create($data)
     {
+        // Mengubah judul menjadi title case sebelum insert
+        $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::insert(
             "INSERT INTO instrumen_pengawasan (judul, petugas_pengelola_id, isi, status, perencana_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
             [
@@ -53,6 +73,8 @@ class InstrumenPengawasan
 
     public static function update($id, $data)
     {
+        // Mengubah judul menjadi title case sebelum insert
+        $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::update(
             "UPDATE instrumen_pengawasan SET judul = ?, petugas_pengelola_id = ?, isi = ?, status = ?, perencana_id = ?, updated_at = NOW() WHERE id = ?",
             [

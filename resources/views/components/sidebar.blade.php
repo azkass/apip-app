@@ -4,21 +4,29 @@
     </div>
     <div class="p-2 flex-grow">
         @if (Auth::user()->role == 'admin')
+            <a href="/admin/dashboard" class="flex items-center py-2 justify-center sidebar-item">
+                <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
+                <span class="ml-2 hidden sidebar-text">Dashboard</span>
+            </a>
             <a href="/admin/list" class="flex items-center py-2 justify-center sidebar-item">
-                <i class="fa-solid fa-user-shield mx-auto sidebar-icon" title="Manajemen Role"></i>
+                <i class="fa-solid fa-user-shield mx-auto sidebar-icon fa-lg my-4" title="Manajemen Role"></i>
                 <span class="ml-2 hidden sidebar-text">Manajemen Role</span>
             </a>
         @elseif (Auth::user()->role == 'pjk')
-            <a href="/penanggungjawab/daftarprosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
-                <i class="fa-solid fa-clipboard-check mx-auto sidebar-icon" title=""></i>
+            <a href="/penanggungjawab/dashboard" class="flex items-center py-2 justify-center sidebar-item">
+                <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
+                <span class="ml-2 hidden sidebar-text">Dashboard</span>
+            </a>
+            <a href="/penanggungjawab/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                <i class="fa-solid fa-clipboard-check mx-auto sidebar-icon fa-lg my-4" title=""></i>
                 <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
             </a>
-            <a href="/penanggungjawab/daftarinstrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
-                <i class="fa-solid fa-tasks mx-auto sidebar-icon" title=""></i>
+            <a href="/penanggungjawab/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                <i class="fa-solid fa-tasks mx-auto sidebar-icon fa-lg my-4" title=""></i>
                 <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
             </a>
             <a href="" class="flex items-center py-2 justify-center sidebar-item">
-                <i class="fa-solid fa-book mx-auto sidebar-icon" title=""></i>
+                <i class="fa-solid fa-book mx-auto sidebar-icon fa-lg my-4" title=""></i>
                 <span class="ml-2 hidden sidebar-text">Daftar Regulasi</span>
             </a>
         @elseif (Auth::user()->role == 'perencana')
@@ -26,21 +34,25 @@
                 <i class="fa-solid fa-house sidebar-icon mx-auto fa-lg my-4" title="Dashboard"></i>
                 <span class="ml-2 hidden sidebar-text">Dashboard</span>
             </a>
-            <a href="/perencana/daftarprosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+            <a href="/perencana/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
                 <i class="fa-solid fa-pen-ruler mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
                 <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
             </a>
-            <a href="/perencana/daftarinstrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+            <a href="/perencana/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
                 <i class="fa-solid fa-file-signature mx-auto sidebar-icon fa-lg my-4" title="Instrumen Pengawasan"></i>
                 <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
             </a>
-            <a href="/perencana/daftarregulasi" class="flex items-center py-2 justify-center sidebar-item">
+            <a href="/perencana/regulasi" class="flex items-center py-2 justify-center sidebar-item">
                 <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Daftar Regulasi"></i>
                 <span class="ml-2 hidden sidebar-text">Daftar Regulasi</span>
             </a>
         @elseif (Auth::user()->role == 'pegawai')
-            <a href="/pegawai/daftarinstrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
-                <i class="fa-solid fa-clipboard mx-auto sidebar-icon" title=""></i>
+            <a href="/pegawai/dashboard" class="flex items-center py-2 justify-center sidebar-item">
+                <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
+                <span class="ml-2 hidden sidebar-text">Dashboard</span>
+            </a>
+            <a href="/pegawai/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                <i class="fa-solid fa-clipboard mx-auto sidebar-icon fa-lg my-4" title=""></i>
                 <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
             </a>
         @endif

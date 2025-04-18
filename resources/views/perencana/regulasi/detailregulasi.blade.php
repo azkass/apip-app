@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    <h1>Detail Regulasi</h1>
     <div>
         <p>ID: {{ $regulasi->id }}</p>
         <p>Judul: {{ $regulasi->judul }}</p>

@@ -29,8 +29,9 @@ Route::middleware("auth")->group(function () {
             return redirect("/perencana/dashboard");
         } elseif ($user->role == "pjk") {
             return redirect("/penanggungjawab/dashboard");
+        } else {
+            return redirect("/login");
         }
-        return redirect("/login");
     });
 });
 Route::middleware("auth", "role:admin")->group(function () {
@@ -54,24 +55,24 @@ Route::middleware("auth", "role:pjk")->group(function () {
     Route::get("/penanggungjawab/dashboard", function () {
         return view("penanggungjawab.dashboard", ["title" => "Dashboard"]);
     });
-    Route::get("/penanggungjawab/daftarinstrumenpengawasan", [
+    Route::get("/penanggungjawab/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
     ])->name("pjk.instrumen-pengawasan.index");
-    Route::get("/penanggungjawab/daftarinstrumenpengawasan/{id}", [
+    Route::get("/penanggungjawab/instrumenpengawasan/{id}", [
         InstrumenPengawasanController::class,
         "show",
     ])->name("pjk.instrumen-pengawasan.detail");
-    Route::get("/penanggungjawab/daftarinstrumenpengawasan/{id}/edit", [
+    Route::get("/penanggungjawab/instrumenpengawasan/{id}/edit", [
         InstrumenPengawasanController::class,
         "edit",
     ])->name("pjk.instrumen-pengawasan.edit");
-    Route::put("/penanggungjawab/daftarinstrumenpengawasan/{id}", [
+    Route::put("/penanggungjawab/instrumenpengawasan/{id}", [
         InstrumenPengawasanController::class,
         "update",
     ])->name("pjk-instrumen-pengawasan.update");
 
-    Route::get("/penanggungjawab/daftarprosedurpengawasan", function () {
+    Route::get("/penanggungjawab/prosedurpengawasan", function () {
         return view("penanggungjawab.daftarprosedurpengawasan", [
             "title" => "Daftar Prosedur Pengawasan",
         ]);
@@ -81,76 +82,76 @@ Route::middleware("auth", "role:perencana")->group(function () {
     Route::get("/perencana/dashboard", function () {
         return view("perencana.dashboard", ["title" => "Dashboard"]);
     });
-    Route::get("/perencana/daftarinstrumenpengawasan", [
+    Route::get("/perencana/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
     ])->name("perencana.instrumen-pengawasan.index");
-    Route::get("/perencana/daftarinstrumenpengawasan/create", [
+    Route::get("/perencana/instrumenpengawasan/create", [
         InstrumenPengawasanController::class,
         "create",
     ])->name("instrumen-pengawasan.create");
-    Route::get("/perencana/daftarinstrumenpengawasan/{id}", [
+    Route::get("/perencana/instrumenpengawasan/{id}", [
         InstrumenPengawasanController::class,
         "show",
     ])->name("perencana.instrumen-pengawasan.detail");
-    Route::post("/perencana/daftarinstrumenpengawasan", [
+    Route::post("/perencana/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "store",
     ])->name("instrumen-pengawasan.store");
-    Route::get("/perencana/daftarinstrumenpengawasan/{id}/edit", [
+    Route::get("/perencana/instrumenpengawasan/{id}/edit", [
         InstrumenPengawasanController::class,
         "edit",
     ])->name("perencana.instrumen-pengawasan.edit");
-    Route::put("/perencana/daftarinstrumenpengawasan/{id}", [
+    Route::put("/perencana/instrumenpengawasan/{id}", [
         InstrumenPengawasanController::class,
         "update",
     ])->name("instrumen-pengawasan.update");
-    Route::delete("/perencana/daftarinstrumenpengawasan/{id}", [
+    Route::delete("/perencana/instrumenpengawasan/{id}", [
         InstrumenPengawasanController::class,
         "delete",
     ])->name("instrumen-pengawasan.delete");
 
-    Route::get("/perencana/daftarprosedurpengawasan", function () {
-        return view("perencana.daftarprosedurpengawasan", [
+    Route::get("/perencana/prosedurpengawasan", function () {
+        return view("perencana.prosedur.daftarprosedurpengawasan", [
             "title" => "Daftar Prosedur Pengawasan",
         ]);
     });
-    Route::get("/perencana/daftarprosedurpengawasan/create", function () {
-        return view("perencana.createprosedurpengawasan", [
+    Route::get("/perencana/prosedurpengawasan/create", function () {
+        return view("perencana.prosedur.form-generate-body", [
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
-    Route::get("/perencana/daftarprosedurpengawasan/create-cover", function () {
-        return view("perencana.cover", [
+    Route::get("/perencana/prosedurpengawasan/create-cover", function () {
+        return view("perencana.prosedur.cover", [
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
 
-    Route::get("/perencana/daftarregulasi", [
+    Route::get("/perencana/regulasi", [
         RegulasiController::class,
         "index",
     ])->name("perencana.regulasi.index");
-    Route::get("/perencana/daftarregulasi/create", [
+    Route::get("/perencana/regulasi/create", [
         RegulasiController::class,
         "create",
     ])->name("perencana.regulasi.create");
-    Route::get("/perencana/daftarregulasi/{id}", [
+    Route::get("/perencana/regulasi/{id}", [
         RegulasiController::class,
         "detail",
     ])->name("perencana.regulasi.detail");
-    Route::post("/perencana/daftarregulasi", [
+    Route::post("/perencana/regulasi", [
         RegulasiController::class,
         "store",
     ])->name("perencana.regulasi.store");
-    Route::get("/perencana/daftarregulasi/{id}/edit", [
+    Route::get("/perencana/regulasi/{id}/edit", [
         RegulasiController::class,
         "edit",
     ])->name("perencana.regulasi.edit");
-    Route::put("/perencana/daftarregulasi/{id}", [
+    Route::put("/perencana/regulasi/{id}", [
         RegulasiController::class,
         "update",
     ])->name("perencana.regulasi.update");
-    Route::delete("/perencana/daftarregulasi/{id}", [
+    Route::delete("/perencana/regulasi/{id}", [
         RegulasiController::class,
         "delete",
     ])->name("perencana.regulasi.delete");
@@ -160,30 +161,16 @@ Route::middleware("auth", "role:pegawai")->group(function () {
     Route::get("/pegawai/dashboard", function () {
         return view("pegawai.dashboard", ["title" => "Dashboard"]);
     });
-    Route::get("/pegawai/daftarinstrumenpengawasan", [
+    Route::get("/pegawai/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
     ])->name("pegawai.instrumen-pengawasan.index");
-    Route::get("/pegawai/daftarinstrumenpengawasan/{id}", [
+    Route::get("/pegawai/instrumenpengawasan/{id}", [
         InstrumenPengawasanController::class,
         "show",
     ])->name("pegawai.instrumen-pengawasan.detail");
 });
 
-// MaxGraph
-Route::get("/maxgraph", function () {
-    return view("maxGraph", ["title" => "maxgraph"]);
-});
-
-Route::get("/reviu", function () {
-    return view("riviu", ["title" => "Riviu Page"]);
-});
-Route::get("/cover", function () {
-    return view("cover", ["title" => "Cover Page"]);
-});
-Route::get("/sop-dompdf", function () {
-    return view("sop-dompdf");
-});
 // Route::post('/generate-pdf', function (Illuminate\Http\Request $request) {
 //     $activities = $request->input('activities');
 //     $durations = $request->input('durations');
@@ -200,10 +187,6 @@ Route::get("/sop-dompdf", function () {
 // })->name('generate-pdf');
 
 use App\Http\Controllers\ActivityController;
-
-Route::get("/activity-form", [ActivityController::class, "showForm"])->name(
-    "activity.form"
-);
 Route::post("/generate-table", [
     ActivityController::class,
     "generateTable",
