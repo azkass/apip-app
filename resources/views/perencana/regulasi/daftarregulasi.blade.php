@@ -3,7 +3,7 @@
 <div class="container p-4">
     <div class="flex justify-between items-center mb-4">
         <!-- Search Bar -->
-        <div class="flex border-2 border-blue-500 overflow-hidden rounded-lg max-w-lg h-10 mr-4">
+        <div class="flex border-2 border-blue-500 overflow-hidden rounded-md max-w-lg h-10 mr-4">
             <input type="text" placeholder="Cari Regulasi"
                 class="w-full outline-none bg-white text-gray-600 text-sm px-4 py-3" />
             <button type='button' class="flex items-center justify-center bg-[#007bff] px-5 text-sm text-white cursor-pointer">

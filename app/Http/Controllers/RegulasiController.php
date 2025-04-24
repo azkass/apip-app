@@ -14,7 +14,7 @@ class RegulasiController extends Controller
         $regulasi = Regulasi::getAll();
         return view("perencana.regulasi.daftarregulasi", [
             "regulasi" => $regulasi,
-            "title" => "Daftar Regulasi",
+            "title" => "Regulasi",
         ]);
     }
 

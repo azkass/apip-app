@@ -10,4 +10,10 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    // server: {
+    //     host: true, // agar bisa diakses dari luar
+    //     port: 5173,
+    //     origin: "https://fe.azkass.my.id",
+    //     allowedHosts: ["fe.azkass.my.id"],
+    // },
 });

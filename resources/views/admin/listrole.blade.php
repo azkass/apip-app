@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container">
-    <h1>Daftar Pengguna</h1>
     <table class="table">
         <thead>
             <tr>

@@ -77,15 +77,16 @@
         </div>
     @endif
 
+    <!-- Isi tabel -->
     @foreach ($instrumenPengawasan as $instrumen)
     <div class="border-[1px] border-blue-500 rounded-lg w-72 h-40 mb-4 hover:bg-gray-50 transition relative px-4 py-2">
         <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.detail', $instrumen->id) }}" class="absolute inset-0"></a>
         <h1 class="font-bold text-xl">
             {{ $instrumen->judul }}
         </h1>
-        <p class="">{{ $instrumen->petugas_nama }}</p>
-        <p class="">{{ ucfirst($instrumen->status) }}</p>
-        <p class="">{{ $instrumen->updated_at }}</p>
+        <!-- <p class="">{{ $instrumen->petugas_nama }}</p> -->
+        <p class="w-fit py-1 px-2 bg-blue-500 rounded-sm text-center text-white">{{ ucfirst($instrumen->status) }}</p>
+        <!-- <p class="">{{ $instrumen->updated_at }}</p> -->
     </div>
     @endforeach
 </div>

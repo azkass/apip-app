@@ -27,7 +27,7 @@
             </a>
             <a href="" class="flex items-center py-2 justify-center sidebar-item">
                 <i class="fa-solid fa-book mx-auto sidebar-icon fa-lg my-4" title=""></i>
-                <span class="ml-2 hidden sidebar-text">Daftar Regulasi</span>
+                <span class="ml-2 hidden sidebar-text">Regulasi</span>
             </a>
         @elseif (Auth::user()->role == 'perencana')
             <a href="/" class="flex items-center py-2 justify-center sidebar-item">
@@ -43,8 +43,8 @@
                 <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
             </a>
             <a href="/perencana/regulasi" class="flex items-center py-2 justify-center sidebar-item">
-                <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Daftar Regulasi"></i>
-                <span class="ml-2 hidden sidebar-text">Daftar Regulasi</span>
+                <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Regulasi"></i>
+                <span class="ml-2 hidden sidebar-text">Regulasi</span>
             </a>
         @elseif (Auth::user()->role == 'pegawai')
             <a href="/pegawai/dashboard" class="flex items-center py-2 justify-center sidebar-item">

@@ -30,13 +30,13 @@
             @endif
         </div>
 
-        <div class="h-18 bg-white rounded-[3px] px-4 mx-6 -mt-10 flex items-center font-bold text-xl text-gray-600">
+        <div class="h-18 bg-white rounded-[3px] px-4 mx-6 -mt-10 flex items-center font-bold text-xl text-gray-800">
             <p>{{ $title ?? 'Default Title' }}</p>
         </div>
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4">
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 mx-6 pt-4">
         <!-- Konten utama akan diisi dari app.blade.php -->
         @yield('content')
     </main>

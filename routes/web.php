@@ -74,7 +74,7 @@ Route::middleware("auth", "role:pjk")->group(function () {
 
     Route::get("/penanggungjawab/prosedurpengawasan", function () {
         return view("penanggungjawab.daftarprosedurpengawasan", [
-            "title" => "Daftar Prosedur Pengawasan",
+            "title" => "Prosedur Pengawasan",
         ]);
     });
 });
@@ -113,16 +113,21 @@ Route::middleware("auth", "role:perencana")->group(function () {
 
     Route::get("/perencana/prosedurpengawasan", function () {
         return view("perencana.prosedur.daftarprosedurpengawasan", [
-            "title" => "Daftar Prosedur Pengawasan",
-        ]);
-    });
-    Route::get("/perencana/prosedurpengawasan/create", function () {
-        return view("perencana.prosedur.form-generate-body", [
-            "title" => "Buat Prosedur Pengawasan",
+            "title" => "Prosedur Pengawasan",
         ]);
     });
     Route::get("/perencana/prosedurpengawasan/create-cover", function () {
         return view("perencana.prosedur.cover", [
+            "title" => "Buat Prosedur Pengawasan",
+        ]);
+    });
+    Route::get("/perencana/prosedurpengawasan/create-fix", function () {
+        return view("perencana.prosedur.create-fix", [
+            "title" => "Buat Prosedur Pengawasan",
+        ]);
+    });
+    Route::get("/perencana/prosedurpengawasan/create-test", function () {
+        return view("perencana.prosedur.create-test", [
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
