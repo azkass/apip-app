@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('content')
-<div>
     <!-- Form Pelaksana -->
-    <div class="bg-gray-50 p-4" id="formContainer">
-        <h2 class="text-xl font-semibold">Tambah Pelaksana</h2>
+<div class="bg-white rounded-md mb-4 ">
+    <div class="p-4" id="formContainer">
+        <h2 class="text-xl font-semibold mb-4">Tambah Pelaksana</h2>
         <template id="formTemplate">
-            <div class="flex items-center form-item w-96 pt-4 rounded-sm">
-                <label class="block text-base font-medium text-gray-700 mb-1">Pelaksana <span class="actor-number">1</span> :</label>
+            <div class="flex items-center mb-2 form-item w-96 rounded-sm">
+                <label class="block w-28 text-base font-medium text-gray-700">Pelaksana <span class="actor-number">1</span> :</label>
                 <select class="form-select w-52 rounded-md border border-gray-300 shadow-sm py-1 px-3 ml-2" onchange="handleActorSelection(this)">
                     <option value="" selected disabled>-- Pilih Aktor --</option>
                     <option value="Koordinator">Koordinator</option>
@@ -19,7 +19,7 @@
             </div>
         </template>
     </div>
-        <div id="formContainer"  class="bg-gray-50 flex justify-between mb-4 p-4 w-full">
+        <div id="formContainer"  class="flex justify-between p-4 w-full">
             <div>
                 <button onclick="addActor(this)" class="cursor-pointer bg-blue-500 hover:bg-blue-600 h-10 text-base text-white px-4 py-2 rounded-sm mb-2 mr-2">Tambah Pelaksana</button>
                 <button onclick="deleteLastForm()" class="cursor-pointer bg-red-500 hover:bg-red-600 h-10 text-base text-white py-2 px-4 rounded">Hapus Pelaksana</button>
@@ -28,24 +28,24 @@
                 <button onclick="saveActor()" class="cursor-pointer bg-green-600 hover:bg-green-700 h-10 text-base text-white px-4 py-2 rounded-sm">Simpan</button>
             </div>
         </div>
-    </div>
+</div>
 
     <!-- Form Diagram Details -->
-    <div id="diagramSection" class="mb-5 p-4 bg-gray-50 rounded-lg hidden">
+    <div id="diagramSection" class="mb-5 p-4 bg-white rounded-lg hidden">
         <h2 class="text-xl font-semibold mb-3">Detail Diagram</h2>
         <div id="diagramTable" class="mb-4">
             <!-- Diagram table will be added here -->
         </div>
         <div class="flex justify-between w-full">
             <div>
-                <button onclick="addActivity()" class="bg-blue-500 hover:bg-blue-600 h-10 text-base text-white py-2 px-4 rounded-sm mb-2 mr-2">Tambah Kegiatan</button>
-                <button onclick="removeActivity()" class="bg-red-500 hover:bg-red-600 h-10 text-base text-white py-2 px-4 rounded-sm mr-2">Hapus Kegiatan</button>
+                <button onclick="addActivity()" class="bg-blue-500 hover:bg-blue-600 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm mb-2 mr-2">Tambah Aktivitas</button>
+                <button onclick="removeActivity()" class="bg-red-500 hover:bg-red-600 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm mr-2">Hapus Aktivitas</button>
             </div>
-            <button onclick="preview()" class="bg-green-600 hover:bg-green-700 h-10 text-base text-white py-2 px-4 rounded-sm">Preview Diagram</button>
+            <button onclick="preview()" class="bg-green-600 hover:bg-green-700 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm">Preview Diagram</button>
         </div>
     </div>
 
-    <div id="previewBox" class="hidden mt-5 p-4 bg-white rounded-lg">
+    <div id="previewBox" class="hidden p-4 bg-white rounded-lg">
         <h2 class="text-xl font-semibold mb-3">Diagram Preview</h2>
         <div id="graphContainerBox" class="overflow-auto">
             <div id="graphContainer"></div>
@@ -204,16 +204,23 @@
             );
         }
 
-        console.log(JSON.stringify({
-            nActivity,
-            nActor,
-            actorNames
-        }, null, 2));
+        // console.log(JSON.stringify({
+        //     nActivity,
+        //     nActor,
+        //     actorNames
+        // }, null, 2));
 
         setupDiagramTable();
     }
 
     function addActivity() {
+        // Cek apakah ada aktivitas yang memiliki opsi "Selesai"
+        for (let i = 0; i < nActivity; i++) {
+            if (shapeSelections[i].includes('4')) {
+                alert('Tidak dapat menambah aktivitas karena sudah ada opsi "Selesai"!');
+                return;
+            }
+        }
         nActivity++;
         activities.push('');
         tools.push('');
@@ -237,103 +244,157 @@
             falseToSelections.pop();
             setupDiagramTable();
         } else {
-            alert('Minimal terdapat 1 kegiatan');
+            alert('Minimal terdapat 1 Aktivitas');
         }
     }
+
+
 
     function setupDiagramTable() {
-        if (actorNames.length === 0) {
-            alert('Silakan simpan nama pelaksana terlebih dahulu!');
-            return;
-        }
-
-        // Simpan data sebelum render ulang
-        for (let i = 1; i <= nActivity; i++) {
-            activities[i-1] = document.getElementById(`act-${i}`)?.value || '';
-            tools[i-1] = document.getElementById(`tool-${i}`)?.value || '';
-            times[i-1] = document.getElementById(`time-${i}`)?.value || '';
-            outputs[i-1] = document.getElementById(`output-${i}`)?.value || '';
-            notes[i-1] = document.getElementById(`note-${i}`)?.value || '';
-
-            const currentShapes = [];
-            const currentFalseTos = [];
-            for (let j = 1; j <= nActor; j++) {
-                const shapeSelect = document.getElementById(`gShape-${i}-${j}`);
-                currentShapes.push(shapeSelect ? shapeSelect.value : '0');
-
-                const falseToSelect = document.getElementById(`falseTo-${i}-${j}`);
-                currentFalseTos.push(falseToSelect ? falseToSelect.value : '');
+            if (actorNames.length === 0) {
+                alert('Silakan simpan nama pelaksana terlebih dahulu!');
+                return;
             }
-            shapeSelections[i-1] = currentShapes;
-            falseToSelections[i-1] = currentFalseTos;
-        }
 
-        const tableDiv = document.getElementById('diagramTable');
-        tableDiv.innerHTML = '';
+            // Simpan data sebelum render ulang dengan cara lebih efisien
+            for (let i = 0; i < nActivity; i++) {
+                const actNum = i + 1;
+                activities[i] = document.getElementById(`act-${actNum}`)?.value || '';
+                tools[i] = document.getElementById(`tool-${actNum}`)?.value || '';
+                times[i] = document.getElementById(`time-${actNum}`)?.value || '';
+                outputs[i] = document.getElementById(`output-${actNum}`)?.value || '';
+                notes[i] = document.getElementById(`note-${actNum}`)?.value || '';
 
-        const table = document.createElement('table');
-        table.id = 'diagramTable';
-        table.className = 'w-full border-collapse';
+                const currentShapes = [];
+                const currentFalseTos = [];
+                for (let j = 0; j < nActor; j++) {
+                    const actorNum = j + 1;
+                    currentShapes[j] = document.getElementById(`gShape-${actNum}-${actorNum}`)?.value || '0';
+                    currentFalseTos[j] = document.getElementById(`falseTo-${actNum}-${actorNum}`)?.value || '';
+                }
+                shapeSelections[i] = currentShapes;
+                falseToSelections[i] = currentFalseTos;
+            }
 
-        // Header row
-        const headerRow = document.createElement('tr');
-        headerRow.className = 'bg-gray-100';
-        headerRow.innerHTML = `
-            <th class="border p-2">No</th>
-            <th class="border p-2">Kegiatan</th>
-            ${actorNames.map(name => `<th class="border p-2">${name}</th>`).join('')}
-            <th class="border p-2">Kelengkapan</th>
-            <th class="border p-2">Waktu (Jam)</th>
-            <th class="border p-2">Output</th>
-            <th class="border p-2">Keterangan</th>
-        `;
-        table.appendChild(headerRow);
+            const tableDiv = document.getElementById('diagramTable');
 
-        // Activity rows
-        for (let i = 1; i <= nActivity; i++) {
-            const row = document.createElement('tr');
-            row.className = 'hover:bg-gray-50';
-            row.innerHTML = `
-                <td class="border p-2">${i}</td>
-                <td class="border p-2"><textarea id="act-${i}" placeholder="Deskripsi kegiatan" class="w-full p-1 border rounded">${activities[i-1]}</textarea></td>
-                ${Array(nActor).fill().map((_, j) => `
-                    <td class="border p-2">
-                        <select id="gShape-${i}-${j+1}" onchange="check(${i}, ${j+1})" class="w-full p-1 border rounded">
-                            <option value="0" ${shapeSelections[i-1]?.[j] === '0' ? 'selected' : ''}>Tidak ada</option>
-                            <option value="1" ${shapeSelections[i-1]?.[j] === '1' ? 'selected' : ''}>Mulai/Selesai</option>
-                            <option value="2" ${shapeSelections[i-1]?.[j] === '2' ? 'selected' : ''}>Proses</option>
-                            <option value="3" ${shapeSelections[i-1]?.[j] === '3' ? 'selected' : ''}>Pilihan</option>
-                        </select>
-                        <div id="f-${i}-${j+1}" class="form-group ${shapeSelections[i-1]?.[j] === '3' ? '' : 'hidden'} mt-2">
-                            <label for="falseTo-${i}-${j+1}" class="block text-xs text-gray-600 mb-1">Kondisi Salah ke:</label>
-                            <select id="falseTo-${i}-${j+1}" class="w-full p-1 border rounded text-xs">
-                                ${generateFalseOptions(i, j+1, falseToSelections[i-1]?.[j])}
+            // Gunakan DocumentFragment untuk mengurangi reflow
+            const fragment = document.createDocumentFragment();
+            const table = document.createElement('table');
+            table.id = 'diagramTable';
+            table.className = 'w-full border-collapse';
+
+            // Buat header dengan string template
+            const headers = ['No', 'Aktivitas', ...actorNames, 'Kelengkapan', 'Waktu (Jam)', 'Output', 'Keterangan'];
+            const headerRow = document.createElement('tr');
+            headerRow.className = 'bg-gray-100';
+            headerRow.innerHTML = headers.map(header => `<th class="border p-2">${header}</th>`).join('');
+            table.appendChild(headerRow);
+
+            // Cek apakah ada aktivitas yang memiliki opsi "Selesai"
+            let hasSelesai = false;
+            for (let i = 0; i < nActivity; i++) {
+                if (shapeSelections[i].includes('4')) {
+                    hasSelesai = true;
+                    break;
+                }
+            }
+
+            // Buat baris aktivitas
+            for (let i = 1; i <= nActivity; i++) {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+
+                // Temukan indeks pertama dengan shape khusus
+                const firstSpecialIndex = shapeSelections[i-1].findIndex(
+                    shape => shape === '1' || shape === '3' || shape === '4'
+                );
+
+                // Buat kolom untuk setiap aktor
+                const actorColumns = Array(nActor).fill().map((_, j) => {
+                    const actorNum = j + 1;
+                    const isDisabled = firstSpecialIndex >= 0 && j !== firstSpecialIndex;
+
+                    return `
+                        <td class="border p-2">
+                            <select id="gShape-${i}-${actorNum}" onchange="setupDiagramTable()"
+                                class="w-full p-1 border rounded ${isDisabled ? 'opacity-50' : ''}" ${isDisabled ? 'disabled' : ''}>
+                                <option value="0" ${shapeSelections[i-1][j] === '0' ? 'selected' : ''}>Tidak ada</option>
+                                <option value="1" ${shapeSelections[i-1][j] === '1' ? 'selected' : ''}>Mulai</option>
+                                <option value="2" ${shapeSelections[i-1][j] === '2' ? 'selected' : ''}>Proses</option>
+                                <option value="3" ${shapeSelections[i-1][j] === '3' ? 'selected' : ''}>Pilihan</option>
+                                <option value="4" ${shapeSelections[i-1][j] === '4' ? 'selected' : ''}>Selesai</option>
                             </select>
-                        </div>
-                    </td>
-                `).join('')}
-                <td class="border p-2"><input type="text" id="tool-${i}" placeholder="Alat/bahan" class="w-full border rounded p-1 text-sm" value="${tools[i-1]}" /></td>
-                <td class="border p-2"><input type="text" id="time-${i}" placeholder="Waktu" class="w-full border rounded p-1 text-sm" value="${times[i-1]}" /></td>
-                <td class="border p-2"><input type="text" id="output-${i}" placeholder="Output" class="w-full border rounded p-1 text-sm" value="${outputs[i-1]}" /></td>
-                <td class="border p-2"><input type="text" id="note-${i}" placeholder="Catatan" class="w-full border rounded p-1 text-sm" value="${notes[i-1]}" /></td>
-            `;
-            table.appendChild(row);
+
+                            <div id="f-${i}-${actorNum}" class="form-group ${shapeSelections[i-1][j] === '3' ? '' : 'hidden'} mt-2">
+                                <label for="falseTo-${i}-${actorNum}" class="block text-xs text-gray-600 mb-1">Kondisi Salah ke:</label>
+                                <select id="falseTo-${i}-${actorNum}" class="w-full p-1 border rounded text-xs">
+                                    ${generateFalseOptions(i, actorNum, falseToSelections[i-1][j])}
+                                </select>
+                            </div>
+                        </td>
+                    `;
+                }).join('');
+
+                row.innerHTML = `
+                    <td class="border p-2">${i}</td>
+                    <td class="border p-2"><textarea id="act-${i}" placeholder="Deskripsi Aktivitas" class="w-full p-1 border rounded">${activities[i-1]}</textarea></td>
+                    ${actorColumns}
+                    <td class="border p-2"><input type="text" id="tool-${i}" placeholder="Alat/bahan" class="w-full border rounded p-1 text-sm" value="${tools[i-1]}" /></td>
+                    <td class="border p-2"><input type="text" id="time-${i}" placeholder="Waktu" class="w-full border rounded p-1 text-sm" value="${times[i-1]}" /></td>
+                    <td class="border p-2"><input type="text" id="output-${i}" placeholder="Output" class="w-full border rounded p-1 text-sm" value="${outputs[i-1]}" /></td>
+                    <td class="border p-2"><input type="text" id="note-${i}" placeholder="Catatan" class="w-full border rounded p-1 text-sm" value="${notes[i-1]}" /></td>
+                `;
+
+                table.appendChild(row);
+            }
+
+            fragment.appendChild(table);
+
+            // Gunakan innerHTML sekali saja
+            tableDiv.innerHTML = '';
+            tableDiv.appendChild(fragment);
+
+            document.getElementById('diagramSection').classList.remove('hidden');
+
+            // Nonaktifkan tombol "Tambah Aktivitas" jika ada opsi "Selesai"
+            const addButton = document.querySelector('button[onclick="addActivity()"]');
+            if (hasSelesai) {
+                addButton.disabled = true;
+                addButton.classList.add('opacity-50', 'cursor-not-allowed');
+                addButton.classList.remove('hover:bg-blue-600');
+            } else {
+                addButton.disabled = false;
+                addButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                addButton.classList.add('hover:bg-blue-600');
+            }
         }
 
-        tableDiv.appendChild(table);
-        document.getElementById('diagramSection').classList.remove('hidden');
-    }
 
     function generateFalseOptions(i, j, selectedValue) {
-        let options = '<option value="" ${!selectedValue ? "selected disabled" : ""}>-- Pilih Tujuan --</option>';
+        let options = '<option value="" ' + (!selectedValue ? 'selected disabled' : '') + '>-- Pilih Tujuan --</option>';
+
         for (let row = 1; row <= nActivity; row++) {
             for (let col = 1; col <= nActor; col++) {
-                if (row !== i || col !== j) {
+                // Skip current activity and actor
+                if (row === i && col === j) continue;
+
+                // Cek apakah aktor pada aktivitas ini memiliki nilai yang dipilih (bukan '0')
+                if (shapeSelections[row-1] && shapeSelections[row-1][col-1] && shapeSelections[row-1][col-1] !== '0') {
                     const value = (row - 1) * nActor + col;
-                    options += `<option value="${value}" ${value == selectedValue ? 'selected' : ''}>Aktivitas ${row}, ${actorNames[col-1] || 'Pelaksana '+col}</option>`;
+                    const actorName = actorNames[col-1] || 'Pelaksana ' + col;
+                    const isSelected = value == selectedValue ? 'selected' : '';
+
+                    options += `<option value="${value}" ${isSelected}>Aktivitas ${row}, ${actorName}</option>`;
                 }
             }
         }
+
+        // Jika tidak ada opsi selain default, tambahkan pesan
+        if (options === '<option value="" selected disabled>-- Pilih Tujuan --</option>') {
+            options = '<option value="" selected disabled>Tidak ada tujuan tersedia</option>';
+        }
+
         return options;
     }
 
@@ -415,6 +476,9 @@
                         falseData[i - 1][j - 1] = document.getElementById("falseTo-" + i + "-" + j).value;
                         convTo2Dim(falseData[i - 1][j - 1]);
                         falseTarget[falseY][falseX] = 1;
+                        break;
+                    case '4':
+                        graphShape[i - 1][j - 1] = 'state';
                         break;
                     default:
                         graphShape[i - 1][j - 1] = 0;
@@ -567,7 +631,10 @@
             graph.getStylesheet().putCellStyle('process_text', style);
 
             style = mxUtils.clone(style);
-            style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
+            style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE; // Ubah dari ELLIPSE ke RECTANGLE
+            style[mxConstants.STYLE_ROUNDED] = true; // Tambahkan rounded corners
+            style[mxConstants.STYLE_ARCSIZE] = 50; // Nilai kelengkungan sudut
+            style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter; // Tambahkan perimeter
             delete style[mxConstants.STYLE_STARTSIZE];
             style[mxConstants.STYLE_FONTCOLOR] = 'black';
             style[mxConstants.STYLE_STROKECOLOR] = 'black';
@@ -655,7 +722,7 @@
                 var lane1 = graph.insertVertex(pool, null, '', xPointer, yPointer, wTotal, yHead);
                 var no = graph.insertVertex(lane1, null, 'No.', xPointer, yPointer, wNo, yHead);
                 xPointer = xPointer + wNo;
-                var act = graph.insertVertex(lane1, null, 'Kegiatan', xPointer, yPointer, wAct, yHead);
+                var act = graph.insertVertex(lane1, null, 'Aktivitas', xPointer, yPointer, wAct, yHead);
                 xPointer = xPointer + wAct;
                 var actor = graph.insertVertex(lane1, null, 'Pelaksana', xPointer, yPointer, wActor, yHead, 'verticalAlign=top');
                 var actorList = [0];
@@ -810,8 +877,8 @@
                             var shapeWidth = 50;
                             var shapeHeight = 25;
                             if (graphShape[y][z] == 'state') {
-                                shapeWidth = 40;
-                                shapeHeight = 40;
+                                shapeWidth = 50;
+                                shapeHeight = 30;
                             }
 
                             var wCenter = wBase / 2;
