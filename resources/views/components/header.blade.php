@@ -36,7 +36,7 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 mx-6 pt-4">
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white mx-6 mt-4 rounded-[3px]">
         <!-- Konten utama akan diisi dari app.blade.php -->
         @yield('content')
     </main>
