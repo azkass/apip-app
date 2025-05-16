@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\InstrumenPengawasan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class InstrumenPengawasanController extends Controller
 {
@@ -56,26 +57,59 @@ class InstrumenPengawasanController extends Controller
     {
         $request->validate([
             "judul" => "required|string|max:255",
-            "petugas_pengelola_id" => "required|exists:users,id",
-            "isi" => "nullable|string",
+            "pengelola_id" => "required|exists:users,id",
+            "deskripsi" => "nullable|string",
+            "pdf" => "required|file|mimes:pdf|max:10240", // Menerima file PDF maksimal 10MB
             "status" => "required|in:draft,diajukan,disetujui",
         ]);
 
-        $request->merge(["perencana_id" => Auth::id()]);
+        // Handle file upload
+        $fileName = null;
+        if ($request->hasFile("pdf") && $request->file("pdf")->isValid()) {
+            $file = $request->file("pdf");
+            $fileName = $file->getClientOriginalName();
+
+            // Simpan file ke storage/app/instrumen
+            $file->storeAs("instrumen", $fileName);
+        }
+
+        // Merge data dengan pembuat_id dan nama file
+        $request->merge([
+            "pembuat_id" => Auth::id(),
+            "file" => $fileName,
+        ]);
 
         InstrumenPengawasan::create(
             $request->only([
                 "judul",
-                "petugas_pengelola_id",
-                "isi",
+                "pengelola_id",
+                "deskripsi",
+                "file",
                 "status",
-                "perencana_id",
+                "pembuat_id",
             ])
         );
 
         return redirect()
             ->route("perencana.instrumen-pengawasan.index")
             ->with("success", "Instrumen Pengawasan created successfully.");
+    }
+
+    public function downloadPdf($id)
+    {
+        $instrumen = InstrumenPengawasan::find($id);
+
+        if (!$instrumen || !$instrumen->file) {
+            abort(404, "File tidak ditemukan");
+        }
+
+        $filePath = "instrumen/" . $instrumen->file;
+
+        if (!Storage::exists($filePath)) {
+            abort(404, "File tidak ditemukan di storage");
+        }
+
+        return Storage::download($filePath, $instrumen->file);
     }
 
     public function show($id)
@@ -122,34 +156,74 @@ class InstrumenPengawasanController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            "judul" => "required|string|max:255",
-            "petugas_pengelola_id" => "required|exists:users,id",
-            "isi" => "nullable|string",
-            "status" => "required|in:draft,diajukan,disetujui",
-            "perencana_id" => "required|exists:users,id",
-        ]);
-        InstrumenPengawasan::update(
-            $id,
-            $request->only([
-                "judul",
-                "petugas_pengelola_id",
-                "isi",
-                "status",
-                "perencana_id",
-            ])
-        );
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
+
+        if (!$instrumenPengawasan) {
+            return redirect()
+                ->back()
+                ->with("error", "Instrumen Pengawasan tidak ditemukan");
+        }
+
+        $validationRules = [
+            "judul" => "required|string|max:255",
+            "pengelola_id" => "required|exists:users,id",
+            "deskripsi" => "nullable|string",
+            "status" => "required|in:draft,diajukan,disetujui",
+            "pembuat_id" => "required|exists:users,id",
+        ];
+
+        // File PDF bersifat opsional pada update
+        if ($request->hasFile("pdf")) {
+            $validationRules["pdf"] = "file|mimes:pdf|max:10240";
+        }
+
+        $request->validate($validationRules);
+
+        // Handle file upload jika ada
+        $fileName = $instrumenPengawasan->file; // Gunakan file yang sudah ada sebagai default
+
+        if ($request->hasFile("pdf") && $request->file("pdf")->isValid()) {
+            $file = $request->file("pdf");
+            $fileName = $file->getClientOriginalName();
+
+            // Simpan file baru ke storage/app/instrumen
+            $file->storeAs("instrumen", $fileName);
+
+            // Hapus file lama jika ada
+            if (
+                $instrumenPengawasan->file &&
+                Storage::exists("instrumen/" . $instrumenPengawasan->file)
+            ) {
+                Storage::delete("instrumen/" . $instrumenPengawasan->file);
+            }
+        }
+
+        // Update data dengan file yang sesuai (baru atau tetap yang lama)
+        $data = $request->only([
+            "judul",
+            "pengelola_id",
+            "deskripsi",
+            "status",
+            "pembuat_id",
+        ]);
+        $data["file"] = $fileName;
+
+        InstrumenPengawasan::update($id, $data);
+
+        // Ambil data yang sudah diupdate
+        $updatedInstrumenPengawasan = InstrumenPengawasan::detail($id);
+
+        // Redirect sesuai role user
         if (Auth::user()->role == "perencana") {
             return view("perencana.instrumen.detailinstrumenpengawasan", [
-                "instrumenPengawasan" => $instrumenPengawasan,
+                "instrumenPengawasan" => $updatedInstrumenPengawasan,
                 "title" => "Detail Instrumen Pengawasan",
-            ]);
+            ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
         } elseif (Auth::user()->role == "pjk") {
             return view("penanggungjawab.instrumen.detailinstrumenpengawasan", [
-                "instrumenPengawasan" => $instrumenPengawasan,
+                "instrumenPengawasan" => $updatedInstrumenPengawasan,
                 "title" => "Detail Instrumen Pengawasan",
-            ]);
+            ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
         }
     }
 

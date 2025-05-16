@@ -12,11 +12,11 @@ return new class extends Migration {
             $table->string("judul");
             $table->string("tautan")->nullable();
             $table->string("file")->nullable();
+            $table->unsignedBigInteger("pembuat_id");
             $table->timestamps();
-            $table->unsignedBigInteger("perencana_id");
 
             $table
-                ->foreign("perencana_id")
+                ->foreign("pembuat_id")
                 ->references("id")
                 ->on("users")
                 ->onDelete("cascade");

@@ -14,8 +14,127 @@
 @stack('scripts')
 <body class="bg-gray-100">
     <div class="flex h-screen">
-        @include('components.sidebar')
-        @include('components.header')
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-16 bg-white text-gray-600 transition-all duration-300 flex flex-col h-screen">
+            <div class="p-4 flex justify-center">
+                <a class="text-2xl font-bold" href="/">AP</a>
+            </div>
+
+            <div class="p-2 flex-grow">
+                @if (Auth::user()->role == 'admin')
+                    <a href="/admin/dashboard" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
+                        <span class="ml-2 hidden sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="/admin/list" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-user-shield mx-auto sidebar-icon fa-lg my-4" title="Manajemen Role"></i>
+                        <span class="ml-2 hidden sidebar-text">Manajemen Role</span>
+                    </a>
+                @elseif (Auth::user()->role == 'pjk')
+                    <a href="/penanggungjawab/dashboard" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
+                        <span class="ml-2 hidden sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="/penanggungjawab/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-clipboard-check mx-auto sidebar-icon fa-lg my-4" title=""></i>
+                        <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
+                    </a>
+                    <a href="/penanggungjawab/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-tasks mx-auto sidebar-icon fa-lg my-4" title=""></i>
+                        <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
+                    </a>
+                    <a href="" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-book mx-auto sidebar-icon fa-lg my-4" title=""></i>
+                        <span class="ml-2 hidden sidebar-text">Regulasi</span>
+                    </a>
+                @elseif (Auth::user()->role == 'perencana')
+                    <a href="/" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-house sidebar-icon mx-auto fa-lg my-4" title="Dashboard"></i>
+                        <span class="ml-2 hidden sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="/perencana/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-pen-ruler mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
+                        <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
+                    </a>
+                    <a href="/perencana/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-file-signature mx-auto sidebar-icon fa-lg my-4" title="Instrumen Pengawasan"></i>
+                        <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
+                    </a>
+                    <a href="/perencana/regulasi" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Regulasi"></i>
+                        <span class="ml-2 hidden sidebar-text">Regulasi</span>
+                    </a>
+                @elseif (Auth::user()->role == 'pegawai')
+                    <a href="/pegawai/dashboard" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
+                        <span class="ml-2 hidden sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="/pegawai/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-clipboard mx-auto sidebar-icon fa-lg my-4" title=""></i>
+                        <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
+                    </a>
+                @endif
+            </div>
+            <div class="pb-2 text-sm text-gray-500 sidebar-footer transition-all duration-75 mt-auto flex flex-col items-center">
+                <div class="flex items-center sidebar-footer-small justify-center">
+                    <a href="https://github.com/azkass/sistem-sop" class="ml-1">©2025</a>
+                </div>
+                <div class="hidden sidebar-footer-full items-center">
+                    <div class="flex items-center">
+                        <p class="">©2025</p>
+                        <p class="ml-2">•</p>
+                        <a href="https://github.com/azkass/sistem-sop" class="ml-2">APIP</a>
+                        <i class="fa-solid fa-code-compare ml-2" title=""></i>
+                        <a href="https://github.com/azkass/sistem-sop" class="ml-1">V1.0</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Header -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-gray-100 h-36 relative">
+                <div class="bg-[#0069d9] h-28 pb-10 px-4 sm:px-6 flex items-center justify-between">
+                    <button id="toggleSidebar" class="text-white focus:outline-none cursor-pointer">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    {{-- Logout --}}
+                    @if (Auth::check())
+                        <div class="float-right flex items-center space-x-6 text-white">
+                            <i class="fa-solid fa-circle-user fa-2xl" style="color: #ffffff;"></i>
+                            <div class="text-lg">
+                                @if (Auth::user()->role == 'admin')
+                                    <p class="font-medium">Hai, Admin</p>
+                                @elseif (Auth::user()->role == 'pjk')
+                                    <p class="font-medium">Hai, Penanggung Jawab Kegiatan</p>
+                                @elseif (Auth::user()->role == 'perencana')
+                                    <p class="font-medium">Hai, Perencana</p>
+                                @elseif (Auth::user()->role == 'pegawai')
+                                    <p class="font-medium">Hai, Pegawai</p>
+                                @endif
+                            </div>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="cursor-pointer font-medium"><i class="fa-solid fa-right-from-bracket cursor-pointer"></i> Logout</button>
+                            </form>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="h-18 bg-white rounded-[3px] px-4 mx-6 -mt-10 flex items-center font-bold text-xl text-gray-800">
+                    <p>{{ $title ?? 'Default Title' }}</p>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white mx-6 mt-4 rounded-[3px] mb-4">
+                <!-- Konten utama akan diisi dari app.blade.php -->
+                @yield('content')
+            </main>
+        </div>
     </div>
 
     <script>

@@ -11,18 +11,22 @@ return new class extends Migration {
             $table->id();
             $table->string("judul");
             $table->text("deskripsi")->nullable();
-            $table->json("data");
-            $table->unsignedBigInteger("petugas_pengelola_id");
-            $table->unsignedBigInteger("perencana_id");
+            $table->json("cover");
+            $table->json("isi");
+            $table
+                ->enum("status", ["draft", "diajukan", "disetujui"])
+                ->default("draft");
+            $table->unsignedBigInteger("pengelola_id");
+            $table->unsignedBigInteger("pembuat_id");
             $table->timestamps();
 
             $table
-                ->foreign("petugas_pengelola_id")
+                ->foreign("pengelola_id")
                 ->references("id")
                 ->on("users")
                 ->onDelete("cascade");
             $table
-                ->foreign("perencana_id")
+                ->foreign("pembuat_id")
                 ->references("id")
                 ->on("users")
                 ->onDelete("cascade");

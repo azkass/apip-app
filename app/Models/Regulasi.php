@@ -12,7 +12,7 @@ class Regulasi
     {
         return DB::select("SELECT regulasi.*, u1.name AS perencana_nama
             FROM regulasi
-            INNER JOIN users u1 ON regulasi.perencana_id = u1.id");
+            INNER JOIN users u1 ON regulasi.pembuat_id = u1.id");
     }
 
     public static function find($id)
@@ -26,7 +26,7 @@ class Regulasi
             "
             SELECT regulasi.*, u1.name AS perencana_nama
             FROM regulasi
-            INNER JOIN users u1 ON regulasi.perencana_id = u1.id
+            INNER JOIN users u1 ON regulasi.pembuat_id = u1.id
             WHERE regulasi.id = ?",
             [$id]
         );
@@ -37,8 +37,13 @@ class Regulasi
         // Mengubah judul menjadi title case sebelum insert
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::insert(
-            "INSERT INTO regulasi (judul, tautan, perencana_id, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
-            [$data["judul"], $data["tautan"], $data["perencana_id"]]
+            "INSERT INTO regulasi (judul, tautan, file, pembuat_id, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())",
+            [
+                $data["judul"],
+                $data["tautan"],
+                $data["file"],
+                $data["pembuat_id"],
+            ]
         );
     }
 
@@ -47,8 +52,14 @@ class Regulasi
         // Mengubah judul menjadi title case sebelum insert
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::update(
-            "UPDATE regulasi SET judul = ?, tautan = ?, perencana_id = ?, updated_at = NOW() WHERE id = ?",
-            [$data["judul"], $data["tautan"], $data["perencana_id"], $id]
+            "UPDATE regulasi SET judul = ?, tautan = ?, file = ?, pembuat_id = ?, updated_at = NOW() WHERE id = ?",
+            [
+                $data["judul"],
+                $data["tautan"],
+                $data["file"],
+                $data["pembuat_id"],
+                $id,
+            ]
         );
     }
 

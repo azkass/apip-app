@@ -98,6 +98,12 @@ Route::middleware("auth", "role:perencana")->group(function () {
         InstrumenPengawasanController::class,
         "store",
     ])->name("instrumen-pengawasan.store");
+
+    Route::get("/perencana/instrumenpengawasan/{id}/download", [
+        InstrumenPengawasanController::class,
+        "downloadPdf",
+    ])->name("instrumen-pengawasan.download");
+
     Route::get("/perencana/instrumenpengawasan/{id}/edit", [
         InstrumenPengawasanController::class,
         "edit",
@@ -140,6 +146,12 @@ Route::middleware("auth", "role:perencana")->group(function () {
         RegulasiController::class,
         "create",
     ])->name("perencana.regulasi.create");
+
+    Route::get("/perencana/regulasi/{id}/download", [
+        RegulasiController::class,
+        "downloadPdf",
+    ])->name("perencana.regulasi.download");
+
     Route::get("/perencana/regulasi/{id}", [
         RegulasiController::class,
         "detail",
