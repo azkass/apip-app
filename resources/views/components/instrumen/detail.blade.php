@@ -20,7 +20,7 @@
                 </form>
             @endif
             @if (Auth::user()->role == 'perencana')
-                <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" class="" style="display:inline;>
+                <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" class="" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="cursor-pointer mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md">Delete</button>

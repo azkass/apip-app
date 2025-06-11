@@ -9,13 +9,13 @@
                 <label class="block w-28 text-base font-medium text-gray-700">Pelaksana <span class="actor-number">1</span> :</label>
                 <select class="form-select w-52 rounded-md border border-gray-300 shadow-sm py-1 px-3 ml-2" onchange="handleActorSelection(this)">
                     <option value="" selected disabled>-- Pilih Aktor --</option>
-                    <option value="Koordinator">Koordinator</option>
+                    <option value="Inspektur Wilayah">Inspektur Wilayah</option>
                     <option value="Pengendali Teknis">Pengendali Teknis</option>
                     <option value="Ketua Tim">Ketua Tim</option>
                     <option value="Anggota Tim">Anggota Tim</option>
                     <option value="new-actor">Aktor Baru</option>
                 </select>
-                <input type="text" class="hidden custom-actor-input w-52 rounded-md border-gray-300 shadow-sm py-1 px-3 ml-2" placeholder="Masukkan aktor baru">
+                <!-- <input type="text" class="hidden custom-actor-input w-52 rounded-md border-gray-300 shadow-sm py-1 px-3 ml-2" placeholder="Masukkan aktor baru"> -->
             </div>
         </template>
     </div>
@@ -82,7 +82,7 @@
 
     // Tambahkan form pertama saat halaman dimuat
     document.addEventListener('DOMContentLoaded', function() {
-        addActor();
+        // addActor();
     });
 
     function handleActorSelection(selectElement) {
@@ -552,6 +552,9 @@
     }
 
     function draw(container, start, end) {
+        // =====================================
+        // 1. Inisialisasi dan Konfigurasi Dasar
+
         // Reset the preview container
         container.innerHTML = "";
         let pageSize = 5;
@@ -580,7 +583,8 @@
             // Disables the built-in context menu
             mxEvent.disableContextMenu(container);
 
-            // Creates the graph inside the given container
+            // =====================================
+            // 2. Setup Graph Utama
             var graph = new mxGraph(container);
             graph.setHtmlLabels(true);
             // Graph configure for Contstraint
@@ -606,6 +610,9 @@
                 return !this.model.isEdge(cell);
             };
 
+
+            // ==============================
+            // 3. Definisi Shape
             var style = graph.getStylesheet().getDefaultVertexStyle();
             style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
             style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -685,25 +692,38 @@
             // is normally the first child of the root (ie. layer 0).
             var parent = graph.getDefaultParent();
 
+            // ====================================
+            // 4. Pembuatan Struktur Garis Tabel
+
             // Adds cells to the model in a single step
             graph.getModel().beginUpdate();
             try {
-                var xPointer = 0;
-                var yPointer = 0;
-                var wBase = 100;
-                var wNo = 40;
-                var wAct = 120;
-                var wActor = wBase * nActor;
-                var wMutu = wBase * 3;
-                var wNote = 120;
-                var wTotal = wNo + wAct + wActor + wMutu + wNote;
-                var yHeadTop = 25;
-                var yHeadBottom = 55;
-                var yHead = yHeadTop + yHeadBottom;
-                var yOffPage = 50;
+                // Membuat style baru (bisa juga memodifikasi existing style)
+                  const vertexStyle = graph.getStylesheet().getDefaultVertexStyle();
+                  vertexStyle[mxConstants.STYLE_FONTSIZE] = 14;
+                  vertexStyle[mxConstants.STYLE_FONTFAMILY] = 'Times New Roman';
 
-                // Calculate container max Height
-                var yTotal = yHead;
+                // Menentukan ukuran dan tata letak semua komponen tabel.
+                var xPointer = 0;  // Penanda posisi X saat ini
+                var yPointer = 0;  // Penanda posisi Y saat ini
+
+                // Menentukan lebar kolom
+                var wBase = 100;         // Lebar dasar per aktor
+                var wNo = 40;            // Lebar kolom "No."
+                var wAct = 120;          // Lebar kolom "Aktivitas"
+                var wActor = wBase * nActor; // Lebar total kolom "Pelaksana"
+                var wMutu = wBase * 3;   // Lebar kolom "Mutu Baku" (3 sub-kolom)
+                var wNote = 120;         // Lebar kolom "Keterangan"
+                var wTotal = wNo + wAct + wActor + wMutu + wNote; // Lebar total tabel
+
+                // Menentukan tinggi setiap baris
+                var yHeadTop = 25;       // Tinggi bagian atas header
+                var yHeadBottom = 55;    // Tinggi bagian bawah header
+                var yHead = yHeadTop + yHeadBottom; // Tinggi total header
+                var yOffPage = 50;       // Tinggi connector off-page
+
+                // Menghitung tinggi total tabel
+                var yTotal = yHead; // Tinggi total tabel
                 for (let i = start; i <= end; i++) {
                     yTotal = yTotal + rowHeights[i-1];
                 }
@@ -713,13 +733,17 @@
                 if (end != nActivity) {
                     yTotal = yTotal + yOffPage;
                 }
+
+                // Pembuatan Container Utama
                 var pool = graph.insertVertex(parent, null, '', xPointer, yPointer, wTotal, yTotal, 'strokeColor=none;');
                 var fcPool = graph.insertVertex(parent, null, '', xPointer, yPointer, wTotal, yTotal, 'fillOpacity=0;strokeColor=none;');
                 var notouch = graph.insertVertex(parent, null, '', xPointer, yPointer, wTotal, yTotal, 'fillOpacity=0;editable=0;movable=0;strokeColor=none;');
                 pool.setConnectable(false);
 
-                // Head
+                // Pembuatan Garis Header Tabel
                 var lane1 = graph.insertVertex(pool, null, '', xPointer, yPointer, wTotal, yHead);
+
+                // Pembuatan garis kolom pada header tabel
                 var no = graph.insertVertex(lane1, null, 'No.', xPointer, yPointer, wNo, yHead);
                 xPointer = xPointer + wNo;
                 var act = graph.insertVertex(lane1, null, 'Aktivitas', xPointer, yPointer, wAct, yHead);
@@ -737,15 +761,19 @@
                 xPointer = xPointer + wMutu;
                 var ket = graph.insertVertex(lane1, null, 'Keterangan', xPointer, yPointer, wNote, yHead);
 
-                var yTemp = yPointer + yHead;
-                // Body
+                var yTemp = yPointer + yHead; // Posisi Y baru setelah header
+
+                // Pembuatan Body Tabel
                 //actorLoc = createArray(nActivity + 1, nActor);
 
                 // Start Off Page
                 if (start != 1) {
                     xPointer = 0;
                     yPointer = 0;
+
+                    // Pembuatan off-page connectors:
                     var lane = graph.insertVertex(pool, null, '', xPointer, yTemp, wTotal, yOffPage);
+
                     var no = graph.insertVertex(lane, null, '', xPointer, yPointer, wNo, yOffPage);
                     xPointer = xPointer + wNo;
                     var act = graph.insertVertex(lane, null, '', xPointer, yPointer, wAct, yOffPage, 'process_text');
@@ -834,7 +862,9 @@
                     yTemp = yTemp + yOffPage;
                 }
 
-                // Flowchart
+
+                // ===========================
+                // 5. Pembuatan Flowchart
                 //var shape = createArray(nActivity, nActor);
                 xStart = wNo + wAct;
                 yPointer = yHead;
@@ -913,6 +943,8 @@
                                     'routingCenterX=1;routingCenterY=0;', true);
                                 point4.geometry.offset = new mxPoint(-d, -(0.5 * d));
                             }
+
+                            // Membuat koneksi antar shape
                             if (start != 1 && y == start - 1) {
                                 graph.insertEdge(fcPool, null, null, shape[nActivity][top].getChildAt(3), shape[y][z].getChildAt(2));
                             }
@@ -975,19 +1007,47 @@
                         }
                          */
 
-                        // Vertical Line
-                        if (graphLocation[k][l] == 1) {
-                            for (var m = 0; m < nActor; m++) {
-                                if (k + 1 == end) {
-                                    break;
-                                }
-                                if (graphLocation[k + 1][m] != 0) {
-                                    if (graphShape[k][l] == 'condition') {
-                                        graph.insertEdge(fcPool, null, 'Ya', shape[k][l].getChildAt(3), shape[k + 1][m].getChildAt(2), 'verticalAlign=bottom;align=right');
-                                    } else {
-                                        graph.insertEdge(fcPool, null, null, shape[k][l].getChildAt(3), shape[k + 1][m].getChildAt(2));
+                         // Vertical Line - Modified version that maintains both normal connections and condition false paths
+                        for (var k = start - 1; k < end; k++) {
+                            // Pertama, tangani koneksi normal (termasuk "Ya" dari condition)
+                            for (var l = 0; l < nActor; l++) {
+                                if (shape[k][l] != 0 && graphShape[k][l] != 'condition') {
+                                    // Untuk shape biasa, buat koneksi ke semua shape di aktivitas berikutnya
+                                    for (var m = 0; m < nActor; m++) {
+                                        if (k + 1 < end && shape[k + 1][m] != 0) {
+                                            graph.insertEdge(fcPool, null, null, shape[k][l].getChildAt(3), shape[k + 1][m].getChildAt(2));
+                                        }
                                     }
+                                }
+                                else if (graphShape[k][l] == 'condition') {
+                                    // Untuk condition shape, buat koneksi "Ya" ke semua shape di aktivitas berikutnya
+                                    for (var m = 0; m < nActor; m++) {
+                                        if (k + 1 < end && shape[k + 1][m] != 0) {
+                                            graph.insertEdge(fcPool, null, 'Ya', shape[k][l].getChildAt(3), shape[k + 1][m].getChildAt(2), 'verticalAlign=bottom;align=right');
+                                        }
+                                    }
+                                }
+                            }
 
+                            // Kedua, tangani khusus untuk kondisi "Tidak" (false path)
+                            for (var l = 0; l < nActor; l++) {
+                                if (graphShape[k][l] == 'condition') {
+                                    convTo2Dim(falseData[k][l]);
+                                    try {
+                                        if (leftDot == 0) {
+                                            graph.insertEdge(fcPool, null, 'Tidak', shape[k][l].getChildAt(0), shape[falseY][falseX].getChildAt(0), 'verticalAlign=bottom;align=left');
+                                            leftDot = 1;
+                                        } else if (rightDot == 0) {
+                                            graph.insertEdge(fcPool, null, 'Tidak', shape[k][l].getChildAt(1), shape[falseY][falseX].getChildAt(1), 'verticalAlign=top;align=right');
+                                            rightDot = 1;
+                                        } else {
+                                            graph.insertEdge(fcPool, null, 'Tidak', shape[k][l].getChildAt(0), shape[falseY][falseX].getChildAt(0), 'verticalAlign=bottom;align=left');
+                                            leftDot = 1;
+                                            rightDot = 0;
+                                        }
+                                    } catch {
+                                        console.log("Condition in first row or target not found");
+                                    }
                                 }
                             }
                         }

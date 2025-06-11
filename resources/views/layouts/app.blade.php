@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'Default Title' }}</title>
     @vite('resources/css/app.css')
+    <!-- @vite('resources/js/app.js') -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
     </style>
 </head>
-@stack('scripts')
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Sidebar -->
@@ -203,5 +203,7 @@
         }
     });
     </script>
+    @stack('scripts')
+
 </body>
 </html>

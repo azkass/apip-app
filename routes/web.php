@@ -127,6 +127,11 @@ Route::middleware("auth", "role:perencana")->group(function () {
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
+    Route::get("/perencana/prosedurpengawasan/create-cover-new", function () {
+        return view("perencana.prosedur.cover-new", [
+            "title" => "Buat Prosedur Pengawasan",
+        ]);
+    });
     Route::get("/perencana/prosedurpengawasan/create-fix", function () {
         return view("perencana.prosedur.create-fix", [
             "title" => "Buat Prosedur Pengawasan",

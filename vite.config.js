@@ -6,14 +6,12 @@ export default defineConfig({
     plugins: [
         tailwindcss(),
         laravel({
-            input: ["resources/css/app.css", "resources/js/app.js"],
+            input: [
+                "resources/css/app.css",
+                "resources/js/app.js",
+                // "resources/js/graph.js",
+            ],
             refresh: true,
         }),
     ],
-    // server: {
-    //     host: true, // agar bisa diakses dari luar
-    //     port: 5173,
-    //     origin: "https://fe.azkass.my.id",
-    //     allowedHosts: ["fe.azkass.my.id"],
-    // },
 });
