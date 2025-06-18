@@ -9,10 +9,11 @@ return new class extends Migration {
     {
         Schema::create("prosedur_pengawasan", function (Blueprint $table) {
             $table->id();
+            $table->string("nomor");
             $table->string("judul");
-            $table->text("deskripsi")->nullable();
-            $table->json("cover");
-            $table->json("isi");
+            // $table->text("deskripsi")->nullable();
+            $table->longText("cover")->nullable();
+            $table->longText("isi")->nullable();
             $table
                 ->enum("status", ["draft", "diajukan", "disetujui"])
                 ->default("draft");

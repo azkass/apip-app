@@ -22,6 +22,7 @@ var falseX = 0;
 var falseY = 0;
 var shapeSelections = [];
 var falseToSelections = [];
+let graph;
 
 export function addCustomActor(selectElement) {
     if (!selectElement || !selectElement.parentElement) {
@@ -555,7 +556,7 @@ export function draw(container, start, end) {
 
         // =====================================
         // 2. Setup Graph Utama
-        var graph = new mxGraph(container);
+        graph = new mxGraph(container);
         graph.setHtmlLabels(true);
         // Graph configure for Contstraint
         graph.disconnectOnMove = false;
@@ -1579,7 +1580,7 @@ export function draw(container, start, end) {
                                         graph.insertEdge(
                                             fcPool,
                                             null,
-                                            "Ya",
+                                            "Sesuai",
                                             shape[k][l].getChildAt(3),
                                             shape[k + 1][m].getChildAt(2),
                                             "verticalAlign=bottom;align=right",
@@ -1693,4 +1694,15 @@ export function draw(container, start, end) {
             graph.getModel().endUpdate();
         }
     }
+}
+
+export function printXml() {
+    const encoder = new mxCodec();
+    const node = encoder.encode(graph.getModel());
+    const xml = mxUtils.getXml(node);
+    // mxUtils.popup(mxUtils.getXml(node));
+
+    // Cetak di konsol atau tampilkan di halaman
+    console.log(xml);
+    // document.getElementById("outputXml").textContent = xml;
 }

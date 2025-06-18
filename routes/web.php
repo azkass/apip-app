@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InstrumenPengawasanController;
 use App\Http\Controllers\RegulasiController;
+use App\Http\Controllers\ProsedurPengawasanController;
 
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
@@ -72,11 +73,26 @@ Route::middleware("auth", "role:pjk")->group(function () {
         "update",
     ])->name("pjk-instrumen-pengawasan.update");
 
-    Route::get("/penanggungjawab/prosedurpengawasan", function () {
-        return view("penanggungjawab.daftarprosedurpengawasan", [
-            "title" => "Prosedur Pengawasan",
-        ]);
-    });
+    Route::get("/penanggungjawab/prosedurpengawasan", [
+        ProsedurPengawasanController::class,
+        "index",
+    ])->name("pjk.prosedur-pengawasan.index");
+    Route::get("/penanggungjawab/prosedurpengawasan/{id}", [
+        ProsedurPengawasanController::class,
+        "detail",
+    ])->name("pjk.prosedur-pengawasan.detail");
+    Route::get("/penanggungjawab/prosedurpengawasan/{id}/edit", [
+        ProsedurPengawasanController::class,
+        "edit",
+    ])->name("pjk.prosedur-pengawasan.edit");
+    Route::put("/penanggungjawab/prosedurpengawasan/{id}", [
+        ProsedurPengawasanController::class,
+        "update",
+    ])->name("pjk.prosedur-pengawasan.update");
+    Route::delete("/penanggungjawab/prosedurpengawasan/{id}", [
+        ProsedurPengawasanController::class,
+        "delete",
+    ])->name("pjk.prosedur-pengawasan.delete");
 });
 Route::middleware("auth", "role:perencana")->group(function () {
     Route::get("/perencana/dashboard", function () {
@@ -117,18 +133,33 @@ Route::middleware("auth", "role:perencana")->group(function () {
         "delete",
     ])->name("instrumen-pengawasan.delete");
 
-    Route::get("/perencana/prosedurpengawasan", function () {
-        return view("perencana.prosedur.daftarprosedurpengawasan", [
-            "title" => "Prosedur Pengawasan",
-        ]);
-    });
+    Route::get("/perencana/prosedurpengawasan", [
+        ProsedurPengawasanController::class,
+        "index",
+    ])->name("perencana.prosedur-pengawasan.index");
+    Route::get("/perencana/prosedurpengawasan/create", [
+        ProsedurPengawasanController::class,
+        "create",
+    ])->name("prosedur-pengawasan.create");
+    Route::post("/perencana/prosedurpengawasan", [
+        ProsedurPengawasanController::class,
+        "store",
+    ])->name("prosedur-pengawasan.store");
+    Route::get("/perencana/prosedurpengawasan/edit/{id}", [
+        ProsedurPengawasanController::class,
+        "edit",
+    ])->name("perencana.prosedur-pengawasan.edit");
+    Route::get("/perencana/prosedurpengawasan/detail/{id}", [
+        ProsedurPengawasanController::class,
+        "detail",
+    ])->name("perencana.prosedur-pengawasan.detail");
+    Route::delete("/perencana/prosedurpengawasan/delete/{id}", [
+        ProsedurPengawasanController::class,
+        "delete",
+    ])->name("perencana.prosedur-pengawasan.delete");
+
     Route::get("/perencana/prosedurpengawasan/create-cover", function () {
         return view("perencana.prosedur.cover", [
-            "title" => "Buat Prosedur Pengawasan",
-        ]);
-    });
-    Route::get("/perencana/prosedurpengawasan/create-cover-new", function () {
-        return view("perencana.prosedur.cover-new", [
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });

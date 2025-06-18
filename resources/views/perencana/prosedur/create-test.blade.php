@@ -52,7 +52,11 @@
         <div id="graphContainerBox" class="overflow-auto">
             <div id="graphContainer"></div>
         </div>
+        <button id="printXml" class="bg-gray-500 hover:bg-gray-600 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm">Print XML</button>
     </div>
+
+    <!-- console.log XML Diagram -->
+
 </div>
 @endsection
 
@@ -69,6 +73,7 @@
             loadData,
             preview,
             draw,
+            printXml, //console.log XML Diagram
         } from "{{ Vite::asset('resources/js/graph.js') }}";
 
         // Inisialisasi event listeners
@@ -93,6 +98,13 @@
 
             const previewBtn = document.querySelector("#preview");
             if (previewBtn) previewBtn.addEventListener("click", preview);
+
+            // console.log XML Diagram
+            const printXmlBtn = document.querySelector("#printXml");
+            if (printXmlBtn) printXmlBtn.addEventListener("click", printXml);
+
+            const outputXmlBtn = document.querySelector("#outputXml");
+            if (outputXmlBtn) outputXmlBtn.addEventListener("click", outputXml);
 
             // Event delegation untuk actor-select
             const formContainer = document.querySelector("#formContainer");
