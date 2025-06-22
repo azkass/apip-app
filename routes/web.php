@@ -153,6 +153,10 @@ Route::middleware("auth", "role:perencana")->group(function () {
         ProsedurPengawasanController::class,
         "detail",
     ])->name("perencana.prosedur-pengawasan.detail");
+    Route::put("/perencana/prosedurpengawasan/{id}", [
+        ProsedurPengawasanController::class,
+        "update",
+    ])->name("perencana.prosedur-pengawasan.update");
     Route::delete("/perencana/prosedurpengawasan/delete/{id}", [
         ProsedurPengawasanController::class,
         "delete",

@@ -54,6 +54,23 @@ class ProsedurPengawasan
         ]);
     }
 
+    public static function update($id, $data)
+    {
+        // Mengubah judul menjadi title case sebelum update
+        $data["judul"] = ucwords(strtolower($data["judul"]));
+        return DB::update(
+            "UPDATE prosedur_pengawasan SET judul = ?, nomor = ?, status = ?, pengelola_id = ?, pembuat_id = ?, updated_at = NOW() WHERE id = ?",
+            [
+                $data["judul"],
+                $data["nomor"],
+                $data["status"],
+                $data["pengelola_id"],
+                $data["pembuat_id"],
+                $id,
+            ]
+        );
+    }
+
     public static function detail($id)
     {
         return DB::selectOne(

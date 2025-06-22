@@ -426,22 +426,22 @@ export function loadData() {
 
         rowHeights.push(getRowHeight(i - 1));
     }
-    console.log(
-        JSON.stringify(
-            {
-                nActivity,
-                nActor,
-                actorNames,
-                activities,
-                tools,
-                times,
-                outputs,
-                notes,
-            },
-            null,
-            2,
-        ),
-    );
+    // console.log(
+    //     JSON.stringify(
+    //         {
+    //             nActivity,
+    //             nActor,
+    //             actorNames,
+    //             activities,
+    //             tools,
+    //             times,
+    //             outputs,
+    //             notes,
+    //         },
+    //         null,
+    //         2,
+    //     ),
+    // );
 }
 
 export function preview() {
@@ -1692,6 +1692,48 @@ export function draw(container, start, end) {
         } finally {
             // Updates the display
             graph.getModel().endUpdate();
+            console.log(
+                JSON.stringify(
+                    {
+                        nActor: nActor,
+                        actorName: actorName,
+                        nActivity: nActivity,
+                        rowHeights: rowHeights,
+                        activities: activities,
+                        tools: tools,
+                        times: times,
+                        outputs: outputs,
+                        notes: notes,
+                        graphLocation: graphLocation,
+                        graphShape: graphShape,
+                        shape: extractCellData(shape),
+                        falseData: falseData,
+                        actorLoc: extractCellData(actorLoc), // Gunakan fungsi filter khusus
+                    },
+                    null,
+                ),
+            );
+
+            // Fungsi untuk mengekstrak data penting dari mxCell
+            function extractCellData(cells) {
+                return cells.map((row) => {
+                    return row.map((cell) => {
+                        if (!cell) return null;
+                        return {
+                            id: cell.getId(),
+                            value: cell.getValue(),
+                            geometry: cell.getGeometry()
+                                ? {
+                                      x: cell.getGeometry().x,
+                                      y: cell.getGeometry().y,
+                                      width: cell.getGeometry().width,
+                                      height: cell.getGeometry().height,
+                                  }
+                                : null,
+                        };
+                    });
+                });
+            }
         }
     }
 }

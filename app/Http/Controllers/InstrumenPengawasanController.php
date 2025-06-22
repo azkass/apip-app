@@ -214,16 +214,28 @@ class InstrumenPengawasanController extends Controller
         $updatedInstrumenPengawasan = InstrumenPengawasan::detail($id);
 
         // Redirect sesuai role user
+        // if (Auth::user()->role == "perencana") {
+        //     return view("perencana.instrumen.detailinstrumenpengawasan", [
+        //         "instrumenPengawasan" => $updatedInstrumenPengawasan,
+        //         "title" => "Detail Instrumen Pengawasan",
+        //     ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
+        // } elseif (Auth::user()->role == "pjk") {
+        //     return view("penanggungjawab.instrumen.detailinstrumenpengawasan", [
+        //         "instrumenPengawasan" => $updatedInstrumenPengawasan,
+        //         "title" => "Detail Instrumen Pengawasan",
+        //     ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
+        // }
+        //
         if (Auth::user()->role == "perencana") {
-            return view("perencana.instrumen.detailinstrumenpengawasan", [
-                "instrumenPengawasan" => $updatedInstrumenPengawasan,
-                "title" => "Detail Instrumen Pengawasan",
-            ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
+            return redirect()->route(
+                "perencana.instrumen.detailinstrumenpengawasan",
+                $updatedInstrumenPengawasan->id
+            );
         } elseif (Auth::user()->role == "pjk") {
-            return view("penanggungjawab.instrumen.detailinstrumenpengawasan", [
-                "instrumenPengawasan" => $updatedInstrumenPengawasan,
-                "title" => "Detail Instrumen Pengawasan",
-            ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
+            return redirect()->route(
+                "penanggungjawab.instrumen.detailinstrumenpengawasan",
+                $updatedInstrumenPengawasan->id
+            );
         }
     }
 

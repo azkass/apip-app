@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->string("nomor");
             $table->string("judul");
             // $table->text("deskripsi")->nullable();
-            $table->longText("cover")->nullable();
-            $table->longText("isi")->nullable();
+            $table->json("cover")->nullable();
+            $table->json("isi")->nullable();
             $table
                 ->enum("status", ["draft", "diajukan", "disetujui"])
                 ->default("draft");

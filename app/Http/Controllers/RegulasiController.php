@@ -141,10 +141,10 @@ class RegulasiController extends Controller
         // Ambil data yang sudah diupdate
         $updatedRegulasi = Regulasi::detail($id);
         // $regulasi = Regulasi::detail($id);
-        return view("perencana.regulasi.detailregulasi", [
-            "regulasi" => $updatedRegulasi,
-            "title" => "Detail Regulasi",
-        ]);
+        return redirect()->route(
+            "perencana.regulasi.detail",
+            $updatedRegulasi->id
+        );
     }
 
     public function delete($id)

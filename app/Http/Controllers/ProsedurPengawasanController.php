@@ -111,6 +111,35 @@ class ProsedurPengawasanController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+
+        $validatedData = $request->validate([
+            "judul" => "required|max:255",
+            "nomor" => "required|max:255",
+            "status" => "required|max:255",
+            "pengelola_id" => "required|exists:users,id",
+            "pembuat_id" => "required|exists:users,id",
+        ]);
+
+        ProsedurPengawasan::update($id, $request);
+
+        $updatedProsedurPengawasan = ProsedurPengawasan::detail($id);
+
+        if (Auth::user()->role == "perencana") {
+            return redirect()->route(
+                "perencana.prosedur-pengawasan.detail",
+                $updatedProsedurPengawasan->id
+            );
+        } elseif (Auth::user()->role == "pjk") {
+            return redirect()->route(
+                "penanggungjawab.prosedur.detail",
+                $updatedProsedurPengawasan->id
+            );
+        }
+    }
+
     public function delete($id)
     {
         ProsedurPengawasan::delete($id);
