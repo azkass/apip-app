@@ -177,6 +177,14 @@ Route::middleware("auth", "role:perencana")->group(function () {
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
+    Route::get("/perencana/prosedurpengawasan/edit-body/{id}", [
+        ProsedurPengawasanController::class,
+        "editBody",
+    ])->name("perencana.prosedur-pengawasan.edit-body");
+    Route::put("/perencana/prosedurpengawasan/body/{id}", [
+        ProsedurPengawasanController::class,
+        "updateBody",
+    ])->name("perencana.prosedur-pengawasan.update-body");
 
     Route::get("/perencana/regulasi", [
         RegulasiController::class,

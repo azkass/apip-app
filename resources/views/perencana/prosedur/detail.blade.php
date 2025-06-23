@@ -5,16 +5,18 @@
 
     <!-- Tambahkan container dan tombol untuk graph -->
     <div class="container mt-4 px-4">
-        <button id="generateGraphBtn" class="mb-4 bg-gray-500 hover:bg-gray-600 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm">Lihat Dokumen SOP</button>
-        <div id="graphContainerBox" style="width: 100%; overflow-x: auto;">
+        <div id="graphContainerBox">
             <div id="graphContainer"></div>
         </div>
     </div>
 
     @push('scripts')
         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                generateGraph();
+            });
             // Data statis untuk contoh
-            const staticGraphData = {"nActor":2,"actorName":["Inspektur Wilayah","Pengendali Teknis"],"nActivity":5,"rowHeights":[80,80,80,80,80],"activities":["","","","",""],"tools":["","","","",""],"times":["","","","",""],"outputs":["","","","",""],"notes":["","","","",""],"graphLocation":[[1,0],[0,1],[0,1],[1,0],[1,0]],"graphShape":[["state",0],[0,"process"],[0,"condition"],["process",0],["state",0]],"shape":[[{"id":"71","value":"","geometry":{"x":185,"y":105,"width":50,"height":30}},null],[null,{"id":"77","value":"","geometry":{"x":285,"y":187.5,"width":50,"height":25}}],[null,{"id":"83","value":"","geometry":{"x":290,"y":260,"width":40,"height":40}}],[{"id":"89","value":"","geometry":{"x":185,"y":347.5,"width":50,"height":25}},null],[{"id":"95","value":"","geometry":{"x":185,"y":425,"width":50,"height":30}},null],[null,null],[null,null]],"falseData":[[null,null],[null,null],[null,"4"],[null,null],[null,null]],"actorLoc":[[{"id":"20","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"21","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[{"id":"31","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"32","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[{"id":"42","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"43","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[{"id":"53","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"54","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[{"id":"64","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"65","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[null,null]]};
+            const staticGraphData = {"nActor":2,"actorName":["Inspektur Wilayah","Pengendali Teknis"],"nActivity":2,"rowHeights":[80,80],"activities":["",""],"tools":["",""],"times":["",""],"outputs":["",""],"notes":["",""],"graphLocation":[[1,0],[0,1]],"graphShape":[["state",0],[0,"process"]],"shape":[[{"id":"38","value":"","geometry":{"x":185,"y":105,"width":50,"height":30}},null],[null,{"id":"44","value":"","geometry":{"x":285,"y":187.5,"width":50,"height":25}}],[null,null],[null,null]],"falseData":[[null,null],[null,null]],"actorLoc":[[{"id":"20","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"21","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[{"id":"31","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"32","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[null,null]]};
             // Fungsi untuk generate graph
             function generateGraph() {
                 // Assign data statis ke variabel global
@@ -38,6 +40,7 @@
                 const container = document.getElementById('graphContainer');
                 draw(container, 1, staticGraphData.nActivity);
             }
+
             function draw(container, start, end) {
                 // =====================================
                 // 1. Inisialisasi dan Konfigurasi Dasar
@@ -1219,9 +1222,6 @@
                     falseY = falseY - 1;
                 }
             }
-
-            // Event listener untuk tombol
-            document.getElementById('generateGraphBtn').addEventListener('click', generateGraph);
         </script>
 
         <!-- Set mxBasePath sebelum load mxClient -->

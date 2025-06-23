@@ -129,15 +129,32 @@ class ProsedurPengawasanController extends Controller
 
         if (Auth::user()->role == "perencana") {
             return redirect()->route(
-                "perencana.prosedur-pengawasan.detail",
+                // "perencana.prosedur-pengawasan.detail",
+                "perencana.prosedur-pengawasan.edit-body",
                 $updatedProsedurPengawasan->id
             );
         } elseif (Auth::user()->role == "pjk") {
             return redirect()->route(
-                "penanggungjawab.prosedur.detail",
+                "pjk.prosedur-pengawasan.detail",
                 $updatedProsedurPengawasan->id
             );
         }
+    }
+
+    public function editBody($id)
+    {
+        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+
+        return view("perencana.prosedur.create-test", [
+            "prosedurPengawasan" => $prosedurPengawasan,
+            // "is_pjk" => $is_pjk,
+            "title" => "Edit Prosedur Pengawasan",
+        ]);
+    }
+
+    public function updateBody(Request $request, $id)
+    {
+        $prosedurPengawasan = ProsedurPengawasan::detail($id);
     }
 
     public function delete($id)

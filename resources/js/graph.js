@@ -500,6 +500,19 @@ export function preview() {
     var mainContainerBox = document.getElementById("graphContainerBox");
     mainContainerBox.style = "height:" + totalHeight + "px;";
     return true;
+
+    // const dataBody = draw(container, start, end - 1);
+    // try {
+    //         // Untuk mengirim string JSON, perlu set header secara manual
+    //         const response = await axios.put('/perencana/prosedurpengawasan/body/{id}', dataBody, {
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+    //         console.log('Data berhasil dikirim:', response.data);
+    //     } catch (error) {
+    //         console.error('Gagal mengirim data:', error);
+    //     }
 }
 
 export function convTo2Dim(x) {
@@ -1692,27 +1705,49 @@ export function draw(container, start, end) {
         } finally {
             // Updates the display
             graph.getModel().endUpdate();
-            console.log(
-                JSON.stringify(
-                    {
-                        nActor: nActor,
-                        actorName: actorName,
-                        nActivity: nActivity,
-                        rowHeights: rowHeights,
-                        activities: activities,
-                        tools: tools,
-                        times: times,
-                        outputs: outputs,
-                        notes: notes,
-                        graphLocation: graphLocation,
-                        graphShape: graphShape,
-                        shape: extractCellData(shape),
-                        falseData: falseData,
-                        actorLoc: extractCellData(actorLoc), // Gunakan fungsi filter khusus
-                    },
-                    null,
-                ),
+            // console.log(
+            //     JSON.stringify(
+            //         {
+            //             nActor: nActor,
+            //             actorName: actorName,
+            //             nActivity: nActivity,
+            //             rowHeights: rowHeights,
+            //             activities: activities,
+            //             tools: tools,
+            //             times: times,
+            //             outputs: outputs,
+            //             notes: notes,
+            //             graphLocation: graphLocation,
+            //             graphShape: graphShape,
+            //             shape: extractCellData(shape),
+            //             falseData: falseData,
+            //             actorLoc: extractCellData(actorLoc), // Gunakan fungsi filter khusus
+            //         },
+            //         null,
+            //     ),
+            // );
+
+            const dataBody = JSON.stringify(
+                {
+                    nActor: nActor,
+                    actorName: actorName,
+                    nActivity: nActivity,
+                    rowHeights: rowHeights,
+                    activities: activities,
+                    tools: tools,
+                    times: times,
+                    outputs: outputs,
+                    notes: notes,
+                    graphLocation: graphLocation,
+                    graphShape: graphShape,
+                    shape: extractCellData(shape),
+                    falseData: falseData,
+                    actorLoc: extractCellData(actorLoc), // Gunakan fungsi filter khusus
+                },
+                null,
             );
+            // return dataBody;
+            console.log(dataBody);
 
             // Fungsi untuk mengekstrak data penting dari mxCell
             function extractCellData(cells) {
