@@ -172,11 +172,6 @@ Route::middleware("auth", "role:perencana")->group(function () {
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
-    Route::get("/perencana/prosedurpengawasan/create-test", function () {
-        return view("perencana.prosedur.create-test", [
-            "title" => "Buat Prosedur Pengawasan",
-        ]);
-    });
     Route::get("/perencana/prosedurpengawasan/edit-body/{id}", [
         ProsedurPengawasanController::class,
         "editBody",

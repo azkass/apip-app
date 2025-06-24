@@ -9,7 +9,8 @@ export default defineConfig({
             input: [
                 "resources/css/app.css",
                 "resources/js/app.js",
-                // "resources/js/graph.js",
+                "resources/js/graph.js",
+                "resources/js/editBody.js",
             ],
             refresh: true,
         }),

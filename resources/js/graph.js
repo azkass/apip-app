@@ -140,9 +140,9 @@ export function saveActor() {
         const savedActivities = [...activities];
         const savedTools = [...tools];
         const savedTimes = [...times];
-        const savedOutputs = [...outputs]; 
+        const savedOutputs = [...outputs];
         const savedNotes = [...notes];
-        
+
         // Perbarui shape selections untuk jumlah aktor baru
         shapeSelections = shapeSelections.map((row) =>
             Array(nActor)
@@ -154,7 +154,7 @@ export function saveActor() {
                 .fill()
                 .map((_, i) => (i < row.length ? row[i] : "")),
         );
-        
+
         // Jika flag doNotOverwriteActivities aktif, kembalikan data aktivitas yang disimpan
         if (window.doNotOverwriteActivities) {
             activities = savedActivities;
@@ -164,7 +164,7 @@ export function saveActor() {
             notes = savedNotes;
         }
     }
-    
+
     setupActivityForm();
     return true;
 }
@@ -211,7 +211,7 @@ export function loadExistingData(jsonData) {
         console.error("No JSON data provided to loadExistingData");
         return false;
     }
-    
+
     try {
         // Load actor data
         if (jsonData.actorName && Array.isArray(jsonData.actorName)) {
@@ -219,7 +219,7 @@ export function loadExistingData(jsonData) {
             nActor = jsonData.nActor || actorNames.length;
             actorName = actorNames;
         }
-        
+
         // Load activity data
         if (jsonData.activities && Array.isArray(jsonData.activities)) {
             // Simpan ke variabel global
@@ -230,7 +230,7 @@ export function loadExistingData(jsonData) {
             outputs = jsonData.outputs || Array(activities.length).fill("");
             notes = jsonData.notes || Array(activities.length).fill("");
             nActivity = jsonData.nActivity || activities.length;
-            
+
             // Initialize shape selections from graphShape if available
             if (jsonData.graphShape && Array.isArray(jsonData.graphShape)) {
                 shapeSelections = [];
@@ -238,15 +238,22 @@ export function loadExistingData(jsonData) {
                     const row = [];
                     for (let j = 0; j < jsonData.graphShape[i].length; j++) {
                         let shapeValue = "0"; // default
-                        switch(jsonData.graphShape[i][j]) {
+                        switch (jsonData.graphShape[i][j]) {
                             case "state":
                                 if (i === 0) {
                                     shapeValue = "1"; // Mulai
                                 } else {
                                     // Check if this is the last activity with state
                                     let isLast = true;
-                                    for (let k = i+1; k < jsonData.graphShape.length; k++) {
-                                        if (jsonData.graphShape[k][j] === "state") {
+                                    for (
+                                        let k = i + 1;
+                                        k < jsonData.graphShape.length;
+                                        k++
+                                    ) {
+                                        if (
+                                            jsonData.graphShape[k][j] ===
+                                            "state"
+                                        ) {
                                             isLast = false;
                                             break;
                                         }
@@ -269,29 +276,33 @@ export function loadExistingData(jsonData) {
                 }
             } else {
                 // Create default shape selections
-                shapeSelections = Array(nActivity).fill().map(() => Array(nActor).fill("0"));
+                shapeSelections = Array(nActivity)
+                    .fill()
+                    .map(() => Array(nActor).fill("0"));
             }
-            
+
             // Initialize false to selections
             if (jsonData.falseData && Array.isArray(jsonData.falseData)) {
                 falseToSelections = jsonData.falseData.map((row) => {
                     return row.map((cell) => cell || "");
                 });
             } else {
-                falseToSelections = Array(nActivity).fill().map(() => Array(nActor).fill(""));
+                falseToSelections = Array(nActivity)
+                    .fill()
+                    .map(() => Array(nActor).fill(""));
             }
         }
-        
+
         rowHeights = jsonData.rowHeights || [];
         graphLocation = jsonData.graphLocation;
         graphShape = jsonData.graphShape;
-        
+
         // Setup the activity form with loaded data
         setupActivityForm();
-        
+
         // Reset loading flag after setup
         window.isLoadingExistingData = false;
-        
+
         // Explicitly make the diagram section visible
         const diagramSection = document.getElementById("diagramSection");
         if (diagramSection) {
@@ -299,7 +310,7 @@ export function loadExistingData(jsonData) {
         } else {
             console.error("Could not find diagram section element");
         }
-        
+
         return true;
     } catch (e) {
         console.error("Error loading existing data:", e);
@@ -313,16 +324,18 @@ export function setupActivityForm() {
         alert("Silakan simpan nama pelaksana terlebih dahulu!");
         return;
     }
-    
+
     // Hanya baca data dari form jika bukan berasal dari loading data
     if (!window.isLoadingExistingData) {
         // Simpan data sebelum render ulang dengan cara lebih efisien
         for (let i = 0; i < nActivity; i++) {
             const actNum = i + 1;
-            activities[i] = document.getElementById(`act-${actNum}`)?.value || "";
+            activities[i] =
+                document.getElementById(`act-${actNum}`)?.value || "";
             tools[i] = document.getElementById(`tool-${actNum}`)?.value || "";
             times[i] = document.getElementById(`time-${actNum}`)?.value || "";
-            outputs[i] = document.getElementById(`output-${actNum}`)?.value || "";
+            outputs[i] =
+                document.getElementById(`output-${actNum}`)?.value || "";
             notes[i] = document.getElementById(`note-${actNum}`)?.value || "";
             const currentShapes = [];
             const currentFalseTos = [];
