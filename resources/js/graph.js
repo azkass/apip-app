@@ -1792,13 +1792,38 @@ export function draw(container, start, end) {
     }
 }
 
-// export function detail(GraphData) {
-//     // const container = document.createElement("graphContainer");
-//     const container = document.getElementById("graphContainer");
-//     const GraphData = GraphData;
-//     // container.innerHTML = "";
+function initDetailPage() {
+    // Cek jika kita berada di halaman detail yang memiliki data `prosedurDetailData`
+    if (window.prosedurDetailData) {
+        const GraphData = window.prosedurDetailData;
 
-//     draw(container, 1, GraphData.nActivity);
-//     console.log("Type of GraphData on detail:", typeof GraphData);
-//     console.log("Graph Data on detail:", GraphData);
-// }
+        // Pastikan data tidak kosong
+        if (GraphData && Object.keys(GraphData).length > 0) {
+            // Assign data dari global variable ke module-level variables
+            nActor = GraphData.nActor;
+            actorName = GraphData.actorName;
+            nActivity = GraphData.nActivity;
+            rowHeights = GraphData.rowHeights;
+            activities = GraphData.activities;
+            tools = GraphData.tools;
+            times = GraphData.times;
+            outputs = GraphData.outputs;
+            notes = GraphData.notes;
+            graphLocation = GraphData.graphLocation;
+            graphShape = GraphData.graphShape;
+            shape = GraphData.shape;
+            falseData = GraphData.falseData;
+            actorLoc = GraphData.actorLoc;
+
+            const container = document.getElementById("graphContainer");
+            if (container) {
+                // Panggil fungsi draw() dengan container dan range activity
+                draw(container, 1, GraphData.nActivity);
+                console.log("data db:", typeof GraphData);
+                console.log("data db:", GraphData);
+            }
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", initDetailPage);
