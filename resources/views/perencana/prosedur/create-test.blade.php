@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="bg-white rounded-md mb-4" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}">
+<div class="bg-white rounded-md mb-4" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}" data-prosedur-isi="{{ $prosedurPengawasan->isi ?? '' }}">
     <!-- Form Input Pelaksana -->
     @csrf
     <div class="p-4" id="formContainer">
@@ -60,6 +60,13 @@
         </div>
     </div>
 
+    <!-- Debug Info (Hidden in production) -->
+    <div id="debugInfo" class="hidden p-4 bg-gray-100 rounded-lg mt-4">
+        <h3 class="text-lg font-semibold mb-2">Debug Info</h3>
+        <div id="debugContent" class="whitespace-pre-wrap bg-white p-2 rounded border">
+            <!-- Debug content will be inserted here -->
+        </div>
+    </div>
 
 </div>
 @endsection
@@ -75,15 +82,86 @@
             deleteLastActivity,
             setupActivityForm,
             loadData,
+            loadExistingData,
             preview,
             draw,
         } from "{{ Vite::asset('resources/js/graph.js') }}";
 
         // Inisialisasi event listeners
         document.addEventListener("DOMContentLoaded", () => {
-            // Tambahkan form pertama
-            addActor();
+            // Cek apakah ada data yang sudah tersimpan
+            const prosedurContainer = document.getElementById('prosedur-container');
+            const prosedurIsi = prosedurContainer.dataset.prosedurIsi;
+            
+            // For debugging - uncomment in development
+            // const debugInfo = document.getElementById('debugInfo');
+            // const debugContent = document.getElementById('debugContent');
+            // debugInfo.classList.remove('hidden');
+            
+            if (prosedurIsi && prosedurIsi !== '') {
+                try {
+                    // console.log('Loading existing data from JSON');
+                    const jsonData = JSON.parse(prosedurIsi);
+                    
+                    // Display JSON data in debug area for inspection
+                    // if (debugContent) {
+                    //     debugContent.textContent = JSON.stringify(jsonData, null, 2);
+                    // }
+                    
+                    if (jsonData && jsonData.actorName && jsonData.actorName.length > 0) {
+                        // Step 1: First create all the actor forms needed
+                        for (let i = 0; i < jsonData.actorName.length; i++) {
+                            addActor();
+                        }
+                        
+                        // Step 2: Set the actor values in the dropdowns
+                        const actorSelects = document.querySelectorAll('.actor-select');
+                        actorSelects.forEach((select, index) => {
+                            if (index < jsonData.actorName.length) {
+                                const actorValue = jsonData.actorName[index];
+                                
+                                // Check if the actor value exists in the options
+                                const optionExists = Array.from(select.options).some(
+                                    option => option.value === actorValue
+                                );
+                                
+                                if (optionExists) {
+                                    select.value = actorValue;
+                                } else if (actorValue) {
+                                    // Handle custom actor
+                                    select.value = 'new-actor';
+                                    addCustomActor(select);
+                                    const customInput = select.parentElement.querySelector('.custom-actor-input');
+                                    if (customInput) {
+                                        customInput.value = actorValue;
+                                        customInput.classList.remove('hidden');
+                                    }
+                                }
+                            }
+                        });
+                        
+                        // Ubah urutan: load existing data terlebih dahulu
+                        // untuk mengisi data aktivitas dan bentuk
+                        loadExistingData(jsonData);
+                        
+                        // Lalu panggil saveActor tapi cegah menimpa data
+                        window.doNotOverwriteActivities = true;
+                        saveActor();
+                        window.doNotOverwriteActivities = false;
+                    } else {
+                        // console.warn('No valid actor data found in JSON');
+                        addActor(); // Add default first actor form
+                    }
+                } catch (e) {
+                    console.error('Error parsing JSON data:', e);
+                    addActor(); // Add default first actor form if loading fails
+                }
+            } else {
+                // console.log('No existing data found, starting with a blank form');
+                addActor(); // Add default first actor form
+            }
 
+            // Set up event listeners
             const addActorBtn = document.querySelector("#add-actor");
             if (addActorBtn) addActorBtn.addEventListener("click", addActor);
 
@@ -102,7 +180,7 @@
             const previewBtn = document.querySelector("#preview");
             if (previewBtn) previewBtn.addEventListener("click", preview);
 
-            // Event delegation untuk actor-select
+            // Event delegation for actor-select changes
             const formContainer = document.querySelector("#formContainer");
             if (formContainer) {
                 formContainer.addEventListener("change", function(event) {

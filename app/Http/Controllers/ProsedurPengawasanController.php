@@ -144,10 +144,9 @@ class ProsedurPengawasanController extends Controller
     public function editBody($id)
     {
         $prosedurPengawasan = ProsedurPengawasan::detail($id);
-
+        
         return view("perencana.prosedur.create-test", [
             "prosedurPengawasan" => $prosedurPengawasan,
-            // "is_pjk" => $is_pjk,
             "title" => "Edit Prosedur Pengawasan",
         ]);
     }

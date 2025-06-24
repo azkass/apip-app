@@ -136,6 +136,14 @@ export function saveActor() {
     actorNames = newActorNames;
     // Adjust selections jika jumlah aktor berubah
     if (prevNActor !== nActor) {
+        // Simpan data aktivitas jika kita sedang memuat data existing
+        const savedActivities = [...activities];
+        const savedTools = [...tools];
+        const savedTimes = [...times];
+        const savedOutputs = [...outputs]; 
+        const savedNotes = [...notes];
+        
+        // Perbarui shape selections untuk jumlah aktor baru
         shapeSelections = shapeSelections.map((row) =>
             Array(nActor)
                 .fill()
@@ -146,8 +154,19 @@ export function saveActor() {
                 .fill()
                 .map((_, i) => (i < row.length ? row[i] : "")),
         );
+        
+        // Jika flag doNotOverwriteActivities aktif, kembalikan data aktivitas yang disimpan
+        if (window.doNotOverwriteActivities) {
+            activities = savedActivities;
+            tools = savedTools;
+            times = savedTimes;
+            outputs = savedOutputs;
+            notes = savedNotes;
+        }
     }
+    
     setupActivityForm();
+    return true;
 }
 
 export function addActivity() {
@@ -187,33 +206,138 @@ export function deleteLastActivity() {
     }
 }
 
-// function untuk membuat formulir input aktivitas {
+export function loadExistingData(jsonData) {
+    if (!jsonData) {
+        console.error("No JSON data provided to loadExistingData");
+        return false;
+    }
+    
+    try {
+        // Load actor data
+        if (jsonData.actorName && Array.isArray(jsonData.actorName)) {
+            actorNames = jsonData.actorName;
+            nActor = jsonData.nActor || actorNames.length;
+            actorName = actorNames;
+        }
+        
+        // Load activity data
+        if (jsonData.activities && Array.isArray(jsonData.activities)) {
+            // Simpan ke variabel global
+            window.isLoadingExistingData = true;
+            activities = jsonData.activities;
+            tools = jsonData.tools || Array(activities.length).fill("");
+            times = jsonData.times || Array(activities.length).fill("");
+            outputs = jsonData.outputs || Array(activities.length).fill("");
+            notes = jsonData.notes || Array(activities.length).fill("");
+            nActivity = jsonData.nActivity || activities.length;
+            
+            // Initialize shape selections from graphShape if available
+            if (jsonData.graphShape && Array.isArray(jsonData.graphShape)) {
+                shapeSelections = [];
+                for (let i = 0; i < jsonData.graphShape.length; i++) {
+                    const row = [];
+                    for (let j = 0; j < jsonData.graphShape[i].length; j++) {
+                        let shapeValue = "0"; // default
+                        switch(jsonData.graphShape[i][j]) {
+                            case "state":
+                                if (i === 0) {
+                                    shapeValue = "1"; // Mulai
+                                } else {
+                                    // Check if this is the last activity with state
+                                    let isLast = true;
+                                    for (let k = i+1; k < jsonData.graphShape.length; k++) {
+                                        if (jsonData.graphShape[k][j] === "state") {
+                                            isLast = false;
+                                            break;
+                                        }
+                                    }
+                                    shapeValue = isLast ? "4" : "2"; // Selesai or Proses
+                                }
+                                break;
+                            case "process":
+                                shapeValue = "2"; // Proses
+                                break;
+                            case "condition":
+                                shapeValue = "3"; // Pilihan
+                                break;
+                            default:
+                                shapeValue = "0"; // Tidak ada
+                        }
+                        row.push(shapeValue);
+                    }
+                    shapeSelections.push(row);
+                }
+            } else {
+                // Create default shape selections
+                shapeSelections = Array(nActivity).fill().map(() => Array(nActor).fill("0"));
+            }
+            
+            // Initialize false to selections
+            if (jsonData.falseData && Array.isArray(jsonData.falseData)) {
+                falseToSelections = jsonData.falseData.map((row) => {
+                    return row.map((cell) => cell || "");
+                });
+            } else {
+                falseToSelections = Array(nActivity).fill().map(() => Array(nActor).fill(""));
+            }
+        }
+        
+        rowHeights = jsonData.rowHeights || [];
+        graphLocation = jsonData.graphLocation;
+        graphShape = jsonData.graphShape;
+        
+        // Setup the activity form with loaded data
+        setupActivityForm();
+        
+        // Reset loading flag after setup
+        window.isLoadingExistingData = false;
+        
+        // Explicitly make the diagram section visible
+        const diagramSection = document.getElementById("diagramSection");
+        if (diagramSection) {
+            diagramSection.classList.remove("hidden");
+        } else {
+            console.error("Could not find diagram section element");
+        }
+        
+        return true;
+    } catch (e) {
+        console.error("Error loading existing data:", e);
+        window.isLoadingExistingData = false;
+        return false;
+    }
+}
+
 export function setupActivityForm() {
     if (actorNames.length === 0) {
         alert("Silakan simpan nama pelaksana terlebih dahulu!");
         return;
     }
-    // Simpan data sebelum render ulang dengan cara lebih efisien
-    for (let i = 0; i < nActivity; i++) {
-        const actNum = i + 1;
-        activities[i] = document.getElementById(`act-${actNum}`)?.value || "";
-        tools[i] = document.getElementById(`tool-${actNum}`)?.value || "";
-        times[i] = document.getElementById(`time-${actNum}`)?.value || "";
-        outputs[i] = document.getElementById(`output-${actNum}`)?.value || "";
-        notes[i] = document.getElementById(`note-${actNum}`)?.value || "";
-        const currentShapes = [];
-        const currentFalseTos = [];
-        for (let j = 0; j < nActor; j++) {
-            const actorNum = j + 1;
-            currentShapes[j] =
-                document.getElementById(`gShape-${actNum}-${actorNum}`)
-                    ?.value || "0";
-            currentFalseTos[j] =
-                document.getElementById(`falseTo-${actNum}-${actorNum}`)
-                    ?.value || "";
+    
+    // Hanya baca data dari form jika bukan berasal dari loading data
+    if (!window.isLoadingExistingData) {
+        // Simpan data sebelum render ulang dengan cara lebih efisien
+        for (let i = 0; i < nActivity; i++) {
+            const actNum = i + 1;
+            activities[i] = document.getElementById(`act-${actNum}`)?.value || "";
+            tools[i] = document.getElementById(`tool-${actNum}`)?.value || "";
+            times[i] = document.getElementById(`time-${actNum}`)?.value || "";
+            outputs[i] = document.getElementById(`output-${actNum}`)?.value || "";
+            notes[i] = document.getElementById(`note-${actNum}`)?.value || "";
+            const currentShapes = [];
+            const currentFalseTos = [];
+            for (let j = 0; j < nActor; j++) {
+                const actorNum = j + 1;
+                currentShapes[j] =
+                    document.getElementById(`gShape-${actNum}-${actorNum}`)
+                        ?.value || "0";
+                currentFalseTos[j] =
+                    document.getElementById(`falseTo-${actNum}-${actorNum}`)
+                        ?.value || "";
+            }
+            shapeSelections[i] = currentShapes;
+            falseToSelections[i] = currentFalseTos;
         }
-        shapeSelections[i] = currentShapes;
-        falseToSelections[i] = currentFalseTos;
     }
     const tableDiv = document.getElementById("diagramTable");
     // Gunakan DocumentFragment untuk mengurangi reflow
