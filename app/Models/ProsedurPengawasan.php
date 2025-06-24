@@ -71,6 +71,14 @@ class ProsedurPengawasan
         );
     }
 
+    public static function updateBody($id, $data)
+    {
+        return DB::update(
+            "UPDATE prosedur_pengawasan SET isi = ?, updated_at = NOW() WHERE id = ?",
+            [$data["isi"], $id]
+        );
+    }
+
     public static function detail($id)
     {
         return DB::selectOne(

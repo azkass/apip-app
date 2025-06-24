@@ -154,7 +154,16 @@ class ProsedurPengawasanController extends Controller
 
     public function updateBody(Request $request, $id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+        $validatedData = $request->validate([
+            "isi" => "required|json",
+        ]);
+
+        ProsedurPengawasan::updateBody($id, $validatedData);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Data berhasil disimpan",
+        ]);
     }
 
     public function delete($id)

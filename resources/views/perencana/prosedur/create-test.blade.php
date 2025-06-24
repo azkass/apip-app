@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @section('content')
-<div class="bg-white rounded-md mb-4 ">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<div class="bg-white rounded-md mb-4" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}">
     <!-- Form Input Pelaksana -->
+    @csrf
     <div class="p-4" id="formContainer">
         <h2 class="text-xl font-semibold mb-4">Tambahkan Pelaksana</h2>
         <template id="formTemplate">
@@ -49,13 +51,15 @@
     <!-- Output Diagram Preview -->
     <div id="previewBox" class="hidden p-4 bg-white rounded-lg">
         <h2 class="text-xl font-semibold mb-3">Diagram Preview</h2>
-        <div id="graphContainerBox" class="overflow-auto">
+        <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedurPengawasan->id) }}"
+           class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition duration-200">
+           Detail Prosedur Pengawasan
+        </a>
+        <div id="graphContainerBox" class="overflow-auto mt-4">
             <div id="graphContainer"></div>
         </div>
-        <button id="printXml" class="bg-gray-500 hover:bg-gray-600 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm">Print XML</button>
     </div>
 
-    <!-- console.log XML Diagram -->
 
 </div>
 @endsection
@@ -73,7 +77,6 @@
             loadData,
             preview,
             draw,
-            printXml, //console.log XML Diagram
         } from "{{ Vite::asset('resources/js/graph.js') }}";
 
         // Inisialisasi event listeners
@@ -99,13 +102,6 @@
             const previewBtn = document.querySelector("#preview");
             if (previewBtn) previewBtn.addEventListener("click", preview);
 
-            // console.log XML Diagram
-            const printXmlBtn = document.querySelector("#printXml");
-            if (printXmlBtn) printXmlBtn.addEventListener("click", printXml);
-
-            const outputXmlBtn = document.querySelector("#outputXml");
-            if (outputXmlBtn) outputXmlBtn.addEventListener("click", outputXml);
-
             // Event delegation untuk actor-select
             const formContainer = document.querySelector("#formContainer");
             if (formContainer) {
@@ -125,6 +121,7 @@
 
         <!-- Load mxGraph core -->
         <script src="/vendor/mxgraph/js/mxClient.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <!-- Load Vite script khusus untuk page ini -->
         @vite('resources/js/graph.js')

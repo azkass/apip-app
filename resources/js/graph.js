@@ -442,9 +442,10 @@ export function loadData() {
     //         2,
     //     ),
     // );
+    //
 }
 
-export function preview() {
+export async function preview() {
     // Display Preview
     document.getElementById("previewBox").classList.remove("hidden");
 
@@ -493,7 +494,43 @@ export function preview() {
             "px;border:black solid 1px;cursor:default;";
         mainContainer.append(container);
 
-        draw(container, start, end - 1);
+        //test csrf available
+        const csrfToken = document.querySelector(
+            'meta[name="csrf-token"]',
+        )?.content;
+        if (!csrfToken) {
+            console.error("CSRF token tidak ditemukan!");
+            return;
+        }
+        // Memanggil fungsi untuk menggambar SOP dan menyimpan data json
+        const jsonBody = draw(container, start, end - 1);
+        // Menerima data id prosedur
+        const id =
+            document.getElementById("prosedur-container").dataset.prosedurId;
+        // console.log(jsonBody);
+        //
+        // Mengirimkan data json ke database
+        try {
+            // Kirim ke server
+            const response = await axios.put(
+                `/perencana/prosedurpengawasan/body/${id}`,
+                { isi: jsonBody },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector(
+                            'meta[name="csrf-token"]',
+                        ).content,
+                    },
+                },
+            );
+
+            console.log("Data tersimpan:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Gagal menyimpan:", error);
+            throw error;
+        }
     }
 
     // Recalculate box height
@@ -541,7 +578,7 @@ export function draw(container, start, end) {
     // 1. Inisialisasi dan Konfigurasi Dasar
 
     // Reset the preview container
-    container.innerHTML = "";
+    // container.innerHTML = "";
     // let pageSize = 5;
 
     // Checks if the browser is supported
@@ -1705,29 +1742,8 @@ export function draw(container, start, end) {
         } finally {
             // Updates the display
             graph.getModel().endUpdate();
-            // console.log(
-            //     JSON.stringify(
-            //         {
-            //             nActor: nActor,
-            //             actorName: actorName,
-            //             nActivity: nActivity,
-            //             rowHeights: rowHeights,
-            //             activities: activities,
-            //             tools: tools,
-            //             times: times,
-            //             outputs: outputs,
-            //             notes: notes,
-            //             graphLocation: graphLocation,
-            //             graphShape: graphShape,
-            //             shape: extractCellData(shape),
-            //             falseData: falseData,
-            //             actorLoc: extractCellData(actorLoc), // Gunakan fungsi filter khusus
-            //         },
-            //         null,
-            //     ),
-            // );
 
-            const dataBody = JSON.stringify(
+            const jsonBody = JSON.stringify(
                 {
                     nActor: nActor,
                     actorName: actorName,
@@ -1746,8 +1762,11 @@ export function draw(container, start, end) {
                 },
                 null,
             );
-            // return dataBody;
-            console.log(dataBody);
+            console.log("Type of data draw():", typeof jsonBody);
+            console.log("data draw:", jsonBody);
+            // console.log("Type of data draw():", typeof GraphData);
+            // console.log("data draw:", GraphData);
+            return jsonBody;
 
             // Fungsi untuk mengekstrak data penting dari mxCell
             function extractCellData(cells) {
@@ -1773,13 +1792,13 @@ export function draw(container, start, end) {
     }
 }
 
-export function printXml() {
-    const encoder = new mxCodec();
-    const node = encoder.encode(graph.getModel());
-    const xml = mxUtils.getXml(node);
-    // mxUtils.popup(mxUtils.getXml(node));
+// export function detail(GraphData) {
+//     // const container = document.createElement("graphContainer");
+//     const container = document.getElementById("graphContainer");
+//     const GraphData = GraphData;
+//     // container.innerHTML = "";
 
-    // Cetak di konsol atau tampilkan di halaman
-    console.log(xml);
-    // document.getElementById("outputXml").textContent = xml;
-}
+//     draw(container, 1, GraphData.nActivity);
+//     console.log("Type of GraphData on detail:", typeof GraphData);
+//     console.log("Graph Data on detail:", GraphData);
+// }

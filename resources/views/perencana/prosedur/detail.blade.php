@@ -13,12 +13,11 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                generateGraph();
-            });
             // Data statis untuk contoh
-            const staticGraphData = {"nActor":2,"actorName":["Inspektur Wilayah","Pengendali Teknis"],"nActivity":2,"rowHeights":[80,80],"activities":["",""],"tools":["",""],"times":["",""],"outputs":["",""],"notes":["",""],"graphLocation":[[1,0],[0,1]],"graphShape":[["state",0],[0,"process"]],"shape":[[{"id":"38","value":"","geometry":{"x":185,"y":105,"width":50,"height":30}},null],[null,{"id":"44","value":"","geometry":{"x":285,"y":187.5,"width":50,"height":25}}],[null,null],[null,null]],"falseData":[[null,null],[null,null]],"actorLoc":[[{"id":"20","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"21","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[{"id":"31","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"32","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[null,null]]};
+            // const staticGraphData = {"nActor":2,"actorName":["Inspektur Wilayah","Pengendali Teknis"],"nActivity":2,"rowHeights":[80,80],"activities":["",""],"tools":["",""],"times":["",""],"outputs":["",""],"notes":["",""],"graphLocation":[[1,0],[0,1]],"graphShape":[["state",0],[0,"process"]],"shape":[[{"id":"38","value":"","geometry":{"x":185,"y":105,"width":50,"height":30}},null],[null,{"id":"44","value":"","geometry":{"x":285,"y":187.5,"width":50,"height":25}}],[null,null],[null,null]],"falseData":[[null,null],[null,null]],"actorLoc":[[{"id":"20","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"21","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[{"id":"31","value":"","geometry":{"x":0,"y":0,"width":100,"height":80}},{"id":"32","value":"","geometry":{"x":100,"y":0,"width":100,"height":80}}],[null,null]]};
+            const staticGraphData = {!! $prosedurPengawasan->isi ?? '{}' !!};
+
             // Fungsi untuk generate graph
-            function generateGraph() {
                 // Assign data statis ke variabel global
                 window.nActor = staticGraphData.nActor;
                 window.actorName = staticGraphData.actorName;
@@ -39,7 +38,10 @@
                 // Panggil fungsi draw() dengan container dan range activity
                 const container = document.getElementById('graphContainer');
                 draw(container, 1, staticGraphData.nActivity);
-            }
+                console.log("data db:", typeof staticGraphData);
+                console.log("data db:", staticGraphData);
+            });
+
 
             function draw(container, start, end) {
                 // =====================================
@@ -1154,49 +1156,8 @@
                                     }
                                 }
 
-                                // Condition Line
-                                if (graphShape[k][l] == "condition") {
-                                    convTo2Dim(falseData[k][l]);
-                                    try {
-                                        if (leftDot == 0) {
-                                            graph.insertEdge(
-                                                fcPool,
-                                                null,
-                                                "Tidak",
-                                                shape[k][l].getChildAt(0),
-                                                shape[falseY][falseX].getChildAt(0),
-                                                "verticalAlign=bottom;align=left",
-                                            );
-                                            leftDot = 1;
-                                            // console.log('Dot: ' + leftDot + '-' + rightDot);
-                                        } else if (rightDot == 0) {
-                                            graph.insertEdge(
-                                                fcPool,
-                                                null,
-                                                "Tidak",
-                                                shape[k][l].getChildAt(1),
-                                                shape[falseY][falseX].getChildAt(1),
-                                                "verticalAlign=top;align=right",
-                                            );
-                                            rightDot = 1;
-                                            // console.log('Dot: ' + leftDot + '-' + rightDot);
-                                        } else {
-                                            graph.insertEdge(
-                                                fcPool,
-                                                null,
-                                                "Tidak",
-                                                shape[k][l].getChildAt(0),
-                                                shape[falseY][falseX].getChildAt(0),
-                                                "verticalAlign=bottom;align=left",
-                                            );
-                                            leftDot = 1;
-                                            rightDot = 0;
-                                            // console.log('Reset Dot: ' + leftDot + '-' + rightDot);
-                                        }
-                                    } catch {
-                                        // console.log("Condition in first row");
-                                    }
-                                }
+
+
                                 /* if (graphShape[k][l] == 'condition') {
                                     convTo2Dim(falseData[k][l]);
                                     if (graphShape[falseY][falseX] == 'condition') {
@@ -1210,6 +1171,49 @@
                     } finally {
                         // Updates the display
                         graph.getModel().endUpdate();
+                        const jsonBody = JSON.stringify(
+                            {
+                                nActor: nActor,
+                                actorName: actorName,
+                                nActivity: nActivity,
+                                rowHeights: rowHeights,
+                                activities: activities,
+                                tools: tools,
+                                times: times,
+                                outputs: outputs,
+                                notes: notes,
+                                graphLocation: graphLocation,
+                                graphShape: graphShape,
+                                shape: extractCellData(shape),
+                                falseData: falseData,
+                                actorLoc: extractCellData(actorLoc), // Gunakan fungsi filter khusus
+                            },
+                            null,
+                        );
+                        console.log("Type of data draw():", typeof jsonBody);
+                        console.log("data draw:", jsonBody);
+                        return jsonBody;
+
+                        // Fungsi untuk mengekstrak data penting dari mxCell
+                        function extractCellData(cells) {
+                            return cells.map((row) => {
+                                return row.map((cell) => {
+                                    if (!cell) return null;
+                                    return {
+                                        id: cell.getId(),
+                                        value: cell.getValue(),
+                                        geometry: cell.getGeometry()
+                                            ? {
+                                                  x: cell.getGeometry().x,
+                                                  y: cell.getGeometry().y,
+                                                  width: cell.getGeometry().width,
+                                                  height: cell.getGeometry().height,
+                                              }
+                                            : null,
+                                    };
+                                });
+                            });
+                        }
                     }
                 }
             }
