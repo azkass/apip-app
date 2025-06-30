@@ -17,17 +17,17 @@ return new class extends Migration {
             $table
                 ->enum("status", ["draft", "diajukan", "disetujui"])
                 ->default("draft");
-            $table->unsignedBigInteger("pengelola_id");
             $table->unsignedBigInteger("pembuat_id");
+            $table->unsignedBigInteger("penyusun_id");
             $table->timestamps();
 
             $table
-                ->foreign("pengelola_id")
+                ->foreign("pembuat_id")
                 ->references("id")
                 ->on("users")
                 ->onDelete("cascade");
             $table
-                ->foreign("pembuat_id")
+                ->foreign("penyusun_id")
                 ->references("id")
                 ->on("users")
                 ->onDelete("cascade");

@@ -1,10 +1,12 @@
 <div class="container p-8">
+    <div class="mb-4">
     @if (Auth::user()->role == 'perencana')
-        <a href="/perencana/prosedurpengawasan/create-cover" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-sm mb-4">Create Cover Fix Code</a> <br><br>
-        <a href="/perencana/prosedurpengawasan/create-fix" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-sm">Create Body Fix Code</a>
-    @endif
+            <a href="/perencana/prosedurpengawasan/create-cover" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-sm mb-4">Create Cover Fix Code</a> <br><br>
+            <a href="/perencana/prosedurpengawasan/create-fix" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-sm">Create Body Fix Code</a>
+        @endif
+    </div>
 
-    <div class="flex items-center my-6">
+    <div class="flex items-center mb-6">
     <!-- Search Bar -->
     <div>
         <label class="font-semibold">Cari</label>
@@ -22,16 +24,9 @@
                 class="block w-28 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
                 onchange="window.location.href=this.value"
             >
-                @if (Auth::user()->role == 'perencana')
+                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
                     @foreach (range(date('Y'), 2025) as $year)
-                        <option value="{{ route('perencana.prosedur-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
-                                {{ request('tahun', date('Y')) == $year ? 'selected' : '' }}>
-                            {{ $year }}
-                        </option>
-                    @endforeach
-                @elseif (Auth::user()->role == 'pjk')
-                    @foreach (range(date('Y'), 2025) as $year)
-                        <option value="{{ route('pjk.prosedur-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
+                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
                                 {{ request('tahun', date('Y')) == $year ? 'selected' : '' }}>
                             {{ $year }}
                         </option>
@@ -57,34 +52,26 @@
                 class="block w-28 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
                 onchange="window.location.href=this.value"
             >
-                @if (Auth::user()->role == 'perencana')
-                    <option value="{{ route('perencana.prosedur-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }} class="flex items-center">
-                @elseif (Auth::user()->role == 'pjk')
-                    <option value="{{ route('pjk.prosedur-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }} class="flex items-center">
+                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }} class="flex items-center">
                 @endif
                     Semua
                 </option>
 
-                @if (Auth::user()->role == 'perencana')
-                    <option value="{{ route('perencana.prosedur-pengawasan.index', ['status' => 'draft']) }}" {{ $activeTab == 'draft' ? 'selected' : '' }} class="flex items-center">
-                @elseif (Auth::user()->role == 'pjk')
-                    <option value="{{ route('pjk.prosedur-pengawasan.index', ['status' => 'draft']) }}" {{ $activeTab == 'draft' ? 'selected' : '' }} class="flex items-center">
+                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'draft']) }}" {{ $activeTab == 'draft' ? 'selected' : '' }} class="flex items-center">
                 @endif
                     Draft
                 </option>
 
-                @if (Auth::user()->role == 'perencana')
-                    <option value="{{ route('perencana.prosedur-pengawasan.index', ['status' => 'diajukan']) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }} class="flex items-center">
-                @elseif (Auth::user()->role == 'pjk')
-                    <option value="{{ route('pjk.prosedur-pengawasan.index', ['status' => 'diajukan']) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }} class="flex items-center">
+                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'diajukan']) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }} class="flex items-center">
                 @endif
                     Diajukan
                 </option>
 
-                @if (Auth::user()->role == 'perencana')
-                    <option value="{{ route('perencana.prosedur-pengawasan.index', ['status' => 'disetujui']) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }} class="flex items-center">
-                @elseif (Auth::user()->role == 'pjk')
-                    <option value="{{ route('pjk.prosedur-pengawasan.index', ['status' => 'disetujui']) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }} class="flex items-center">
+                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'disetujui']) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }} class="flex items-center">
                 @endif
                     Disetujui
                 </option>
@@ -117,8 +104,9 @@
             <th class="border border-gray-300 px-4 py-2 w-[150px] text-center">Nomor SOP</th>
             <th class="border border-gray-300 px-4 py-2 text-center">Judul</th>
             <th class="border border-gray-300 px-4 py-2 text-center w-40">Status</th>
-            @if (Auth::user()->role != 'pegawai')
-            <th class="border border-gray-300 px-4 py-2 text-center w-36">Aksi</th>
+            <th class="border border-gray-300 px-4 py-2 text-center w-52">Aksi</th>
+            @if (Auth::user()->role == 'pjk')
+            <th class="border border-gray-300 px-4 py-2 text-center w-36">Evaluasi</th>
             @endif
         </tr>
     </thead>
@@ -149,11 +137,27 @@
                 </span>
             </td>
 
-            @if (Auth::user()->role != 'pegawai')
-                <td class="border border-gray-300 px-4 py-3 text-center font-semibold text-white">
-                    <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.edit', $prosedur->id) }}" class="py-2 px-4 bg-sky-500 hover:bg-sky-600 rounded-md">Edit</a>
-                </td>
-            @endif
+            <td class="border border-gray-300 px-4 py-3 text-center font-semibold text-white">
+                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.edit', $prosedur->id) }}" class="py-2 px-4 bg-sky-500 hover:bg-sky-600 rounded-md">Edit</a>
+                @endif
+                <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="py-2 px-4 bg-green-500 hover:bg-green-600 rounded-md">Lihat</a>
+            </td>
+
+            @if (Auth::user()->role == 'pjk')
+            <td class="border border-gray-300 px-4 py-3 text-center font-semibold text-white">
+                <!-- asd -->
+                    @php
+                        $periode = DB::table("periode_evaluasi_prosedur")->latest()->first();
+                        $now = now()->toDateString();
+                        $isPeriodeActive = $periode && $now >= $periode->mulai && $now <= $periode->berakhir;
+                    @endphp
+
+                    @if ($isPeriodeActive)
+                        <a href="{{ route('evaluasi.create', $prosedur->id) }}" class="py-2 px-4 bg-purple-500 hover:bg-purple-600 rounded-md ml-2">Evaluasi</a>
+                    @endif
+                @endif
+            </td>
         </tr>
         @endforeach
     </tbody>

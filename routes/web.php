@@ -6,9 +6,71 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InstrumenPengawasanController;
 use App\Http\Controllers\RegulasiController;
 use App\Http\Controllers\ProsedurPengawasanController;
+use App\Http\Controllers\EvaluasiProsedurController;
+use App\Http\Controllers\PeriodeEvaluasiProsedurController;
 
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
+
+// Periode Evaluasi
+Route::get("/periode", [
+    PeriodeEvaluasiProsedurController::class,
+    "index",
+])->name("periode.index");
+
+// Evaluasi
+Route::middleware(["periode.evaluasi"])->group(function () {
+    Route::get("/evaluasi", [EvaluasiProsedurController::class, "index"])->name(
+        "evaluasi.index"
+    );
+    Route::get("/evaluasi/create/{sop_id}", [
+        EvaluasiProsedurController::class,
+        "create",
+    ])->name("evaluasi.create");
+    Route::post("/evaluasi", [
+        EvaluasiProsedurController::class,
+        "store",
+    ])->name("evaluasi.store");
+    Route::get("/evaluasi/{id}", [
+        EvaluasiProsedurController::class,
+        "show",
+    ])->name("evaluasi.show");
+    Route::get("/evaluasi/{id}/edit", [
+        EvaluasiProsedurController::class,
+        "edit",
+    ])->name("evaluasi.edit");
+    Route::put("/evaluasi/{id}", [
+        EvaluasiProsedurController::class,
+        "update",
+    ])->name("evaluasi.update");
+    Route::delete("/evaluasi/{id}", [
+        EvaluasiProsedurController::class,
+        "destroy",
+    ])->name("evaluasi.destroy");
+});
+Route::get("/periode/create", [
+    PeriodeEvaluasiProsedurController::class,
+    "create",
+])->name("periode.create");
+Route::post("/periode", [
+    PeriodeEvaluasiProsedurController::class,
+    "store",
+])->name("periode.store");
+
+Route::get("/periode/edit", [
+    PeriodeEvaluasiProsedurController::class,
+    "edit",
+])->name("periode.edit");
+
+Route::put("/periode", [
+    PeriodeEvaluasiProsedurController::class,
+    "update",
+])->name("periode.update");
+
+Route::delete("/periode/{id}", [
+    PeriodeEvaluasiProsedurController::class,
+    "destroy",
+])->name("periode.destroy");
 
 // Login
 Route::get("/auth/redirect", [SocialiteController::class, "redirect"]);
@@ -50,6 +112,14 @@ Route::middleware("auth", "role:admin")->group(function () {
         SocialiteController::class,
         "update",
     ])->name("admin.update");
+    Route::get("/admin/prosedurpengawasan", [
+        ProsedurPengawasanController::class,
+        "index",
+    ])->name("admin.prosedurpengawasan.index");
+    Route::get("/admin/prosedurpengawasan/{id}", [
+        ProsedurPengawasanController::class,
+        "detail",
+    ])->name("admin.prosedur-pengawasan.detail");
 });
 
 Route::middleware("auth", "role:pjk")->group(function () {

@@ -30,6 +30,7 @@ class ProsedurPengawasanController extends Controller
         ];
 
         $viewPath = match (Auth::user()->role) {
+            "admin" => "admin.prosedur.daftarprosedurpengawasan",
             "perencana" => "perencana.prosedur.daftarprosedurpengawasan",
             "pjk" => "penanggungjawab.prosedur.daftarprosedurpengawasan",
             "pegawai" => "pegawai.prosedur.daftarprosedurpengawasan",
@@ -58,8 +59,8 @@ class ProsedurPengawasanController extends Controller
             "judul" => "required|max:255",
             "nomor" => "required|max:255",
             "status" => "required|max:255",
-            "pengelola_id" => "required|exists:users,id",
             "pembuat_id" => "required|exists:users,id",
+            "penyusun_id" => "required|exists:users,id",
         ]);
 
         ProsedurPengawasan::create($validatedData);
@@ -119,8 +120,8 @@ class ProsedurPengawasanController extends Controller
             "judul" => "required|max:255",
             "nomor" => "required|max:255",
             "status" => "required|max:255",
-            "pengelola_id" => "required|exists:users,id",
             "pembuat_id" => "required|exists:users,id",
+            "penyusun_id" => "required|exists:users,id",
         ]);
 
         ProsedurPengawasan::update($id, $request);

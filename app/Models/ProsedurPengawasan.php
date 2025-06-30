@@ -15,9 +15,9 @@ class ProsedurPengawasan
 
     public static function getByStatus($status = null)
     {
-        $query = 'SELECT prosedur_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
+        $query = 'SELECT prosedur_pengawasan.id, prosedur_pengawasan.nomor, prosedur_pengawasan.judul, prosedur_pengawasan.status, prosedur_pengawasan.updated_at, u1.name AS petugas_nama, u2.name AS perencana_nama
             FROM prosedur_pengawasan
-            INNER JOIN users u1 ON prosedur_pengawasan.pengelola_id = u1.id
+            INNER JOIN users u1 ON prosedur_pengawasan.penyusun_id = u1.id
             INNER JOIN users u2 ON prosedur_pengawasan.pembuat_id = u2.id';
 
         // Filter berdasarkan status jika diberikan
@@ -36,13 +36,13 @@ class ProsedurPengawasan
         // Mengubah judul menjadi title case sebelum insert
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::insert(
-            "INSERT INTO prosedur_pengawasan (judul, nomor, status, pengelola_id, pembuat_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+            "INSERT INTO prosedur_pengawasan (judul, nomor, status, pembuat_id, penyusun_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
             [
                 $data["judul"],
                 $data["nomor"],
                 $data["status"],
-                $data["pengelola_id"],
                 $data["pembuat_id"],
+                $data["penyusun_id"],
             ]
         );
     }
@@ -59,13 +59,13 @@ class ProsedurPengawasan
         // Mengubah judul menjadi title case sebelum update
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::update(
-            "UPDATE prosedur_pengawasan SET judul = ?, nomor = ?, status = ?, pengelola_id = ?, pembuat_id = ?, updated_at = NOW() WHERE id = ?",
+            "UPDATE prosedur_pengawasan SET judul = ?, nomor = ?, status = ?, pembuat_id = ?, penyusun_id = ?, updated_at = NOW() WHERE id = ?",
             [
                 $data["judul"],
                 $data["nomor"],
                 $data["status"],
-                $data["pengelola_id"],
                 $data["pembuat_id"],
+                $data["penyusun_id"],
                 $id,
             ]
         );
@@ -85,7 +85,7 @@ class ProsedurPengawasan
             "
             SELECT prosedur_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
             FROM prosedur_pengawasan
-            INNER JOIN users u1 ON prosedur_pengawasan.pengelola_id = u1.id
+            INNER JOIN users u1 ON prosedur_pengawasan.penyusun_id = u1.id
             INNER JOIN users u2 ON prosedur_pengawasan.pembuat_id = u2.id
             WHERE prosedur_pengawasan.id = ?",
             [$id]

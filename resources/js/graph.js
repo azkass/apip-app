@@ -1,4 +1,4 @@
-let formCount = 0;
+var formCount = 0;
 var nActor = 0;
 var nAction = 0;
 var nActivity = 1; // Default 1 activity
@@ -22,7 +22,6 @@ var falseX = 0;
 var falseY = 0;
 var shapeSelections = [];
 var falseToSelections = [];
-let graph;
 
 export function addCustomActor(selectElement) {
     if (!selectElement || !selectElement.parentElement) {
@@ -640,15 +639,16 @@ export async function preview() {
             return;
         }
         // Memanggil fungsi untuk menggambar SOP dan menyimpan data json
+        // Render halaman
         const jsonBody = draw(container, start, end - 1);
-        // Menerima data id prosedur
         const id =
             document.getElementById("prosedur-container").dataset.prosedurId;
-        // console.log(jsonBody);
-        //
-        // Mengirimkan data json ke database
+        // Kirim data ke server
         try {
-            // Kirim ke server
+            const jsonBody = draw(container, start, end - 1);
+            const id =
+                document.getElementById("prosedur-container").dataset
+                    .prosedurId;
             const response = await axios.put(
                 `/perencana/prosedurpengawasan/body/${id}`,
                 { isi: jsonBody },
@@ -674,19 +674,6 @@ export async function preview() {
     var mainContainerBox = document.getElementById("graphContainerBox");
     mainContainerBox.style = "height:" + totalHeight + "px;";
     return true;
-
-    // const dataBody = draw(container, start, end - 1);
-    // try {
-    //         // Untuk mengirim string JSON, perlu set header secara manual
-    //         const response = await axios.put('/perencana/prosedurpengawasan/body/{id}', dataBody, {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         });
-    //         console.log('Data berhasil dikirim:', response.data);
-    //     } catch (error) {
-    //         console.error('Gagal mengirim data:', error);
-    //     }
 }
 
 export function convTo2Dim(x) {
@@ -715,8 +702,8 @@ export function draw(container, start, end) {
     // 1. Inisialisasi dan Konfigurasi Dasar
 
     // Reset the preview container
-    // container.innerHTML = "";
-    // let pageSize = 5;
+    container.innerHTML = "";
+    let pageSize = 5;
 
     // Checks if the browser is supported
     if (!mxClient.isBrowserSupported()) {
@@ -743,7 +730,7 @@ export function draw(container, start, end) {
 
         // =====================================
         // 2. Setup Graph Utama
-        graph = new mxGraph(container);
+        var graph = new mxGraph(container);
         graph.setHtmlLabels(true);
         // Graph configure for Contstraint
         graph.disconnectOnMove = false;

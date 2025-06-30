@@ -12,7 +12,7 @@ class InstrumenPengawasan
     {
         $query = 'SELECT instrumen_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
             FROM instrumen_pengawasan
-            INNER JOIN users u1 ON instrumen_pengawasan.pengelola_id = u1.id
+            INNER JOIN users u1 ON instrumen_pengawasan.penyusun_id = u1.id
             INNER JOIN users u2 ON instrumen_pengawasan.pembuat_id = u2.id';
 
         // Filter berdasarkan status jika diberikan
@@ -40,7 +40,7 @@ class InstrumenPengawasan
             "
             SELECT instrumen_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
             FROM instrumen_pengawasan
-            INNER JOIN users u1 ON instrumen_pengawasan.pengelola_id = u1.id
+            INNER JOIN users u1 ON instrumen_pengawasan.penyusun_id = u1.id
             INNER JOIN users u2 ON instrumen_pengawasan.pembuat_id = u2.id
             WHERE instrumen_pengawasan.id = ?",
             [$id]
@@ -52,10 +52,10 @@ class InstrumenPengawasan
         // Mengubah judul menjadi title case sebelum insert
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::insert(
-            "INSERT INTO instrumen_pengawasan (judul, pengelola_id, deskripsi, file, status, pembuat_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())",
+            "INSERT INTO instrumen_pengawasan (judul, penyusun_id, deskripsi, file, status, pembuat_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())",
             [
                 $data["judul"],
-                $data["pengelola_id"],
+                $data["penyusun_id"],
                 $data["deskripsi"],
                 $data["file"],
                 $data["status"],
@@ -69,10 +69,10 @@ class InstrumenPengawasan
         // Mengubah judul menjadi title case sebelum insert
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::update(
-            "UPDATE instrumen_pengawasan SET judul = ?, pengelola_id = ?, deskripsi = ?, file = ?, status = ?, pembuat_id = ?, updated_at = NOW() WHERE id = ?",
+            "UPDATE instrumen_pengawasan SET judul = ?, penyusun_id = ?, deskripsi = ?, file = ?, status = ?, pembuat_id = ?, updated_at = NOW() WHERE id = ?",
             [
                 $data["judul"],
-                $data["pengelola_id"],
+                $data["penyusun_id"],
                 $data["deskripsi"],
                 $data["file"],
                 $data["status"],

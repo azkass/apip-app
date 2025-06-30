@@ -4,7 +4,7 @@
     @endcomponent
 
     <!-- Tambahkan container dan tombol untuk graph -->
-    <div class="container mt-4 px-4">
+    <div class="container mt-4 mx-4 border-1 border-black">
         <div id="graphContainerBox">
             <div id="graphContainer"></div>
         </div>

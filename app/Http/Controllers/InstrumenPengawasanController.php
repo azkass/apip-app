@@ -57,7 +57,7 @@ class InstrumenPengawasanController extends Controller
     {
         $request->validate([
             "judul" => "required|string|max:255",
-            "pengelola_id" => "required|exists:users,id",
+            "penyusun_id" => "required|exists:users,id",
             "deskripsi" => "nullable|string",
             "pdf" => "required|file|mimes:pdf|max:10240", // Menerima file PDF maksimal 10MB
             "status" => "required|in:draft,diajukan,disetujui",
@@ -82,7 +82,7 @@ class InstrumenPengawasanController extends Controller
         InstrumenPengawasan::create(
             $request->only([
                 "judul",
-                "pengelola_id",
+                "penyusun_id",
                 "deskripsi",
                 "file",
                 "status",
@@ -166,7 +166,7 @@ class InstrumenPengawasanController extends Controller
 
         $validationRules = [
             "judul" => "required|string|max:255",
-            "pengelola_id" => "required|exists:users,id",
+            "penyusun_id" => "required|exists:users,id",
             "deskripsi" => "nullable|string",
             "status" => "required|in:draft,diajukan,disetujui",
             "pembuat_id" => "required|exists:users,id",
@@ -201,7 +201,7 @@ class InstrumenPengawasanController extends Controller
         // Update data dengan file yang sesuai (baru atau tetap yang lama)
         $data = $request->only([
             "judul",
-            "pengelola_id",
+            "penyusun_id",
             "deskripsi",
             "status",
             "pembuat_id",

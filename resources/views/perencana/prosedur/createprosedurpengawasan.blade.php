@@ -12,8 +12,8 @@
                 <input type="text" name="nomor" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="pengelola_id" class="font-bold">Petugas Pengelola : </label>
-                <select name="pengelola_id" class="form-control" required>
+                <label for="penyusun_id" class="font-bold">Petugas Penyusun : </label>
+                <select name="penyusun_id" class="form-control" required>
                     @foreach ($is_pjk as $user)
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                     @endforeach

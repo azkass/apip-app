@@ -53,18 +53,10 @@
         <h2 class="text-xl font-semibold mb-3">Diagram Preview</h2>
         <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedurPengawasan->id) }}"
            class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition duration-200">
-           Detail Prosedur Pengawasan
+               Simpan
         </a>
         <div id="graphContainerBox" class="overflow-auto mt-4">
             <div id="graphContainer"></div>
-        </div>
-    </div>
-
-    <!-- Debug Info (Hidden in production) -->
-    <div id="debugInfo" class="hidden p-4 bg-gray-100 rounded-lg mt-4">
-        <h3 class="text-lg font-semibold mb-2">Debug Info</h3>
-        <div id="debugContent" class="whitespace-pre-wrap bg-white p-2 rounded border">
-            <!-- Debug content will be inserted here -->
         </div>
     </div>
 
