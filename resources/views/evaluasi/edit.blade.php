@@ -2,8 +2,6 @@
 
 @section('content')
 <div class="container mx-auto">
-    <h1 class="text-xl font-semibold mb-4">Edit Evaluasi Prosedur</h1>
-
     <div class="bg-gray-50 p-4 rounded-lg mb-4">
         <h4 class="font-semibold text-gray-700 mb-2">Informasi SOP</h4>
         <p><strong>Nomor SOP:</strong> {{ $evaluasi->sop_nomor }}</p>

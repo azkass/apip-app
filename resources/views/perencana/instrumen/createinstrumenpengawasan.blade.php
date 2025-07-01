@@ -1,46 +1,54 @@
 @extends('layouts.app')
 @section('content')
-<div class="p-8">
+<div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
     <form action="{{ route('instrumen-pengawasan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <div class="form-group">
-            <label for="judul" class="font-bold">Judul : </label>
-            <input type="text" name="judul" class="form-control" required>
+        <input type="hidden" name="pembuat_id" value="{{ Auth::id() }}">
+
+        <div class="mb-4">
+            <label for="judul" class="block font-medium text-gray-700">Judul</label>
+            <input type="text" name="judul" id="judul" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        <div class="form-group">
-            <label for="pengelola_id" class="font-bold">Petugas Pengelola : </label>
-            <select name="pengelola_id" class="form-control" required>
+        
+        <div class="mb-4">
+            <label for="pengelola_id" class="block font-medium text-gray-700">Petugas Pengelola</label>
+            <select name="pengelola_id" id="pengelola_id" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
                 @foreach ($is_pjk as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="form-group">
-            <label for="deskripsi" class="font-bold">Deskripsi : </label>
-            <textarea name="deskripsi" class="form-control"></textarea>
+        
+        <div class="mb-4">
+            <label for="deskripsi" class="block font-medium text-gray-700">Deskripsi</label>
+            <textarea name="deskripsi" id="deskripsi"
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"></textarea>
         </div>
-        <div class="form-group">
-            <label for="pdf" class="font-bold">File : </label>
-            <input type="file" name="pdf" id="pdf" accept="application/pdf" required>
+        
+        <div class="mb-4">
+            <label for="pdf" class="block font-medium text-gray-700">File PDF</label>
+            <input type="file" name="pdf" id="pdf" accept="application/pdf" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        <div class="form-group">
-            <label for="status" class="font-bold">Status : </label>
-            <select name="status" class="form-control" required>
+        
+        <div class="mb-4">
+            <label for="status" class="block font-medium text-gray-700">Status</label>
+            <select name="status" id="status" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
                 <option value="draft">Draft</option>
                 <option value="diajukan">Diajukan</option>
                 <option value="disetujui">Disetujui</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="pembuat_id" class="font-bold">Perencana : </label>
-            <select name="pembuat_id" class="form-control" required>
-                @foreach ($is_perencana as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
+
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                Simpan Instrumen
+            </button>
         </div>
-        <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md">Simpan</button>
     </form>
 </div>
-
 @endsection

@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
-    <h2 class="text-2xl font-bold mb-6">Input Evaluasi Prosedur</h2>
     <form method="POST" action="{{ route('evaluasi.store') }}">
         @csrf
         <input type="hidden" name="sop_id" value="{{ $sop_id }}">

@@ -1,37 +1,67 @@
-<div class="p-8">
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+
     @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
         <form action="{{ route(Auth::user()->role .'.prosedur-pengawasan.update', $prosedurPengawasan->id) }}" method="POST" enctype="multipart/form-data">
     @endif
         @csrf
         @method('PUT')
-        <div class="form-group">
-            <label for="judul" class="font-bold">Nama SOP : </label>
-            <input type="text" name="judul" class="form-control" value="{{ $prosedurPengawasan->judul }}" required>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Nama SOP</label>
+                <input type="text" name="judul" id="judul" value="{{ $prosedurPengawasan->judul }}" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+            </div>
+            
+            <div>
+                <label for="nomor" class="block text-sm font-medium text-gray-700 mb-1">Nomor SOP</label>
+                <input type="text" name="nomor" id="nomor" value="{{ $prosedurPengawasan->nomor }}" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+            </div>
+            
+            <div>
+                <label for="penyusun_id" class="block text-sm font-medium text-gray-700 mb-1">Petugas Penyusun</label>
+                <select name="penyusun_id" id="penyusun_id" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+                    @foreach ($is_pjk as $user)
+                        <option value="{{ $user->id }}" {{ $prosedurPengawasan->penyusun_id == $user->id ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" id="status" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+                    <option value="draft" {{ $prosedurPengawasan->status == 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="diajukan" {{ $prosedurPengawasan->status == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
+                    <option value="disetujui" {{ $prosedurPengawasan->status == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                </select>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="nomor" class="font-bold">Nomor SOP : </label>
-            <input type="text" name="nomor" class="form-control" value="{{ $prosedurPengawasan->nomor }}" required>
-        </div>
-        <div class="form-group">
-            <label for="penyusun_id" class="font-bold">Petugas Penyusun : </label>
-            <select name="penyusun_id" class="form-control" required>
-                @foreach ($is_pjk as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="status" class="font-bold">Status : </label>
-            <select name="status" class="form-control" required>
-                <option value="draft">Draft</option>
-                <option value="diajukan">Diajukan</option>
-                <option value="disetujui">Disetujui</option>
-            </select>
-        </div>
+        
         <input type="hidden" name="pembuat_id" value="{{ $prosedurPengawasan->pembuat_id }}">
-        <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md">Simpan</button>
+        
+        <div class="mt-6">
+            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition">
+                Simpan Perubahan
+            </button>
+        </div>
     </form>
 </div>
+
 @push('scripts')
     <!-- Set mxBasePath sebelum load mxClient -->
         <script>

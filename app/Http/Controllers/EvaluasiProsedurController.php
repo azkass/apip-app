@@ -10,12 +10,18 @@ class EvaluasiProsedurController extends Controller
     public function index()
     {
         $data = EvaluasiProsedur::getAll();
-        return view("evaluasi.index", compact("data"));
+        return view("evaluasi.index", [
+            "data" => $data,
+            "title" => "Daftar Evaluasi Prosedur",
+        ]);
     }
 
     public function create($sop_id)
     {
-        return view("evaluasi.create", compact("sop_id"));
+        return view("evaluasi.create", [
+            "sop_id" => $sop_id,
+            "title" => "Tambah Evaluasi Prosedur",
+        ]);
     }
 
     public function store(Request $request)
@@ -40,13 +46,19 @@ class EvaluasiProsedurController extends Controller
     public function show($id)
     {
         $evaluasi = EvaluasiProsedur::findById($id);
-        return view("evaluasi.show", compact("evaluasi"));
+        return view("evaluasi.show", [
+            "evaluasi" => $evaluasi,
+            "title" => "Detail Evaluasi Prosedur",
+        ]);
     }
 
     public function edit($id)
     {
         $evaluasi = EvaluasiProsedur::findById($id);
-        return view("evaluasi.edit", compact("evaluasi"));
+        return view("evaluasi.edit", [
+            "evaluasi" => $evaluasi,
+            "title" => "Edit Evaluasi Prosedur",
+        ]);
     }
 
     public function update(Request $request, $id)

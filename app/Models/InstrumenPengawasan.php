@@ -10,18 +10,14 @@ class InstrumenPengawasan
 
     public static function getByStatus($status = null)
     {
-        $query = 'SELECT instrumen_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
-            FROM instrumen_pengawasan
-            INNER JOIN users u1 ON instrumen_pengawasan.penyusun_id = u1.id
-            INNER JOIN users u2 ON instrumen_pengawasan.pembuat_id = u2.id';
+        $query = 'SELECT ip.*, u1.name AS petugas_nama, u2.name AS perencana_nama
+            FROM instrumen_pengawasan ip
+            INNER JOIN users u1 ON ip.penyusun_id = u1.id
+            INNER JOIN users u2 ON ip.pembuat_id = u2.id';
 
         // Filter berdasarkan status jika diberikan
-        if ($status) {
-            if ($status === "semua") {
-                // Tidak perlu menambahkan filter status
-            } else {
-                $query .= " WHERE instrumen_pengawasan.status = '$status'";
-            }
+        if ($status && $status !== "semua") {
+            $query .= " WHERE ip.status = '" . addslashes($status) . "'";
         }
         return DB::select($query);
     }
@@ -38,11 +34,11 @@ class InstrumenPengawasan
     {
         return DB::selectOne(
             "
-            SELECT instrumen_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
-            FROM instrumen_pengawasan
-            INNER JOIN users u1 ON instrumen_pengawasan.penyusun_id = u1.id
-            INNER JOIN users u2 ON instrumen_pengawasan.pembuat_id = u2.id
-            WHERE instrumen_pengawasan.id = ?",
+            SELECT ip.*, u1.name AS petugas_nama, u2.name AS perencana_nama
+            FROM instrumen_pengawasan ip
+            INNER JOIN users u1 ON ip.penyusun_id = u1.id
+            INNER JOIN users u2 ON ip.pembuat_id = u2.id
+            WHERE ip.id = ?",
             [$id]
         );
     }

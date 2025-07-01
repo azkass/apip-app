@@ -15,14 +15,15 @@ class EvaluasiProsedur extends Model
             SELECT
                 ep.id,
                 ep.sop_id,
-                ep.judul,
-                ep.isi,
                 ep.created_at,
                 ep.updated_at,
                 pp.nomor as sop_nomor,
-                pp.judul as sop_judul
+                pp.judul as sop_judul,
+                pp.penyusun_id as penyusun_id,
+                u.name as penyusun_nama
             FROM evaluasi_prosedur ep
             JOIN prosedur_pengawasan pp ON ep.sop_id = pp.id
+            JOIN users u ON pp.penyusun_id = u.id
             ORDER BY ep.id DESC
         ");
     }

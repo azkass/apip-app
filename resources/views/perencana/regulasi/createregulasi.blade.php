@@ -1,21 +1,34 @@
 @extends('layouts.app')
 @section('content')
-<div class="p-8">
+<div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
     <form action="{{ route('perencana.regulasi.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <div>
-            <label for="judul" class="font-semibold" >Judul : </label>
-            <input type="text" name="judul" id="judul" required>
+        <input type="hidden" name="pembuat_id" value="{{ Auth::id() }}">
+
+        <div class="mb-4">
+            <label for="judul" class="block font-medium text-gray-700">Judul</label>
+            <input type="text" name="judul" id="judul" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        <div>
-            <label for="tautan" class="font-semibold" >Tautan : </label>
-            <input type="text" name="tautan" id="tautan" required>
+        
+        <div class="mb-4">
+            <label for="tautan" class="block font-medium text-gray-700">Tautan</label>
+            <input type="text" name="tautan" id="tautan" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        <div class="form-group" class="">
-            <label for="pdf" class="font-semibold" >File : </label>
-            <input type="file" name="pdf" id="pdf" accept="application/pdf" required>
+        
+        <div class="mb-4">
+            <label for="pdf" class="block font-medium text-gray-700">File PDF</label>
+            <input type="file" name="pdf" id="pdf" accept="application/pdf" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md">Submit</button>
+
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                Simpan Regulasi
+            </button>
+        </div>
     </form>
 </div>
 @endsection

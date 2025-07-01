@@ -26,10 +26,10 @@
         <table class="w-full border-collapse">
             <thead class="bg-gray-50">
                 <tr>
-                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">No</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">No</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Tanggal Mulai</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Tanggal Berakhir</th>
-                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Pembuat</th>
+                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Pembuat Periode</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Status</th>
                     @if(Auth::user()->role == 'admin')
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Aksi</th>
@@ -45,7 +45,7 @@
                         $isFuture = $now < $item->mulai;
                     @endphp
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="border border-gray-300 px-4 py-3">{{ $index + 1 }}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center">{{ $index + 1 }}</td>
                         <td class="border border-gray-300 px-4 py-3">
                             {{ \Carbon\Carbon::parse($item->mulai)->format('d M Y') }}
                         </td>
@@ -55,7 +55,7 @@
                         <td class="border border-gray-300 px-4 py-3">
                             <div>
                                 <div class="font-medium">{{ $item->pembuat_name }}</div>
-                                <div class="text-sm text-gray-500">{{ $item->pembuat_email }}</div>
+                                <!-- <div class="text-sm text-gray-500">{{ $item->pembuat_email }}</div> -->
                             </div>
                         </td>
                         <td class="border border-gray-300 px-4 py-3 text-center">
@@ -77,7 +77,7 @@
                         @if(Auth::user()->role == 'admin')
                         <td class="border border-gray-300 px-4 py-3 text-center">
                             <div class="flex justify-center space-x-2">
-                                <a href="{{ route('periode.edit') }}"
+                                <a href="{{ route('periode.edit', $item->id) }}"
                                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">
                                     Edit
                                 </a>

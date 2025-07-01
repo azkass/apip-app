@@ -1,65 +1,80 @@
 @extends('layouts.app')
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="bg-white rounded-md mb-4" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}" data-prosedur-isi="{{ $prosedurPengawasan->isi ?? '' }}">
-    <!-- Form Input Pelaksana -->
-    @csrf
-    <div class="p-4" id="formContainer">
-        <h2 class="text-xl font-semibold mb-4">Tambahkan Pelaksana</h2>
-        <template id="formTemplate">
-            <div class="flex items-center mb-2 form-item w-96 rounded-sm">
-                <label class="block w-28 text-base font-medium text-gray-700">Pelaksana <span class="actor-number">1</span> :</label>
-                <select class="form-select actor-select w-52 rounded-md border border-gray-300 shadow-sm py-1 px-3 ml-2">
-                    <option value="" selected disabled>-- Pilih Pelaksana --</option>
-                    <option value="Inspektur Wilayah">Inspektur Wilayah</option>
-                    <option value="Pengendali Teknis">Pengendali Teknis</option>
-                    <option value="Ketua Tim">Ketua Tim</option>
-                    <option value="Anggota Tim">Anggota Tim</option>
-                    <option value="new-actor">Pelaksana Baru</option>
-                </select>
-                <input type="text" class="hidden custom-actor-input w-52 rounded-md border-gray-300 shadow-sm py-1 px-3 ml-2" placeholder="Masukkan pelaksana baru">
-            </div>
-        </template>
-    </div>
-    <!-- Button Input Pelaksana -->
-    <div id="formContainer"  class="flex justify-between p-4 w-full">
-        <div>
-            <button id="add-actor" class="cursor-pointer bg-blue-500 hover:bg-blue-600 h-10 text-base text-white px-4 py-2 rounded-sm mb-2 mr-2">Tambah Pelaksana</button>
-            <button id="delete-last-actor" class="cursor-pointer bg-red-500 hover:bg-red-600 h-10 text-base text-white py-2 px-4 rounded">Hapus Pelaksana</button>
+<div class="container mx-auto py-6">
+    <div class="bg-white shadow-md rounded-lg mb-6 p-6" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}" data-prosedur-isi="{{ $prosedurPengawasan->isi ?? '' }}">
+        <!-- Form Input Pelaksana -->
+        @csrf
+        <div class="mb-6" id="formContainer">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Tambahkan Pelaksana</h2>
+            <template id="formTemplate">
+                <div class="flex items-center mb-3 form-item w-full max-w-lg rounded-sm">
+                    <label class="block w-32 text-sm font-medium text-gray-700">Pelaksana <span class="actor-number">1</span> :</label>
+                    <select class="form-select actor-select w-64 rounded-md border border-gray-300 shadow-sm py-2 px-3 ml-2 focus:ring focus:ring-blue-200">
+                        <option value="" selected disabled>-- Pilih Pelaksana --</option>
+                        <option value="Inspektur Wilayah">Inspektur Wilayah</option>
+                        <option value="Pengendali Teknis">Pengendali Teknis</option>
+                        <option value="Ketua Tim">Ketua Tim</option>
+                        <option value="Anggota Tim">Anggota Tim</option>
+                        <option value="new-actor">Pelaksana Baru</option>
+                    </select>
+                    <input type="text" class="hidden custom-actor-input w-64 rounded-md border-gray-300 shadow-sm py-2 px-3 ml-2 focus:ring focus:ring-blue-200" placeholder="Masukkan pelaksana baru">
+                </div>
+            </template>
         </div>
-        <div>
-            <button id="save-actor" class="cursor-pointer bg-green-600 hover:bg-green-700 h-10 text-base text-white px-4 py-2 rounded-sm">Simpan</button>
+        <!-- Button Input Pelaksana -->
+        <div id="formContainer" class="flex justify-between p-4 w-full border-t border-gray-200 pt-4">
+            <div class="space-x-2">
+                <button id="add-actor" class="bg-blue-500 hover:bg-blue-600 h-10 text-sm text-white px-4 py-2 rounded-md transition">
+                    Tambah Pelaksana
+                </button>
+                <button id="delete-last-actor" class="bg-red-500 hover:bg-red-600 h-10 text-sm text-white py-2 px-4 rounded-md transition">
+                    Hapus Pelaksana
+                </button>
+            </div>
+            <div>
+                <button id="save-actor" class="bg-green-600 hover:bg-green-700 h-10 text-sm text-white px-4 py-2 rounded-md transition">
+                    Simpan
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Form Input Aktivitas -->
-    <div id="diagramSection" class="mb-5 p-4 bg-white rounded-lg hidden">
-        <h2 class="text-xl font-semibold mb-3">Tambahkan Aktivitas</h2>
-        <div id="diagramTable" class="mb-4">
+    <div id="diagramSection" class="bg-white shadow-md rounded-lg mb-6 p-6 hidden">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Tambahkan Aktivitas</h2>
+        <div id="diagramTable" class="mb-6">
             <!-- Diagram table will be added here -->
         </div>
         <!-- Button Aktivitas -->
-        <div class="flex justify-between w-full">
-            <div>
-                <button id="add-activity" class="bg-blue-500 hover:bg-blue-600 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm mb-2 mr-2">Tambah Aktivitas</button>
-                <button id="delete-last-activity" class="bg-red-500 hover:bg-red-600 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm mr-2">Hapus Aktivitas</button>
+        <div class="flex justify-between w-full border-t border-gray-200 pt-4">
+            <div class="space-x-2">
+                <button id="add-activity" class="bg-blue-500 hover:bg-blue-600 cursor-pointer h-10 text-sm text-white py-2 px-4 rounded-md transition">
+                    Tambah Aktivitas
+                </button>
+                <button id="delete-last-activity" class="bg-red-500 hover:bg-red-600 cursor-pointer h-10 text-sm text-white py-2 px-4 rounded-md transition">
+                    Hapus Aktivitas
+                </button>
             </div>
-            <button id="preview" class="bg-green-600 hover:bg-green-700 cursor-pointer h-10 text-base text-white py-2 px-4 rounded-sm">Preview Diagram</button>
+            <button id="preview" class="bg-green-600 hover:bg-green-700 cursor-pointer h-10 text-sm text-white py-2 px-4 rounded-md transition">
+                Preview Diagram
+            </button>
         </div>
     </div>
 
     <!-- Output Diagram Preview -->
-    <div id="previewBox" class="hidden p-4 bg-white rounded-lg">
-        <h2 class="text-xl font-semibold mb-3">Diagram Preview</h2>
-        <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedurPengawasan->id) }}"
-           class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition duration-200">
-               Simpan
-        </a>
-        <div id="graphContainerBox" class="overflow-auto mt-4">
+    <div id="previewBox" class="hidden bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Diagram Preview</h2>
+        <div class="mb-4">
+            <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedurPengawasan->id) }}"
+               class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition">
+                   Simpan
+            </a>
+        </div>
+        <div id="graphContainerBox" class="overflow-auto border border-gray-200 rounded-md p-2">
             <div id="graphContainer"></div>
         </div>
     </div>
-
 </div>
 @endsection
 

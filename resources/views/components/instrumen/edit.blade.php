@@ -1,4 +1,10 @@
-<div class="p-4">
+<div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
     @if (Auth::user()->role == 'perencana')
         <form action="{{ route('instrumen-pengawasan.update', $instrumenPengawasan->id) }}" method="POST" enctype="multipart/form-data">
     @elseif (Auth::user()->role == 'pjk')
@@ -6,71 +12,82 @@
     @endif
         @csrf
         @method('PUT')
-        <div class="form-group">
-            <label for="judul" class="font-semibold">Judul : </label>
-            <input type="text" name="judul" class="form-control" value="{{ $instrumenPengawasan->judul }}" required>
+        
+        <div class="mb-4">
+            <label for="judul" class="block font-medium text-gray-700">Judul</label>
+            <input type="text" name="judul" id="judul" value="{{ $instrumenPengawasan->judul }}" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        <div class="form-group">
-            <label for="pengelola_id" class="font-semibold">Petugas Pengelola : </label>
-            <select name="pengelola_id" class="form-control" required>
+        
+        <div class="mb-4">
+            <label for="pengelola_id" class="block font-medium text-gray-700">Petugas Pengelola</label>
+            <select name="pengelola_id" id="pengelola_id" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
                 @foreach ($is_pjk as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    <option value="{{ $user->id }}" {{ $instrumenPengawasan->pengelola_id == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="form-group flex items-start gap-2">
-            <label for="deskripsi" class="font-semibold pt-1">Deskripsi :</label>
-            <textarea name="deskripsi" class="form-control">{{ $instrumenPengawasan->deskripsi }}</textarea>
+        
+        <div class="mb-4">
+            <label for="deskripsi" class="block font-medium text-gray-700">Deskripsi</label>
+            <textarea name="deskripsi" id="deskripsi" 
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">{{ $instrumenPengawasan->deskripsi }}</textarea>
         </div>
-
-        <!-- <div class="form-group">
-            <label for="file">File</label>
-            <input type="file" name="pdf" id="pdf" accept="application/pdf" required>
-        </div> -->
-
-        <div class="form-group">
-            <div class="input-group">
-                <div class="custom-file">
-                    <label for="pdf" class="font-semibold">File : </label>
-                    <input type="file" name="pdf" id="pdf" accept="application/pdf" class="custom-file-input">
-                </div>
-            </div>
+        
+        <div class="mb-4">
+            <label for="pdf" class="block font-medium text-gray-700">File PDF</label>
+            <input type="file" name="pdf" id="pdf" accept="application/pdf"
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+            
             @if($instrumenPengawasan->file)
-            <div class="mt-2">
-                <small class="text-muted">File saat ini: {{ $instrumenPengawasan->file }}</small>
-                <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}" class="">
+            <div class="mt-2 text-sm text-gray-600">
+                File saat ini: {{ $instrumenPengawasan->file }}
+                <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}" class="text-blue-500 hover:underline">
+                    Download
                 </a>
             </div>
             @endif
         </div>
 
-
-        <div class="form-group" class="">
-            <label for="status" class="font-semibold">Status</label>
-            <select name="status" class="form-control" required>
+        <div class="mb-4">
+            <label for="status" class="block font-medium text-gray-700">Status</label>
+            <select name="status" id="status" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
                 <option value="draft" {{ $instrumenPengawasan->status == 'draft' ? 'selected' : '' }}>Draft</option>
                 <option value="diajukan" {{ $instrumenPengawasan->status == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
                 <option value="disetujui" {{ $instrumenPengawasan->status == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
             </select>
         </div>
+        
         <!-- Sembunyikan atau nonaktifkan input perencana_id -->
         <input type="hidden" name="pembuat_id" value="{{ $instrumenPengawasan->pembuat_id }}">
-        <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md">Simpan</button>
+        
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                Simpan Perubahan
+            </button>
+        </div>
     </form>
+    
     @if (Auth::user()->role == 'perencana')
-        <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" class="mt-4">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md">Delete</button>
-        </form>
+        <div class="mt-4">
+            <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" onclick="return confirm('Yakin ingin menghapus instrumen ini?')" 
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition">
+                    Hapus
+                </button>
+            </form>
+        </div>
     @endif
 </div>
 
-
 <script>
-    // Menampilkan nama file yang dipilih
     document.getElementById('pdf').addEventListener('change', function() {
         var fileName = this.files[0] ? this.files[0].name : 'Pilih file...';
-        document.querySelector('.custom-file-label').textContent = fileName;
+        this.nextElementSibling ? this.nextElementSibling.textContent = fileName : null;
     });
 </script>

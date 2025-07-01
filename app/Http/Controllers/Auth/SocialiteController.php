@@ -53,7 +53,7 @@ class SocialiteController extends Controller
     public function list()
     {
         $users = DB::select("SELECT id, name, email, role FROM users");
-        return view("admin.listrole", [
+        return view("admin.manajemen-role.listrole", [
             "title" => "Daftar Pengguna",
             "users" => $users,
         ]);
@@ -65,7 +65,7 @@ class SocialiteController extends Controller
             "SELECT id, name, email, role FROM users WHERE id = ?",
             [$id]
         );
-        return view("admin.editrole", [
+        return view("admin.manajemen-role.editrole", [
             "title" => "Daftar Pengguna",
             "user" => $user,
         ]);

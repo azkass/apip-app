@@ -1,165 +1,211 @@
-<div class="container p-8">
-    <div class="mb-4">
-    @if (Auth::user()->role == 'perencana')
-            <a href="/perencana/prosedurpengawasan/create-cover" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-sm mb-4">Create Cover Fix Code</a> <br><br>
-            <a href="/perencana/prosedurpengawasan/create-fix" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-sm">Create Body Fix Code</a>
+<div class="container mx-auto p-4">
+    <div class="mb-6">
+        @if (Auth::user()->role == 'perencana')
+            <div class="flex space-x-3">
+                <a href="/perencana/prosedurpengawasan/create-cover" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Cover Fix Code</a>
+                <a href="/perencana/prosedurpengawasan/create-fix" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Body Fix Code</a>
+            </div>
         @endif
     </div>
 
-    <div class="flex items-center mb-6">
-    <!-- Search Bar -->
-    <div>
-        <label class="font-semibold">Cari</label>
-        <div class="flex border-2 border-gray-300 overflow-hidden rounded-md h-10 mr-2 mt-1">
-            <input type="text" id="search" placeholder="Cari prosedur Pengawasan" class="form-control w-96 outline-none bg-white text-gray-600 text-sm px-4 py-3" />
-        </div>
-    </div>
-
-    <!-- Filter Tahun -->
-    <div>
-        <label class="font-semibold">Tahun</label>
-        <div class="relative mr-2 w-28 mt-1">
-            <select
-                id="tahunDropdown"
-                class="block w-28 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
-                onchange="window.location.href=this.value"
-            >
-                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                    @foreach (range(date('Y'), 2025) as $year)
-                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
-                                {{ request('tahun', date('Y')) == $year ? 'selected' : '' }}>
-                            {{ $year }}
-                        </option>
-                    @endforeach
-                @endif
-            </select>
-
-            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+    <div class="flex flex-wrap items-end gap-4 mb-6">
+        <!-- Search Bar -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
+            <div class="relative">
+                <input type="text" id="search" placeholder="Cari prosedur pengawasan" 
+                       class="w-80 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"/>
             </div>
         </div>
-    </div>
 
-    <!-- Filter Status -->
-    @if (Auth::user()->role != 'pegawai')
-    <div>
-        <label class="font-semibold">Status</label>
-        <div class="relative mr-2 w-28 mt-1">
-            <select
-                id="statusDropdown"
-                class="block w-28 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
-                onchange="window.location.href=this.value"
-            >
-                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }} class="flex items-center">
-                @endif
-                    Semua
-                </option>
-
-                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'draft']) }}" {{ $activeTab == 'draft' ? 'selected' : '' }} class="flex items-center">
-                @endif
-                    Draft
-                </option>
-
-                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'diajukan']) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }} class="flex items-center">
-                @endif
-                    Diajukan
-                </option>
-
-                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                    <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'disetujui']) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }} class="flex items-center">
-                @endif
-                    Disetujui
-                </option>
-            </select>
-
-            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </div>
-        </div>
-    </div>
-    @endif
-
-
-    <!-- Button Tambah -->
-    @if (Auth::user()->role == 'perencana')
-    <div>
-        <a href="{{ route('prosedur-pengawasan.create') }}" class="bg-blue-500 hover:bg-blue-600 h-[38px] mt-7 px-3 rounded-md text-white flex items-center justify-center font-medium">Tambah</a>
-    </div>
-    @endif
-</div>
-
-
-<!-- Isi tabel -->
-<table class="w-full bg-gray-50">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="border border-gray-300 px-4 py-2 w-[20px] text-center">No</th>
-            <th class="border border-gray-300 px-4 py-2 w-[150px] text-center">Nomor SOP</th>
-            <th class="border border-gray-300 px-4 py-2 text-center">Judul</th>
-            <th class="border border-gray-300 px-4 py-2 text-center w-40">Status</th>
-            <th class="border border-gray-300 px-4 py-2 text-center w-52">Aksi</th>
-            @if (Auth::user()->role == 'pjk')
-            <th class="border border-gray-300 px-4 py-2 text-center w-36">Evaluasi</th>
-            @endif
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($prosedurPengawasan as $index => $prosedur)
-        <tr class="hover:bg-white transition-colors duration-200">
-            <td class="border border-gray-300 px-4 py-2 text-center">{{ $index + 1 }}</td>
-            <td class="border border-gray-300 px-4 py-2 text-left">
-                <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="inline-block w-full">
-                    {{ $prosedur->nomor }}
-                </a>
-            </td>
-            <td class="border border-gray-300 px-4 py-2 align-middle">
-                <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="inline-block w-full">
-                   {{ $prosedur->judul }}
-                </a>
-            </td>
-            <td class="border border-gray-300 text-center text-white font-semibold">
-                <span class="py-2 px-3 rounded-md
-                    @if($prosedur->status == 'draft')
-                        bg-yellow-500
-                    @elseif($prosedur->status == 'diajukan')
-                        bg-blue-600
-                    @elseif($prosedur->status == 'disetujui')
-                        bg-green-500
-                    @endif">
-                    {{ ucfirst($prosedur->status) }}
-                </span>
-            </td>
-
-            <td class="border border-gray-300 px-4 py-3 text-center font-semibold text-white">
-                @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.edit', $prosedur->id) }}" class="py-2 px-4 bg-sky-500 hover:bg-sky-600 rounded-md">Edit</a>
-                @endif
-                <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="py-2 px-4 bg-green-500 hover:bg-green-600 rounded-md">Lihat</a>
-            </td>
-
-            @if (Auth::user()->role == 'pjk')
-            <td class="border border-gray-300 px-4 py-3 text-center font-semibold text-white">
-                <!-- asd -->
-                    @php
-                        $periode = DB::table("periode_evaluasi_prosedur")->latest()->first();
-                        $now = now()->toDateString();
-                        $isPeriodeActive = $periode && $now >= $periode->mulai && $now <= $periode->berakhir;
-                    @endphp
-
-                    @if ($isPeriodeActive)
-                        <a href="{{ route('evaluasi.create', $prosedur->id) }}" class="py-2 px-4 bg-purple-500 hover:bg-purple-600 rounded-md ml-2">Evaluasi</a>
+        <!-- Filter Tahun -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+            <div class="relative">
+                <select
+                    id="tahunDropdown"
+                    class="block w-32 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md appearance-none focus:ring focus:ring-blue-200"
+                    onchange="window.location.href=this.value"
+                >
+                    @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                        @foreach (range(date('Y'), 2025) as $year)
+                            <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
+                                    {{ request('tahun', date('Y')) == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endforeach
                     @endif
+                </select>
+
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Status -->
+        @if (Auth::user()->role != 'pegawai')
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <div class="relative">
+                <select
+                    id="statusDropdown"
+                    class="block w-32 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md appearance-none focus:ring focus:ring-blue-200"
+                    onchange="window.location.href=this.value"
+                >
+                    @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'semua']) }}" 
+                                {{ $activeTab == 'semua' ? 'selected' : '' }}>
+                            Semua
+                        </option>
+
+                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'draft']) }}" 
+                                {{ $activeTab == 'draft' ? 'selected' : '' }}>
+                            Draft
+                        </option>
+
+                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'diajukan']) }}" 
+                                {{ $activeTab == 'diajukan' ? 'selected' : '' }}>
+                            Diajukan
+                        </option>
+
+                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'disetujui']) }}" 
+                                {{ $activeTab == 'disetujui' ? 'selected' : '' }}>
+                            Disetujui
+                        </option>
+                    @endif
+                </select>
+
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- Button Tambah -->
+        @if (Auth::user()->role == 'perencana')
+        <div>
+            <a href="{{ route('prosedur-pengawasan.create') }}" 
+               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
+                Tambah
+            </a>
+        </div>
+        @endif
+    </div>
+
+    <!-- Isi tabel -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="w-full border-collapse">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">No</th>
+                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Nomor SOP</th>
+                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Judul</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Status</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Aksi</th>
+                    @if (Auth::user()->role == 'pjk')
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Evaluasi</th>
+                    @endif
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($prosedurPengawasan as $index => $prosedur)
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="border border-gray-300 px-4 py-3 text-center">{{ $index + 1 }}</td>
+                    <td class="border border-gray-300 px-4 py-3">
+                        <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="hover:text-blue-600">
+                            {{ $prosedur->nomor }}
+                        </a>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3">
+                        <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="hover:text-blue-600">
+                           {{ $prosedur->judul }}
+                        </a>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 text-center">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                            @if($prosedur->status == 'draft')
+                                bg-yellow-100 text-yellow-800
+                            @elseif($prosedur->status == 'diajukan')
+                                bg-blue-100 text-blue-800
+                            @elseif($prosedur->status == 'disetujui')
+                                bg-green-100 text-green-800
+                            @endif">
+                            {{ ucfirst($prosedur->status) }}
+                        </span>
+                    </td>
+
+                    <td class="border border-gray-300 px-4 py-3 text-center">
+                        <div class="flex justify-center space-x-2">
+                            @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                            <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.edit', $prosedur->id) }}" 
+                               class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">
+                                Edit
+                            </a>
+                            @endif
+                            <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" 
+                               class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
+                                Lihat
+                            </a>
+                        </div>
+                    </td>
+
+                    @if (Auth::user()->role == 'pjk')
+                    <td class="border border-gray-300 px-4 py-3 text-center">
+                        @php
+                            $periode = DB::table("periode_evaluasi_prosedur")->latest()->first();
+                            $now = now()->toDateString();
+                            $isPeriodeActive = $periode && $now >= $periode->mulai && $now <= $periode->berakhir;
+                        @endphp
+
+                        @if ($isPeriodeActive)
+                            <a href="{{ route('evaluasi.create', $prosedur->id) }}" 
+                               class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm transition">
+                                Evaluasi
+                            </a>
+                        @endif
+                    </td>
+                    @endif
+                </tr>
+                @endforeach
+                
+                @if(count($prosedurPengawasan) == 0)
+                <tr>
+                    <td colspan="{{ Auth::user()->role == 'pjk' ? '6' : '5' }}" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
+                        <div class="flex flex-col items-center">
+                            <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p class="text-lg font-medium">Belum ada prosedur pengawasan</p>
+                            <p class="text-sm">Klik "Tambah" untuk membuat prosedur pengawasan baru</p>
+                        </div>
+                    </td>
+                </tr>
                 @endif
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-4 text-sm text-gray-600">
+        <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center">
+                <span class="inline-block w-3 h-3 bg-yellow-100 rounded-full mr-2"></span>
+                <span>Draft: Prosedur dalam proses perancangan</span>
+            </div>
+            <div class="flex items-center">
+                <span class="inline-block w-3 h-3 bg-blue-100 rounded-full mr-2"></span>
+                <span>Diajukan: Prosedur diajukan untuk ditinjau</span>
+            </div>
+            <div class="flex items-center">
+                <span class="inline-block w-3 h-3 bg-green-100 rounded-full mr-2"></span>
+                <span>Disetujui: Prosedur telah ditinjau dan disetujui</span>
+            </div>
+        </div>
+    </div>
 </div>

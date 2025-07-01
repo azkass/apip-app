@@ -31,6 +31,10 @@
                         <i class="fa-solid fa-user-shield mx-auto sidebar-icon fa-lg my-4" title="Manajemen Role"></i>
                         <span class="ml-2 hidden sidebar-text">Manajemen Role</span>
                     </a>
+                    <a href="{{ route('admin.inspektur-utama.index') }}" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-user-tie mx-auto sidebar-icon fa-lg my-4" title="Inspektur Utama"></i>
+                        <span class="ml-2 hidden sidebar-text">Inspektur Utama</span>
+                    </a>
                     <a href="/admin/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-user-shield mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
                         <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>

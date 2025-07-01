@@ -1,32 +1,71 @@
-<div class="container p-4">
-    <div class="card">
-        <div class="card-body">
-            <p class="card-text"><strong>Judul:</strong> {{ $instrumenPengawasan->judul }}</p>
-            <p class="card-text"><strong>Nama Petugas Pengelola:</strong> {{ $instrumenPengawasan->petugas_nama }}</p>
-            <p class="card-text"><strong>Status:</strong> {{ ucfirst($instrumenPengawasan->status) }}</p>
-            <p class="card-text"><strong>Nama Perencana:</strong> {{ $instrumenPengawasan->perencana_nama }}</p>
-            <p class="card-text"><strong>Deskripsi:</strong> {{ $instrumenPengawasan->deskripsi }} </p>
-            <p class="card-text"><strong>Dokumen:</strong> {{ $instrumenPengawasan->file }}
-                <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}" class="ml-4 py-2 px-4 bg-red-500 hover:bg-red-600 rounded-md text-white">
-                    <i class="fas fa-download"></i> Unduh
+<div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
+    <div class="mb-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Detail Instrumen Pengawasan</h2>
+
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">Judul</h3>
+            <p class="text-base text-gray-800">{{ $instrumenPengawasan->judul }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">Nama Petugas Pengelola</h3>
+            <p class="text-base text-gray-800">{{ $instrumenPengawasan->petugas_nama }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">Status</h3>
+            <p class="text-base text-gray-800">{{ ucfirst($instrumenPengawasan->status) }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">Nama Perencana</h3>
+            <p class="text-base text-gray-800">{{ $instrumenPengawasan->perencana_nama }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">Deskripsi</h3>
+            <p class="text-base text-gray-800">{{ $instrumenPengawasan->deskripsi }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">File</h3>
+            <div class="flex items-center mt-1">
+                <p class="text-base text-gray-800 mr-3">{{ $instrumenPengawasan->file }}</p>
+                <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}" 
+                   class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
+                    <i class="fas fa-download mr-1"></i> Download
                 </a>
-            </p>
+            </div>
+        </div>
 
-            @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
-                <form action="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumenPengawasan->id) }}" method="GET" class="mt-4 inline-block">
-                    <button type="submit" class="cursor-pointer px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-md">
-                        Edit
-                    </button>
-                </form>
-            @endif
-            @if (Auth::user()->role == 'perencana')
-                <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" class="" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="cursor-pointer mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md">Delete</button>
-                </form>
-            @endif
-
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Dibuat Pada</h3>
+                <p class="text-base text-gray-800">{{ \Carbon\Carbon::parse($instrumenPengawasan->created_at)->format('d M Y H:i') }}</p>
+            </div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Diperbarui Pada</h3>
+                <p class="text-base text-gray-800">{{ \Carbon\Carbon::parse($instrumenPengawasan->updated_at)->format('d M Y H:i') }}</p>
+            </div>
         </div>
     </div>
+
+    @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
+    <div class="flex space-x-3">
+        <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumenPengawasan->id) }}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
+            Edit
+        </a>
+        @if (Auth::user()->role == 'perencana')
+        <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" class="inline-block">
+            @csrf
+            @method('DELETE')
+            <button type="submit" onclick="return confirm('Yakin ingin menghapus instrumen ini?')" 
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition">
+                Hapus
+            </button>
+        </form>
+        @endif
+    </div>
+    @endif
 </div>

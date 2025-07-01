@@ -8,6 +8,7 @@ use App\Http\Controllers\RegulasiController;
 use App\Http\Controllers\ProsedurPengawasanController;
 use App\Http\Controllers\EvaluasiProsedurController;
 use App\Http\Controllers\PeriodeEvaluasiProsedurController;
+use App\Http\Controllers\InspekturUtamaController;
 
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
@@ -17,6 +18,26 @@ Route::get("/periode", [
     PeriodeEvaluasiProsedurController::class,
     "index",
 ])->name("periode.index");
+Route::get("/periode/create", [
+    PeriodeEvaluasiProsedurController::class,
+    "create",
+])->name("periode.create");
+Route::post("/periode", [
+    PeriodeEvaluasiProsedurController::class,
+    "store",
+])->name("periode.store");
+Route::get("/periode/edit/{id}", [
+    PeriodeEvaluasiProsedurController::class,
+    "edit",
+])->name("periode.edit");
+Route::put("/periode/{id}", [
+    PeriodeEvaluasiProsedurController::class,
+    "update",
+])->name("periode.update");
+Route::delete("/periode/{id}", [
+    PeriodeEvaluasiProsedurController::class,
+    "destroy",
+])->name("periode.destroy");
 
 // Evaluasi
 Route::middleware(["periode.evaluasi"])->group(function () {
@@ -48,29 +69,6 @@ Route::middleware(["periode.evaluasi"])->group(function () {
         "destroy",
     ])->name("evaluasi.destroy");
 });
-Route::get("/periode/create", [
-    PeriodeEvaluasiProsedurController::class,
-    "create",
-])->name("periode.create");
-Route::post("/periode", [
-    PeriodeEvaluasiProsedurController::class,
-    "store",
-])->name("periode.store");
-
-Route::get("/periode/edit", [
-    PeriodeEvaluasiProsedurController::class,
-    "edit",
-])->name("periode.edit");
-
-Route::put("/periode", [
-    PeriodeEvaluasiProsedurController::class,
-    "update",
-])->name("periode.update");
-
-Route::delete("/periode/{id}", [
-    PeriodeEvaluasiProsedurController::class,
-    "destroy",
-])->name("periode.destroy");
 
 // Login
 Route::get("/auth/redirect", [SocialiteController::class, "redirect"]);
@@ -120,6 +118,36 @@ Route::middleware("auth", "role:admin")->group(function () {
         ProsedurPengawasanController::class,
         "detail",
     ])->name("admin.prosedur-pengawasan.detail");
+
+    // Routes untuk Inspektur Utama - hanya admin yang bisa akses
+    Route::get("/admin/inspektur-utama", [
+        InspekturUtamaController::class,
+        "index",
+    ])->name("admin.inspektur-utama.index");
+    Route::get("/admin/inspektur-utama/create", [
+        InspekturUtamaController::class,
+        "create",
+    ])->name("admin.inspektur-utama.create");
+    Route::post("/admin/inspektur-utama", [
+        InspekturUtamaController::class,
+        "store",
+    ])->name("admin.inspektur-utama.store");
+    Route::get("/admin/inspektur-utama/{id}", [
+        InspekturUtamaController::class,
+        "show",
+    ])->name("admin.inspektur-utama.show");
+    Route::get("/admin/inspektur-utama/{id}/edit", [
+        InspekturUtamaController::class,
+        "edit",
+    ])->name("admin.inspektur-utama.edit");
+    Route::put("/admin/inspektur-utama/{id}", [
+        InspekturUtamaController::class,
+        "update",
+    ])->name("admin.inspektur-utama.update");
+    Route::delete("/admin/inspektur-utama/{id}", [
+        InspekturUtamaController::class,
+        "destroy",
+    ])->name("admin.inspektur-utama.destroy");
 });
 
 Route::middleware("auth", "role:pjk")->group(function () {

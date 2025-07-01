@@ -15,19 +15,16 @@ class ProsedurPengawasan
 
     public static function getByStatus($status = null)
     {
-        $query = 'SELECT prosedur_pengawasan.id, prosedur_pengawasan.nomor, prosedur_pengawasan.judul, prosedur_pengawasan.status, prosedur_pengawasan.updated_at, u1.name AS petugas_nama, u2.name AS perencana_nama
-            FROM prosedur_pengawasan
-            INNER JOIN users u1 ON prosedur_pengawasan.penyusun_id = u1.id
-            INNER JOIN users u2 ON prosedur_pengawasan.pembuat_id = u2.id';
+        $query = "SELECT pp.id, pp.nomor, pp.judul, pp.status, pp.updated_at,
+                  u1.name AS petugas_nama, u2.name AS perencana_nama
+                  FROM prosedur_pengawasan pp
+                  JOIN users u1 ON pp.penyusun_id = u1.id
+                  JOIN users u2 ON pp.pembuat_id = u2.id";
 
-        // Filter berdasarkan status jika diberikan
-        if ($status) {
-            if ($status === "semua") {
-                // Tidak perlu menambahkan filter status
-            } else {
-                $query .= " WHERE prosedur_pengawasan.status = '$status'";
-            }
+        if ($status && $status !== "semua") {
+            $query .= " WHERE pp.status = '" . addslashes($status) . "'";
         }
+
         return DB::select($query);
     }
 
@@ -83,11 +80,11 @@ class ProsedurPengawasan
     {
         return DB::selectOne(
             "
-            SELECT prosedur_pengawasan.*, u1.name AS petugas_nama, u2.name AS perencana_nama
-            FROM prosedur_pengawasan
-            INNER JOIN users u1 ON prosedur_pengawasan.penyusun_id = u1.id
-            INNER JOIN users u2 ON prosedur_pengawasan.pembuat_id = u2.id
-            WHERE prosedur_pengawasan.id = ?",
+            SELECT pp.*, u1.name AS petugas_nama, u2.name AS perencana_nama
+            FROM prosedur_pengawasan pp
+            INNER JOIN users u1 ON pp.penyusun_id = u1.id
+            INNER JOIN users u2 ON pp.pembuat_id = u2.id
+            WHERE pp.id = ?",
             [$id]
         );
     }

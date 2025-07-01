@@ -3,7 +3,6 @@
 @section('content')
 <div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
     <div class="flex justify-between mb-6">
-        <h2 class="text-2xl font-bold">Detail Evaluasi Prosedur</h2>
         <div>
             <a href="{{ route('evaluasi.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">Kembali</a>
             <a href="{{ route('evaluasi.edit', $evaluasi->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition ml-2">Edit</a>
