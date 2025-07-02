@@ -1,17 +1,17 @@
 <div class="container mx-auto p-4">
-    <div class="flex items-center mb-6">
+    <div class="flex items-center gap-4 mb-6">
         <!-- Search Bar -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
-            <div class="relative mr-2">
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1">Cari</label>
+            <div class="relative">
                 <input type="text" id="search" placeholder="Cari instrumen pengawasan" 
                        class="w-80 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"/>
             </div>
         </div>
 
         <!-- Filter Tahun -->
-        <div class="mr-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1">Tahun</label>
             <div class="relative">
                 <select
                     id="tahunDropdown"
@@ -44,14 +44,14 @@
 
         <!-- Filter Status -->
         @if (Auth::user()->role != 'pegawai')
-        <div class="mr-2">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-        <div class="relative">
-            <select
-                id="statusDropdown"
-                class="block w-28 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
-                onchange="window.location.href=this.value"
-            >
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1">Status</label>
+            <div class="relative">
+                <select
+                    id="statusDropdown"
+                    class="block w-28 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
+                    onchange="window.location.href=this.value"
+                >
                 @if (Auth::user()->role == 'perencana')
                     <option value="{{ route('perencana.instrumen-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }}>
                         Semua
@@ -92,25 +92,14 @@
 
         <!-- Button Tambah -->
         @if (Auth::user()->role == 'perencana')
-        <div>
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1 invisible">Aksi</label>
             <a href="{{ route('instrumen-pengawasan.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
                 Tambah Instrumen
             </a>
         </div>
         @endif
     </div>
-
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
 
     <!-- Isi tabel -->
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -121,7 +110,7 @@
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Judul</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Status</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Dokumen</th>
-                    @if (Auth::user()->role != 'pegawai')
+                    @if (Auth::user()->role != 'pegawai' || Auth::user()->role != 'admin')
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Aksi</th>
                     @endif
                 </tr>
@@ -154,7 +143,7 @@
                         </a>
                     </td>
 
-                    @if (Auth::user()->role != 'pegawai')
+                    @if (Auth::user()->role != 'pegawai' || Auth::user()->role != 'admin')
                         <td class="border border-gray-300 px-4 py-3 text-center">
                             <div class="flex justify-center space-x-2">
                                 <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.detail', $instrumen->id) }}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
@@ -193,8 +182,20 @@
             </tbody>
         </table>
     </div>
+    <div class="mt-4 text-sm text-gray-600">
+        <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center">
+                <span class="inline-block w-3 h-3 bg-yellow-100 rounded-full mr-2"></span>
+                <span>Draft: Instrumen pengawasan dalam proses perancangan</span>
+            </div>
+            <div class="flex items-center">
+                <span class="inline-block w-3 h-3 bg-blue-100 rounded-full mr-2"></span>
+                <span>Diajukan: Instrumen pengawasan diajukan untuk ditinjau</span>
+            </div>
+            <div class="flex items-center">
+                <span class="inline-block w-3 h-3 bg-green-100 rounded-full mr-2"></span>
+                <span>Disetujui: Instrumen pengawasan telah ditinjau dan disetujui</span>
+            </div>
+        </div>
+    </div>
 </div>
-
-<script>
-// JavaScript functionality can be added here
-</script>

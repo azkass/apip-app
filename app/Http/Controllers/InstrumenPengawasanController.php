@@ -92,7 +92,7 @@ class InstrumenPengawasanController extends Controller
 
         return redirect()
             ->route("perencana.instrumen-pengawasan.index")
-            ->with("success", "Instrumen Pengawasan created successfully.");
+            ->with("success", "Instrumen Pengawasan berhasil dibuat.");
     }
 
     public function downloadPdf($id)
@@ -213,29 +213,16 @@ class InstrumenPengawasanController extends Controller
         // Ambil data yang sudah diupdate
         $updatedInstrumenPengawasan = InstrumenPengawasan::detail($id);
 
-        // Redirect sesuai role user
-        // if (Auth::user()->role == "perencana") {
-        //     return view("perencana.instrumen.detailinstrumenpengawasan", [
-        //         "instrumenPengawasan" => $updatedInstrumenPengawasan,
-        //         "title" => "Detail Instrumen Pengawasan",
-        //     ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
-        // } elseif (Auth::user()->role == "pjk") {
-        //     return view("penanggungjawab.instrumen.detailinstrumenpengawasan", [
-        //         "instrumenPengawasan" => $updatedInstrumenPengawasan,
-        //         "title" => "Detail Instrumen Pengawasan",
-        //     ])->with("success", "Instrumen Pengawasan berhasil diperbarui");
-        // }
-        //
         if (Auth::user()->role == "perencana") {
             return redirect()->route(
-                "perencana.instrumen.detailinstrumenpengawasan",
-                $updatedInstrumenPengawasan->id
-            );
+                "perencana.instrumen-pengawasan.detail",
+                $updatedInstrumenPengawasan->id,
+            )->with('success', 'Instrumen pengawasan berhasil diedit');
         } elseif (Auth::user()->role == "pjk") {
             return redirect()->route(
-                "penanggungjawab.instrumen.detailinstrumenpengawasan",
+                "pjk.instrumen-pengawasan.detail",
                 $updatedInstrumenPengawasan->id
-            );
+            )->with('success', 'Instrumen pengawasan berhasil diedit');
         }
     }
 

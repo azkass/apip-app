@@ -37,8 +37,10 @@ class Regulasi
         // Mengubah judul menjadi title case sebelum insert
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::insert(
-            "INSERT INTO regulasi (judul, tautan, file, pembuat_id, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())",
+            "INSERT INTO regulasi (kode, hasil_kerja, judul, tautan, file, pembuat_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())",
             [
+                $data["kode"],
+                $data["hasil_kerja"],
                 $data["judul"],
                 $data["tautan"],
                 $data["file"],
@@ -52,8 +54,10 @@ class Regulasi
         // Mengubah judul menjadi title case sebelum insert
         $data["judul"] = ucwords(strtolower($data["judul"]));
         return DB::update(
-            "UPDATE regulasi SET judul = ?, tautan = ?, file = ?, pembuat_id = ?, updated_at = NOW() WHERE id = ?",
+            "UPDATE regulasi SET kode = ?, hasil_kerja = ?, judul = ?, tautan = ?, file = ?, pembuat_id = ?, updated_at = NOW() WHERE id = ?",
             [
+                $data["kode"],
+                $data["hasil_kerja"],
                 $data["judul"],
                 $data["tautan"],
                 $data["file"],

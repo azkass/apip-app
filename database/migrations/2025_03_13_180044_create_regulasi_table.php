@@ -9,6 +9,8 @@ return new class extends Migration {
     {
         Schema::create("regulasi", function (Blueprint $table) {
             $table->id();
+            $table->string("kode");
+            $table->string("hasil_kerja");
             $table->string("judul");
             $table->string("tautan")->nullable();
             $table->string("file")->nullable();

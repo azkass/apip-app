@@ -8,10 +8,10 @@
         @endif
     </div>
 
-    <div class="flex flex-wrap items-end gap-4 mb-6">
+    <div class="flex items-center gap-4 mb-6">
         <!-- Search Bar -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1">Cari</label>
             <div class="relative">
                 <input type="text" id="search" placeholder="Cari prosedur pengawasan" 
                        class="w-80 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"/>
@@ -19,8 +19,8 @@
         </div>
 
         <!-- Filter Tahun -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1">Tahun</label>
             <div class="relative">
                 <select
                     id="tahunDropdown"
@@ -47,8 +47,8 @@
 
         <!-- Filter Status -->
         @if (Auth::user()->role != 'pegawai')
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1">Status</label>
             <div class="relative">
                 <select
                     id="statusDropdown"
@@ -89,7 +89,8 @@
 
         <!-- Button Tambah -->
         @if (Auth::user()->role == 'perencana')
-        <div>
+        <div class="flex flex-col">
+            <label class="text-sm font-medium text-gray-700 mb-1 invisible">Aksi</label>
             <a href="{{ route('prosedur-pengawasan.create') }}" 
                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
                 Tambah

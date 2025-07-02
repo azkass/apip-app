@@ -10,29 +10,29 @@
             <input type="text" name="judul" id="judul" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        
+
         <div class="mb-4">
-            <label for="pengelola_id" class="block font-medium text-gray-700">Petugas Pengelola</label>
-            <select name="pengelola_id" id="pengelola_id" required
+            <label for="penyusun_id" class="block font-medium text-gray-700">Petugas Pengelola</label>
+            <select name="penyusun_id" id="penyusun_id" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
                 @foreach ($is_pjk as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach
             </select>
         </div>
-        
+
         <div class="mb-4">
             <label for="deskripsi" class="block font-medium text-gray-700">Deskripsi</label>
             <textarea name="deskripsi" id="deskripsi"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"></textarea>
         </div>
-        
+
         <div class="mb-4">
             <label for="pdf" class="block font-medium text-gray-700">File PDF</label>
             <input type="file" name="pdf" id="pdf" accept="application/pdf" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        
+
         <div class="mb-4">
             <label for="status" class="block font-medium text-gray-700">Status</label>
             <select name="status" id="status" required

@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Default Title' }}</title>
-    @vite('resources/css/app.css')
-    <!-- @vite('resources/js/app.js') -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
     </style>
+    @stack('scripts')
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
@@ -159,6 +159,25 @@
                 </div>
             </header>
 
+            <!-- Flash Messages -->
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 mx-6 mt-2 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                    <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.style.display='none'">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mx-6 mt-2 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                    <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.style.display='none'">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+            @endif
+
             <!-- Main Content Area -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white mx-6 mt-4 rounded-[3px] mb-4">
                 <!-- Konten utama akan diisi dari app.blade.php -->
@@ -233,7 +252,6 @@
         }
     });
     </script>
-    @stack('scripts')
 
 </body>
 </html>

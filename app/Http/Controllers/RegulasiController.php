@@ -41,6 +41,8 @@ class RegulasiController extends Controller
             "judul" => "required|string|max:255",
             "tautan" => "required|string",
             "pdf" => "required|file|mimes:pdf|max:10240",
+            "kode" => "required|string|max:255",
+            "hasil_kerja" => "required|string|max:255",
         ]);
 
         // Handle file upload
@@ -60,7 +62,7 @@ class RegulasiController extends Controller
         ]);
 
         Regulasi::create(
-            $request->only(["judul", "tautan", "file", "pembuat_id"])
+            $request->only(["judul", "tautan", "file", "pembuat_id", "kode", "hasil_kerja"])
         );
 
         return redirect()
@@ -107,6 +109,8 @@ class RegulasiController extends Controller
             "judul" => "required|string|max:255",
             "tautan" => "required|string",
             "pembuat_id" => "required|exists:users,id",
+            "kode" => "required|string|max:255",
+            "hasil_kerja" => "required|string|max:255",
         ];
 
         // File PDF bersifat opsional pada update
@@ -133,7 +137,7 @@ class RegulasiController extends Controller
         }
 
         // Update data dengan file yang sesuai (baru atau tetap yang lama)
-        $data = $request->only(["judul", "tautan", "status", "pembuat_id"]);
+        $data = $request->only(["judul", "tautan", "status", "pembuat_id", "kode", "hasil_kerja"]);
         $data["file"] = $fileName;
 
         Regulasi::update($id, $data);

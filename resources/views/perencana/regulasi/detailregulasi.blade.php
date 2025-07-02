@@ -5,6 +5,16 @@
         <h2 class="text-xl font-bold text-gray-800 mb-6">Detail Regulasi</h2>
 
         <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">Kode</h3>
+            <p class="text-base text-gray-800">{{ $regulasi->kode }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500">Hasil Kerja</h3>
+            <p class="text-base text-gray-800">{{ $regulasi->hasil_kerja }}</p>
+        </div>
+
+        <div class="mb-4">
             <h3 class="text-sm font-medium text-gray-500">Judul</h3>
             <p class="text-base text-gray-800">{{ $regulasi->judul }}</p>
         </div>

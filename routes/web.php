@@ -9,6 +9,7 @@ use App\Http\Controllers\ProsedurPengawasanController;
 use App\Http\Controllers\EvaluasiProsedurController;
 use App\Http\Controllers\PeriodeEvaluasiProsedurController;
 use App\Http\Controllers\InspekturUtamaController;
+use App\Http\Controllers\DashboardController;
 
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
@@ -96,9 +97,7 @@ Route::middleware("auth")->group(function () {
     });
 });
 Route::middleware("auth", "role:admin")->group(function () {
-    Route::get("/admin/dashboard", function () {
-        return view("admin.dashboard", ["title" => "Dashboard"]);
-    });
+    Route::get("/admin/dashboard", [DashboardController::class, "index"]);
     Route::get("/admin/list", [SocialiteController::class, "list"])->name(
         "admin.list"
     );
@@ -151,9 +150,7 @@ Route::middleware("auth", "role:admin")->group(function () {
 });
 
 Route::middleware("auth", "role:pjk")->group(function () {
-    Route::get("/penanggungjawab/dashboard", function () {
-        return view("penanggungjawab.dashboard", ["title" => "Dashboard"]);
-    });
+    Route::get("/penanggungjawab/dashboard", [DashboardController::class, "index"]);
     Route::get("/penanggungjawab/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
@@ -193,9 +190,7 @@ Route::middleware("auth", "role:pjk")->group(function () {
     ])->name("pjk.prosedur-pengawasan.delete");
 });
 Route::middleware("auth", "role:perencana")->group(function () {
-    Route::get("/perencana/dashboard", function () {
-        return view("perencana.dashboard", ["title" => "Dashboard"]);
-    });
+    Route::get("/perencana/dashboard", [DashboardController::class, "index"]);
     Route::get("/perencana/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
@@ -316,9 +311,7 @@ Route::middleware("auth", "role:perencana")->group(function () {
 });
 
 Route::middleware("auth", "role:pegawai")->group(function () {
-    Route::get("/pegawai/dashboard", function () {
-        return view("pegawai.dashboard", ["title" => "Dashboard"]);
-    });
+    Route::get("/pegawai/dashboard", [DashboardController::class, "index"]);
     Route::get("/pegawai/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",

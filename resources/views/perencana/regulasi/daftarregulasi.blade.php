@@ -10,23 +10,13 @@
         </a>
     </div>
 
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <table class="w-full border-collapse">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">No</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Kode</th>
+                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Hasil Kerja</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Judul</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Dokumen</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Tautan</th>
@@ -37,6 +27,8 @@
                 @forelse ($regulasi as $index => $item)
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="border border-gray-300 px-4 py-3 text-center">{{ $index + 1 }}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center">{{ $item->kode }}</td>
+                        <td class="border border-gray-300 px-4 py-3">{{ $item->hasil_kerja }}</td>
                         <td class="border border-gray-300 px-4 py-3">
                             {{ $item->judul }}
                         </td>
@@ -70,7 +62,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
+                        <td colspan="7" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
                             <div class="flex flex-col items-center">
                                 <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
