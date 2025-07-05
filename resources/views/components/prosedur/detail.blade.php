@@ -23,6 +23,22 @@
                 </span>
             </div>
             <div>
+                <p class="text-gray-600 text-sm font-medium">Tanggal Pembuatan</p>
+                <p class="text-base">{{ $prosedurPengawasan->tanggal_pembuatan ? date('d/m/Y', strtotime($prosedurPengawasan->tanggal_pembuatan)) : '-' }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Tanggal Revisi</p>
+                <p class="text-base">{{ $prosedurPengawasan->tanggal_revisi ? date('d/m/Y', strtotime($prosedurPengawasan->tanggal_revisi)) : '-' }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Tanggal Efektif</p>
+                <p class="text-base">{{ $prosedurPengawasan->tanggal_efektif ? date('d/m/Y', strtotime($prosedurPengawasan->tanggal_efektif)) : '-' }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Disahkan Oleh</p>
+                <p class="text-base">{{ $prosedurPengawasan->disahkan_oleh_nama }}</p>
+            </div>
+            <div>
                 <p class="text-gray-600 text-sm font-medium">Perencana</p>
                 <p class="text-base">{{ $prosedurPengawasan->perencana_nama }}</p>
             </div>

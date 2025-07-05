@@ -11,15 +11,15 @@
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
     </style>
 </head>
-<body>
-    <div class="relative mx-auto w-full max-w-md bg-gray-50 px-6 py-10 mt-40 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
-        <div class="text-center mb-4">
-            <h1 class="text-3xl font-semibold text-black">Sign in</h1>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-6">
+    <div class="w-full max-w-sm mx-auto bg-white px-5 py-8 sm:px-8 sm:py-10 rounded-xl shadow-lg">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl sm:text-3xl font-semibold text-black">Sign in</h1>
         </div>
-        <div class="bg-gray-200 hover:bg-gray-300 text-black text-center w-56 p-2 rounded-lg cursor-pointer mx-auto">
-            <a href="/auth/redirect" class="inline-block w-full">
+        <div class="flex justify-center">
+            <a href="/auth/redirect" class="flex items-center justify-center w-full bg-gray-200 hover:bg-gray-300 text-black p-3 rounded-lg transition-colors duration-200">
                 <i class="fa-brands fa-google mr-2"></i>
-                Sign In Google
+                <span>Sign In with Google</span>
             </a>
         </div>
     </div>

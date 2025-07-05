@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ProsedurPengawasan;
+use App\Models\InspekturUtama;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -46,9 +47,13 @@ class ProsedurPengawasanController extends Controller
         $is_perencana = DB::select(
             'SELECT id, name, role FROM users WHERE role IN ("perencana")'
         ); // Ambil data user untuk dropdown
+        
+        $inspektur_utama = InspekturUtama::getNama();
+        
         return view("perencana.prosedur.createprosedurpengawasan", [
             "is_pjk" => $is_pjk,
             "is_perencana" => $is_perencana,
+            "inspektur_utama" => $inspektur_utama,
             "title" => "Tambah Prosedur Pengawasan",
         ]);
     }
@@ -61,6 +66,10 @@ class ProsedurPengawasanController extends Controller
             "status" => "required|max:255",
             "pembuat_id" => "required|exists:users,id",
             "penyusun_id" => "required|exists:users,id",
+            "tanggal_pembuatan" => "nullable|date",
+            "tanggal_revisi" => "nullable|date",
+            "tanggal_efektif" => "nullable|date",
+            "disahkan_oleh" => "required|exists:inspektur_utama,id",
         ]);
 
         ProsedurPengawasan::create($validatedData);
@@ -97,16 +106,21 @@ class ProsedurPengawasanController extends Controller
         $is_pjk = DB::select(
             'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
         ); // Ambil data user untuk dropdown
+        
+        $inspektur_utama = InspekturUtama::getAll();
+        
         if (Auth::user()->role == "perencana") {
             return view("perencana.prosedur.editprosedurpengawasan", [
                 "prosedurPengawasan" => $prosedurPengawasan,
                 "is_pjk" => $is_pjk,
+                "inspektur_utama" => $inspektur_utama,
                 "title" => "Edit Prosedur Pengawasan",
             ]);
         } elseif (Auth::user()->role == "pjk") {
             return view("penanggungjawab.prosedur.editprosedurpengawasan", [
                 "prosedurPengawasan" => $prosedurPengawasan,
                 "is_pjk" => $is_pjk,
+                "inspektur_utama" => $inspektur_utama,
                 "title" => "Edit Prosedur Pengawasan",
             ]);
         }
@@ -122,6 +136,10 @@ class ProsedurPengawasanController extends Controller
             "status" => "required|max:255",
             "pembuat_id" => "required|exists:users,id",
             "penyusun_id" => "required|exists:users,id",
+            "tanggal_pembuatan" => "nullable|date",
+            "tanggal_revisi" => "nullable|date",
+            "tanggal_efektif" => "nullable|date",
+            "disahkan_oleh" => "required|exists:inspektur_utama,id",
         ]);
 
         ProsedurPengawasan::update($id, $request);
@@ -163,6 +181,30 @@ class ProsedurPengawasanController extends Controller
         return response()->json([
             "success" => true,
             "message" => "Data berhasil disimpan",
+        ]);
+    }
+    
+    public function editCover($id)
+    {
+        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+
+        return view("perencana.prosedur.edit-cover", [
+            "prosedurPengawasan" => $prosedurPengawasan,
+            "title" => "Edit Cover Prosedur Pengawasan",
+        ]);
+    }
+
+    public function updateCover(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            "cover" => "required|json",
+        ]);
+
+        ProsedurPengawasan::updateCover($id, $validatedData);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Cover berhasil disimpan",
         ]);
     }
 

@@ -6,7 +6,7 @@
             <input type="text" placeholder="Cari Regulasi Pengawasan" class="w-96 outline-none bg-white text-gray-600 text-sm px-4 py-3" />
         </div>
         <a href="{{ route('perencana.regulasi.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
-            Tambah Regulasi
+            Tambah
         </a>
     </div>
 

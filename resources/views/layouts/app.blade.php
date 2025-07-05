@@ -43,6 +43,10 @@
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
                         <span class="ml-2 hidden sidebar-text">Periode Evaluasi</span>
                     </a>
+                    <a href="{{ route('pertanyaan.index') }}" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-question-circle mx-auto sidebar-icon fa-lg my-4" title="Pertanyaan Evaluasi"></i>
+                        <span class="ml-2 hidden sidebar-text">Pertanyaan Evaluasi</span>
+                    </a>
                 @elseif (Auth::user()->role == 'pjk')
                     <a href="/penanggungjawab/dashboard" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
@@ -187,69 +191,91 @@
     </div>
 
     <script>
-    // Kode untuk mekanisme sidebar
-    document.getElementById('toggleSidebar').addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const sidebar = document.getElementById('sidebar');
+        const toggleButton = document.getElementById('toggleSidebar');
         const sidebarTexts = document.querySelectorAll('.sidebar-text');
-        const sidebarItems = document.querySelectorAll('.sidebar-item');
         const sidebarIcons = document.querySelectorAll('.sidebar-icon');
-        const sidebarFooterSmall = document.querySelector('.sidebar-footer-small');
-        const sidebarFooterFull = document.querySelector('.sidebar-footer-full');
-
-        if (sidebar.classList.contains('w-64')) {
-            // Ubah ke mode kecil
-            sidebar.classList.remove('w-64');
-            sidebar.classList.add('w-16');
-
-            // Sembunyikan teks
-            sidebarTexts.forEach(text => {
-                text.classList.add('hidden');
-            });
-
-            // Pusatkan ikon secara horizontal
-            sidebarItems.forEach(item => {
-                item.classList.remove('justify-start');
-                item.classList.add('justify-center');
-            });
-
-            // Set ikon ke tengah dan hapus margin
-            sidebarIcons.forEach(icon => {
-                icon.classList.remove('w-6');
-                icon.classList.remove('ml-3');
-                icon.classList.add('mx-auto');
-            });
-
-            // Tampilkan footer versi kecil, sembunyikan versi besar
-            sidebarFooterSmall.classList.remove('hidden');
-            sidebarFooterFull.classList.add('hidden');
-
-        } else {
-            // Ubah ke mode besar
-            sidebar.classList.remove('w-16');
-            sidebar.classList.add('w-64');
-
-            // Tampilkan teks
-            sidebarTexts.forEach(text => {
-                text.classList.remove('hidden');
-            });
-
-            // Ubah alignment ke kiri
-            sidebarItems.forEach(item => {
-                item.classList.remove('justify-center');
-                item.classList.add('justify-start');
-            });
-
-            // Atur ikon agar sesuai mode besar dengan margin
-            sidebarIcons.forEach(icon => {
-                icon.classList.add('w-6');
-                icon.classList.add('ml-3');
-                icon.classList.remove('mx-auto');
-            });
-
-            // Sembunyikan footer versi kecil, tampilkan versi besar
-            sidebarFooterSmall.classList.add('hidden');
-            sidebarFooterFull.classList.remove('hidden');
+        const footerSmall = document.querySelector('.sidebar-footer-small');
+        const footerFull = document.querySelector('.sidebar-footer-full');
+        
+        // Get sidebar state from localStorage or default to open
+        let isOpen = localStorage.getItem('sidebarOpen') !== 'false';
+        let isMobile = window.innerWidth < 768;
+        
+        // Apply sidebar state more efficiently
+        function applySidebarState() {
+            // Common state changes
+            sidebar.classList.toggle('w-64', isOpen);
+            sidebar.classList.toggle('w-16', !isOpen || !isMobile);
+            sidebar.classList.toggle('hidden', isMobile && !isOpen);
+            
+            // Update appearance based on state
+            if (isOpen) {
+                sidebarTexts.forEach(text => text.classList.remove('hidden'));
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.classList.remove('justify-center');
+                    item.classList.add('justify-start');
+                });
+                sidebarIcons.forEach(icon => {
+                    icon.classList.add('w-6', 'ml-3');
+                    icon.classList.remove('mx-auto');
+                });
+                footerSmall.classList.add('hidden');
+                footerFull.classList.remove('hidden');
+            } else {
+                sidebarTexts.forEach(text => text.classList.add('hidden'));
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.classList.remove('justify-start');
+                    item.classList.add('justify-center');
+                });
+                sidebarIcons.forEach(icon => {
+                    icon.classList.remove('w-6', 'ml-3');
+                    icon.classList.add('mx-auto');
+                });
+                footerSmall.classList.remove('hidden');
+                footerFull.classList.add('hidden');
+            }
+            
+            // Save state to localStorage
+            localStorage.setItem('sidebarOpen', isOpen);
         }
+        
+        // Toggle sidebar state with button
+        toggleButton.addEventListener('click', function() {
+            isOpen = !isOpen;
+            applySidebarState();
+        });
+        
+        // We want to close the sidebar on menu click for both mobile and desktop
+        document.querySelector('.p-2.flex-grow').addEventListener('click', function(e) {
+            const sidebarItem = e.target.closest('.sidebar-item');
+            if (sidebarItem) {
+                // Close the sidebar in localStorage for both mobile and desktop
+                localStorage.setItem('sidebarOpen', 'false');
+                // No preventDefault, let the link navigate normally
+                return true;
+            }
+        });
+        
+        // Efficient window resize handling
+        const handleResize = () => {
+            const wasMobile = isMobile;
+            isMobile = window.innerWidth < 768;
+            
+            if (wasMobile !== isMobile) {
+                applySidebarState();
+            }
+        };
+        
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleResize, 100);
+        });
+        
+        // Initialize sidebar
+        applySidebarState();
     });
     </script>
 

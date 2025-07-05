@@ -30,6 +30,36 @@
             </div>
             
             <div>
+                <label for="tanggal_pembuatan" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pembuatan</label>
+                <input type="date" name="tanggal_pembuatan" id="tanggal_pembuatan" value="{{ $prosedurPengawasan->tanggal_pembuatan }}" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+            </div>
+            
+            <div>
+                <label for="tanggal_revisi" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Revisi</label>
+                <input type="date" name="tanggal_revisi" id="tanggal_revisi" value="{{ $prosedurPengawasan->tanggal_revisi }}" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+            </div>
+            
+            <div>
+                <label for="tanggal_efektif" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Efektif</label>
+                <input type="date" name="tanggal_efektif" id="tanggal_efektif" value="{{ $prosedurPengawasan->tanggal_efektif }}" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+            </div>
+            
+            <div>
+                <label for="disahkan_oleh" class="block text-sm font-medium text-gray-700 mb-1">Disahkan Oleh</label>
+                <select name="disahkan_oleh" id="disahkan_oleh" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+                    @foreach ($inspektur_utama as $inspektur)
+                        <option value="{{ $inspektur->id }}" {{ $prosedurPengawasan->disahkan_oleh == $inspektur->id ? 'selected' : '' }}>
+                            {{ $inspektur->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div>
                 <label for="penyusun_id" class="block text-sm font-medium text-gray-700 mb-1">Petugas Penyusun</label>
                 <select name="penyusun_id" id="penyusun_id" required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">

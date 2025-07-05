@@ -13,6 +13,11 @@ class InspekturUtama
         return DB::select("SELECT * FROM inspektur_utama ORDER BY created_at DESC");
     }
 
+    public static function getNama()
+    {
+        return DB::select("SELECT id, nama FROM inspektur_utama ORDER BY created_at DESC");
+    }
+
     public static function find($id)
     {
         return DB::selectOne("SELECT * FROM inspektur_utama WHERE id = ?", [$id]);

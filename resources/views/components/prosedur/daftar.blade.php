@@ -1,12 +1,5 @@
 <div class="container mx-auto p-4">
-    <div class="mb-6">
-        @if (Auth::user()->role == 'perencana')
-            <div class="flex space-x-3">
-                <a href="/perencana/prosedurpengawasan/create-cover" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Cover Fix Code</a>
-                <a href="/perencana/prosedurpengawasan/create-fix" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Body Fix Code</a>
-            </div>
-        @endif
-    </div>
+    
 
     <div class="flex items-center gap-4 mb-6">
         <!-- Search Bar -->
@@ -107,6 +100,8 @@
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">No</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Nomor SOP</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Judul</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Tanggal Pembuatan</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Disahkan Oleh</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Status</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Aksi</th>
                     @if (Auth::user()->role == 'pjk')
@@ -127,6 +122,12 @@
                         <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="hover:text-blue-600">
                            {{ $prosedur->judul }}
                         </a>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 text-center">
+                        {{ $prosedur->tanggal_pembuatan ? date('d/m/Y', strtotime($prosedur->tanggal_pembuatan)) : '-' }}
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 text-center">
+                        {{ $prosedur->disahkan_oleh_nama }}
                     </td>
                     <td class="border border-gray-300 px-4 py-3 text-center">
                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
@@ -177,7 +178,7 @@
                 
                 @if(count($prosedurPengawasan) == 0)
                 <tr>
-                    <td colspan="{{ Auth::user()->role == 'pjk' ? '6' : '5' }}" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
+                    <td colspan="{{ Auth::user()->role == 'pjk' ? '8' : '7' }}" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
                         <div class="flex flex-col items-center">
                             <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -208,5 +209,14 @@
                 <span>Disetujui: Prosedur telah ditinjau dan disetujui</span>
             </div>
         </div>
+    </div>
+
+    <div class="mt-6">
+        @if (Auth::user()->role == 'perencana')
+            <div class="flex space-x-3">
+                <a href="/perencana/prosedurpengawasan/create-cover" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Cover Fix Code</a>
+                <a href="/perencana/prosedurpengawasan/create-fix" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Body Fix Code</a>
+            </div>
+        @endif
     </div>
 </div>

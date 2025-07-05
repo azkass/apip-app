@@ -11,7 +11,10 @@ return new class extends Migration {
             $table->id();
             $table->string("nomor");
             $table->string("judul");
-            // $table->text("deskripsi")->nullable();
+            $table->date("tanggal_pembuatan")->nullable();
+            $table->date("tanggal_revisi")->nullable();
+            $table->date("tanggal_efektif")->nullable();
+            $table->unsignedBigInteger("disahkan_oleh");
             $table->json("cover")->nullable();
             $table->json("isi")->nullable();
             $table
@@ -20,6 +23,12 @@ return new class extends Migration {
             $table->unsignedBigInteger("pembuat_id");
             $table->unsignedBigInteger("penyusun_id");
             $table->timestamps();
+
+            $table
+                ->foreign("disahkan_oleh")
+                ->references("id")
+                ->on("inspektur_utama")
+                ->onDelete("cascade");
 
             $table
                 ->foreign("pembuat_id")

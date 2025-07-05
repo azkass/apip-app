@@ -10,6 +10,7 @@ use App\Http\Controllers\EvaluasiProsedurController;
 use App\Http\Controllers\PeriodeEvaluasiProsedurController;
 use App\Http\Controllers\InspekturUtamaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PertanyaanEvaluasiController;
 
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
@@ -147,6 +148,32 @@ Route::middleware("auth", "role:admin")->group(function () {
         InspekturUtamaController::class,
         "destroy",
     ])->name("admin.inspektur-utama.destroy");
+    
+    // Routes untuk Pertanyaan Evaluasi - hanya admin yang bisa akses
+    Route::get("/admin/pertanyaan-evaluasi", [
+        PertanyaanEvaluasiController::class,
+        "index",
+    ])->name("pertanyaan.index");
+    Route::get("/admin/pertanyaan-evaluasi/create", [
+        PertanyaanEvaluasiController::class,
+        "create",
+    ])->name("pertanyaan.create");
+    Route::post("/admin/pertanyaan-evaluasi", [
+        PertanyaanEvaluasiController::class,
+        "store",
+    ])->name("pertanyaan.store");
+    Route::get("/admin/pertanyaan-evaluasi/{pertanyaan}/edit", [
+        PertanyaanEvaluasiController::class,
+        "edit",
+    ])->name("pertanyaan.edit");
+    Route::put("/admin/pertanyaan-evaluasi/{pertanyaan}", [
+        PertanyaanEvaluasiController::class,
+        "update",
+    ])->name("pertanyaan.update");
+    Route::delete("/admin/pertanyaan-evaluasi/{pertanyaan}", [
+        PertanyaanEvaluasiController::class,
+        "destroy",
+    ])->name("pertanyaan.destroy");
 });
 
 Route::middleware("auth", "role:pjk")->group(function () {

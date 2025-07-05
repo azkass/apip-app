@@ -13,14 +13,20 @@ return new class extends Migration {
         Schema::create("evaluasi_prosedur", function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("sop_id");
-            $table->string("judul");
-            $table->string("isi");
+            $table->unsignedBigInteger("pertanyaan_id");
+            $table->boolean("jawaban");
             $table->timestamps();
 
             $table
                 ->foreign("sop_id")
                 ->references("id")
                 ->on("prosedur_pengawasan")
+                ->onDelete("cascade");
+
+            $table
+                ->foreign("pertanyaan_id")
+                ->references("id")
+                ->on("pertanyaan_evaluasi")
                 ->onDelete("cascade");
         });
     }
