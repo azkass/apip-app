@@ -23,12 +23,15 @@
                                 <span class="font-medium text-gray-800 mr-2">{{ $index + 1 }}.</span>
                                 <span>{{ $item->pertanyaan }}</span>
                             </div>
-                            <div class="mt-3 flex space-x-4">
+                            <div class="mt-3 flex space-x-6">
                                 <label class="inline-flex items-center">
-                                    <input type="checkbox" name="jawaban[{{ $item->id }}]" value="1" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                    <span class="ml-2">Ya</span>
+                                    <input type="radio" name="jawaban[{{ $item->id }}]" value="1" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                                    <span class="ml-2 text-black font-medium">Ya</span>
                                 </label>
-                                <span class="text-gray-500">(Biarkan tidak dicentang untuk jawaban "Tidak")</span>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="jawaban[{{ $item->id }}]" value="0" class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50" required>
+                                    <span class="ml-2 text-black font-medium">Tidak</span>
+                                </label>
                             </div>
                         </div>
                     @endforeach
@@ -46,4 +49,16 @@
         </div>
     </form>
 </div>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const radioGroups = document.querySelectorAll('input[type="radio"]');
+    const pertanyaanCount = {{ count($pertanyaan) }};
+    const answeredCount = document.querySelectorAll('input[type="radio"]:checked').length;
+    
+    if (answeredCount !== pertanyaanCount) {
+        e.preventDefault();
+        alert('Harap jawab semua pertanyaan sebelum mengirim formulir.');
+    }
+});
+</script>
 @endsection

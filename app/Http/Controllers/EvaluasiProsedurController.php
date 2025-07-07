@@ -10,9 +10,9 @@ class EvaluasiProsedurController extends Controller
 {
     public function index()
     {
-        $data = EvaluasiProsedur::getAll();
+        $groupedData = EvaluasiProsedur::getGroupedBySop();
         return view("evaluasi.index", [
-            "data" => $data,
+            "groupedData" => $groupedData,
             "title" => "Daftar Evaluasi Prosedur",
         ]);
     }
@@ -59,7 +59,7 @@ class EvaluasiProsedurController extends Controller
         
         // Insert new evaluations
         foreach ($pertanyaan_ids as $index => $pertanyaan_id) {
-            $jawabanValue = isset($jawaban[$pertanyaan_id]) ? 1 : 0;
+            $jawabanValue = isset($jawaban[$pertanyaan_id]) ? (int)$jawaban[$pertanyaan_id] : 0;
             EvaluasiProsedur::insertData(
                 $sop_id,
                 $pertanyaan_id,
@@ -151,7 +151,7 @@ class EvaluasiProsedurController extends Controller
         
         // Insert updated evaluations
         foreach ($pertanyaan_ids as $index => $pertanyaan_id) {
-            $jawabanValue = isset($jawaban[$pertanyaan_id]) ? 1 : 0;
+            $jawabanValue = isset($jawaban[$pertanyaan_id]) ? (int)$jawaban[$pertanyaan_id] : 0;
             EvaluasiProsedur::insertData(
                 $sop_id,
                 $pertanyaan_id,

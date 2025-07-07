@@ -148,7 +148,7 @@ Route::middleware("auth", "role:admin")->group(function () {
         InspekturUtamaController::class,
         "destroy",
     ])->name("admin.inspektur-utama.destroy");
-    
+
     // Routes untuk Pertanyaan Evaluasi - hanya admin yang bisa akses
     Route::get("/admin/pertanyaan-evaluasi", [
         PertanyaanEvaluasiController::class,
@@ -177,7 +177,10 @@ Route::middleware("auth", "role:admin")->group(function () {
 });
 
 Route::middleware("auth", "role:pjk")->group(function () {
-    Route::get("/penanggungjawab/dashboard", [DashboardController::class, "index"]);
+    Route::get("/penanggungjawab/dashboard", [
+        DashboardController::class,
+        "index",
+    ]);
     Route::get("/penanggungjawab/instrumenpengawasan", [
         InstrumenPengawasanController::class,
         "index",
@@ -292,6 +295,18 @@ Route::middleware("auth", "role:perencana")->group(function () {
             "title" => "Buat Prosedur Pengawasan",
         ]);
     });
+    Route::get("/perencana/prosedurpengawasan/edit-cover/{id}", [
+        ProsedurPengawasanController::class,
+        "editCover",
+    ])->name("perencana.prosedur-pengawasan.edit-cover");
+    Route::put("/perencana/prosedurpengawasan/update-cover/{id}", [
+        ProsedurPengawasanController::class,
+        "updateCover",
+    ])->name("perencana.prosedur-pengawasan.update-cover");
+    Route::get("/perencana/prosedur-pengawasan/{id}/cover-data", [
+        ProsedurPengawasanController::class,
+        "getCoverData",
+    ]);
     Route::get("/perencana/prosedurpengawasan/edit-body/{id}", [
         ProsedurPengawasanController::class,
         "editBody",

@@ -1,16 +1,5 @@
 <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
-
+    @props(['inspektur_utama', 'is_pjk', 'is_pjk'])
     @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
         <form action="{{ route(Auth::user()->role .'.prosedur-pengawasan.update', $prosedurPengawasan->id) }}" method="POST" enctype="multipart/form-data">
     @endif
@@ -51,7 +40,7 @@
                 <label for="disahkan_oleh" class="block text-sm font-medium text-gray-700 mb-1">Disahkan Oleh</label>
                 <select name="disahkan_oleh" id="disahkan_oleh" required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
-                    @foreach ($inspektur_utama as $inspektur)
+                    @foreach ($inspektur_utama_nama as $inspektur)
                         <option value="{{ $inspektur->id }}" {{ $prosedurPengawasan->disahkan_oleh == $inspektur->id ? 'selected' : '' }}>
                             {{ $inspektur->nama }}
                         </option>
@@ -86,22 +75,8 @@
         
         <div class="mt-6">
             <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition">
-                Simpan Perubahan
+                Simpan
             </button>
         </div>
     </form>
 </div>
-
-@push('scripts')
-    <!-- Set mxBasePath sebelum load mxClient -->
-        <script>
-            window.mxBasePath = '/vendor/mxgraph';
-        </script>
-
-        <!-- Load mxGraph core -->
-        <script src="/vendor/mxgraph/js/mxClient.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-        <!-- Load Vite script khusus untuk page ini -->
-        @vite('resources/js/editCover.js')
-@endpush

@@ -22,14 +22,20 @@
                             <span class="font-medium text-gray-800 mr-2">{{ $index + 1 }}.</span>
                             <span>{{ $item->pertanyaan }}</span>
                         </div>
-                        <div class="mt-3 flex space-x-4">
+                        <div class="mt-3 flex space-x-6">
+                            @php
+                                $jawabanValue = isset($jawabanMap[$item->id]) ? $jawabanMap[$item->id] : null;
+                            @endphp
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="jawaban[{{ $item->id }}]" value="1" 
-                                    {{ isset($jawabanMap[$item->id]) && $jawabanMap[$item->id] == 1 ? 'checked' : '' }}
-                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                <span class="ml-2">Ya</span>
+                                <input type="radio" name="jawaban[{{ $item->id }}]" value="1" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                                    {{ $jawabanValue === 1 ? 'checked' : '' }} required>
+                                <span class="ml-2 text-black font-medium">Ya</span>
                             </label>
-                            <span class="text-gray-500">(Biarkan tidak dicentang untuk jawaban "Tidak")</span>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="jawaban[{{ $item->id }}]" value="0" class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50" 
+                                    {{ $jawabanValue === 0 ? 'checked' : '' }} required>
+                                <span class="ml-2 text-black font-medium">Tidak</span>
+                            </label>
                         </div>
                     </div>
                 @endforeach

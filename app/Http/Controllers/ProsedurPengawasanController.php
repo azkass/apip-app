@@ -107,20 +107,20 @@ class ProsedurPengawasanController extends Controller
             'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
         ); // Ambil data user untuk dropdown
         
-        $inspektur_utama = InspekturUtama::getAll();
+        $inspektur_utama_nama = InspekturUtama::getNama();
         
         if (Auth::user()->role == "perencana") {
             return view("perencana.prosedur.editprosedurpengawasan", [
                 "prosedurPengawasan" => $prosedurPengawasan,
                 "is_pjk" => $is_pjk,
-                "inspektur_utama" => $inspektur_utama,
+                "inspektur_utama_nama" => $inspektur_utama_nama,
                 "title" => "Edit Prosedur Pengawasan",
             ]);
         } elseif (Auth::user()->role == "pjk") {
             return view("penanggungjawab.prosedur.editprosedurpengawasan", [
                 "prosedurPengawasan" => $prosedurPengawasan,
                 "is_pjk" => $is_pjk,
-                "inspektur_utama" => $inspektur_utama,
+                "inspektur_utama_nama" => $inspektur_utama_nama,
                 "title" => "Edit Prosedur Pengawasan",
             ]);
         }
@@ -148,8 +148,7 @@ class ProsedurPengawasanController extends Controller
 
         if (Auth::user()->role == "perencana") {
             return redirect()->route(
-                // "perencana.prosedur-pengawasan.detail",
-                "perencana.prosedur-pengawasan.edit-body",
+                "perencana.prosedur-pengawasan.edit-cover",
                 $updatedProsedurPengawasan->id
             );
         } elseif (Auth::user()->role == "pjk") {
@@ -160,6 +159,104 @@ class ProsedurPengawasanController extends Controller
         }
     }
 
+    public function editCover($id)
+    {
+        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+        // Pastikan field cover di-decode ke array
+        if ($prosedurPengawasan) {
+            // Ambil dari kolom cover jika field-field tidak ada
+            $cover = json_decode($prosedurPengawasan->cover ?? '{}', true);
+            $prosedurPengawasan->dasar_hukum = $cover['dasar_hukum'] ?? $cover['dasarHukum'] ?? [];
+            $prosedurPengawasan->keterkaitan = $cover['keterkaitan'] ?? [];
+            $prosedurPengawasan->peringatan = $cover['peringatan'] ?? [];
+            $prosedurPengawasan->kualifikasi = $cover['kualifikasi'] ?? [];
+            $prosedurPengawasan->peralatan = $cover['peralatan'] ?? [];
+            $prosedurPengawasan->pencatatan = $cover['pencatatan'] ?? [];
+        }
+        return view("perencana.prosedur.edit-cover", [
+            "prosedurPengawasan" => $prosedurPengawasan,
+            "title" => "Edit Cover Prosedur Pengawasan",
+        ]);
+    }
+
+    public function getCoverData($id)
+    {
+        $prosedur = ProsedurPengawasan::detail($id);
+        if (!$prosedur) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        // Ambil cover JSON jika ada, pastikan array
+        $cover = [];
+        if (!empty($prosedur->cover)) {
+            $decoded = json_decode($prosedur->cover, true);
+            if (is_array($decoded)) {
+                $cover = $decoded;
+            }
+        }
+        // Mapping field statis dan dinamis
+        $static = [
+            'nomor_sop'         => $prosedur->nomor ?? '',
+            'tanggal_pembuatan' => $prosedur->tanggal_pembuatan ?? '',
+            'tanggal_revisi'    => $prosedur->tanggal_revisi ?? '',
+            'tanggal_efektif'   => $prosedur->tanggal_efektif ?? '',
+            'disahkan_oleh'     => $prosedur->disahkan_oleh_nama ?? '',
+            'nama_sop'          => $prosedur->judul ?? '',
+            'pejabat_nama'      => $prosedur->petugas_nama ?? '',
+        ];
+        $dynamic = ['dasarHukum','keterkaitan','peringatan','kualifikasi','peralatan','pencatatan'];
+        foreach ($dynamic as $key) {
+            $static[$key] = $cover[$key] ?? [];
+        }
+        return response()->json($static);
+    }
+    public function updateCover(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            "cover" => "required|json",
+        ]);
+
+        ProsedurPengawasan::updateCover($id, $validatedData);
+
+        // Re-fetch the updated model to get all data
+        $prosedur = ProsedurPengawasan::detail($id);
+        if (!$prosedur) {
+            return response()->json(['error' => 'Not found after update'], 404);
+        }
+        
+        $cover = [];
+        if (!empty($prosedur->cover)) {
+            $decoded = json_decode($prosedur->cover, true);
+            if (is_array($decoded)) {
+                $cover = $decoded;
+            }
+        }
+
+        // Prepare the data structure exactly like getCoverData
+        $responseData = [
+            'nomor_sop'         => $prosedur->nomor ?? '',
+            'tanggal_pembuatan' => $prosedur->tanggal_pembuatan ?? '',
+            'tanggal_revisi'    => $prosedur->tanggal_revisi ?? '',
+            'tanggal_efektif'   => $prosedur->tanggal_efektif ?? '',
+            'disahkan_oleh'     => $prosedur->disahkan_oleh_nama ?? '',
+            'nama_sop'          => $prosedur->judul ?? '',
+            'pejabat_nama'      => $prosedur->petugas_nama ?? '',
+        ];
+        
+        // These are the keys the JS expects for the dynamic fields
+        $dynamicKeys = ['dasarHukum','keterkaitan','peringatan','kualifikasi','peralatan','pencatatan'];
+        
+        foreach ($dynamicKeys as $camelCaseKey) {
+            // Convert camelCase to snake_case for fallback lookup
+            $snakeCaseKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camelCaseKey));
+            // Check for camelCase key first, then snake_case, then default to empty array
+            $responseData[$camelCaseKey] = $cover[$camelCaseKey] ?? $cover[$snakeCaseKey] ?? [];
+        }
+        
+        return response()->json($responseData);
+    }
+
+
+    
     public function editBody($id)
     {
         $prosedurPengawasan = ProsedurPengawasan::detail($id);
@@ -184,29 +281,6 @@ class ProsedurPengawasanController extends Controller
         ]);
     }
     
-    public function editCover($id)
-    {
-        $prosedurPengawasan = ProsedurPengawasan::detail($id);
-
-        return view("perencana.prosedur.edit-cover", [
-            "prosedurPengawasan" => $prosedurPengawasan,
-            "title" => "Edit Cover Prosedur Pengawasan",
-        ]);
-    }
-
-    public function updateCover(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            "cover" => "required|json",
-        ]);
-
-        ProsedurPengawasan::updateCover($id, $validatedData);
-
-        return response()->json([
-            "success" => true,
-            "message" => "Cover berhasil disimpan",
-        ]);
-    }
 
     public function delete($id)
     {

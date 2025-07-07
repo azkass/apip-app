@@ -11,7 +11,7 @@
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-6">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
     <div class="w-full max-w-sm mx-auto bg-white px-5 py-8 sm:px-8 sm:py-10 rounded-xl shadow-lg">
         <div class="text-center mb-6">
             <h1 class="text-2xl sm:text-3xl font-semibold text-black">Sign in</h1>

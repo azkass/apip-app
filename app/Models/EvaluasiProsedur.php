@@ -109,4 +109,25 @@ class EvaluasiProsedur extends Model
         $result = DB::selectOne("SELECT COUNT(*) as count FROM evaluasi_prosedur WHERE sop_id = ?", [$sop_id]);
         return $result->count > 0;
     }
+
+    public static function getGroupedBySop()
+    {
+        return DB::select("
+            SELECT
+                ep.sop_id,
+                MAX(ep.created_at) as created_at,
+                MAX(ep.updated_at) as updated_at,
+                pp.nomor as sop_nomor,
+                pp.judul as sop_judul,
+                pp.penyusun_id as penyusun_id,
+                u.name as penyusun_nama,
+                COUNT(DISTINCT ep.pertanyaan_id) as jumlah_pertanyaan,
+                SUM(CASE WHEN ep.jawaban = 1 THEN 1 ELSE 0 END) as jawaban_ya
+            FROM evaluasi_prosedur ep
+            JOIN prosedur_pengawasan pp ON ep.sop_id = pp.id
+            JOIN users u ON pp.penyusun_id = u.id
+            GROUP BY ep.sop_id, pp.nomor, pp.judul, pp.penyusun_id, u.name
+            ORDER BY MAX(ep.created_at) DESC
+        ");
+    }
 }
