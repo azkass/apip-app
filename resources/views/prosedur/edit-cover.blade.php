@@ -12,7 +12,7 @@ window.coverData = {
 };
 </script>
 <div class="mt-8 p-6 bg-white shadow-md rounded-lg">
-    <form id="editCoverForm" method="POST" action="{{ route('perencana.prosedur-pengawasan.update-cover', $prosedurPengawasan->id) }}">
+    <form id="editCoverForm" method="POST" action="{{ route('prosedur-pengawasan.update-cover', $prosedurPengawasan->id) }}">
     @csrf
     @method('PUT')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -21,27 +21,27 @@ window.coverData = {
                 <label class="block text-sm font-medium text-gray-700 mb-1">Dasar Hukum</label>
                 <div id="dasarHukumList"></div>
                 <div class="flex gap-2 mt-2">
-    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('dasarHukum')">Tambah</button>
-    <button type="button" id="dasarHukum-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('dasarHukum')">Hapus</button>
-</div>
+                    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('dasarHukum')">Tambah</button>
+                    <button type="button" id="dasarHukum-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('dasarHukum')">Hapus</button>
+                </div>
             </div>
             <!-- Keterkaitan -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Keterkaitan</label>
                 <div id="keterkaitanList"></div>
                 <div class="flex gap-2 mt-2">
-    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('keterkaitan')">Tambah</button>
-    <button type="button" id="keterkaitan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('keterkaitan')">Hapus</button>
-</div>
+                    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('keterkaitan')">Tambah</button>
+                    <button type="button" id="keterkaitan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('keterkaitan')">Hapus</button>
+                </div>
             </div>
             <!-- Peringatan -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Peringatan</label>
                 <div id="peringatanList"></div>
                 <div class="flex gap-2 mt-2">
-    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('peringatan')">Tambah</button>
-    <button type="button" id="peringatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('peringatan')">Hapus</button>
-</div>
+                <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('peringatan')">Tambah</button>
+                <button type="button" id="peringatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('peringatan')">Hapus</button>
+            </div>
             </div>
             <!-- Kualifikasi Pelaksanaan -->
             <div>
@@ -62,14 +62,14 @@ window.coverData = {
                 <label class="block text-sm font-medium text-gray-700 mb-1">Pencatatan dan Pendataan</label>
                 <div id="pencatatanList"></div>
                 <div class="flex gap-2 mt-2">
-    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('pencatatan')">Tambah</button>
-    <button type="button" id="pencatatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('pencatatan')">Hapus</button>
-</div>
+                    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('pencatatan')">Tambah</button>
+                    <button type="button" id="pencatatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('pencatatan')">Hapus</button>
+                </div>
             </div>
         </div>
         <div class="flex justify-start items-center gap-2 mt-6">
             <button type="submit" id="btnSimpan" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Simpan</button>
-            <a href="{{ route('perencana.prosedur-pengawasan.edit-body', $prosedurPengawasan->id) }}" id="btnLanjut" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition hidden">Lanjut</a>
+            <a href="{{ route('prosedur-pengawasan.edit-body', $prosedurPengawasan->id) }}" id="btnLanjut" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition hidden">Lanjut</a>
         </div>
     </form>
     <!-- Container hasil generate cover mxGraph -->
@@ -87,6 +87,5 @@ window.coverData = {
         }
     </script>
     <script src="/vendor/mxgraph/js/mxClient.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     @vite('resources/js/editCover.js')
 @endpush

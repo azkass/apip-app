@@ -6,14 +6,17 @@ use App\Models\PertanyaanEvaluasi;
 use Illuminate\Http\Request;
 
 class PertanyaanEvaluasiController extends Controller
-{    
+{
     /**
      * Display a listing of pertanyaan evaluasi
      */
     public function index()
     {
-        $pertanyaan = PertanyaanEvaluasi::getAll();
-        return view('admin.pertanyaan.index', compact('pertanyaan'));
+        $pertanyaan = PertanyaanEvaluasi::index();
+        return view("admin.pertanyaan.index", [
+            "pertanyaan" => $pertanyaan,
+            "title" => "Daftar Pertanyaan Evaluasi",
+        ]);
     }
 
     /**
@@ -21,7 +24,9 @@ class PertanyaanEvaluasiController extends Controller
      */
     public function create()
     {
-        return view('admin.pertanyaan.create');
+        return view("admin.pertanyaan.create", [
+            "title" => "Tambah Pertanyaan",
+        ]);
     }
 
     /**
@@ -30,13 +35,14 @@ class PertanyaanEvaluasiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pertanyaan' => 'required|string|max:255',
+            "pertanyaan" => "required|string|max:255",
         ]);
 
         PertanyaanEvaluasi::create($validated);
 
-        return redirect()->route('pertanyaan.index')
-            ->with('success', 'Pertanyaan evaluasi berhasil dibuat.');
+        return redirect()
+            ->route("pertanyaan.index")
+            ->with("success", "Pertanyaan evaluasi berhasil dibuat.");
     }
 
     /**
@@ -45,13 +51,17 @@ class PertanyaanEvaluasiController extends Controller
     public function edit($id)
     {
         $pertanyaan = PertanyaanEvaluasi::find($id);
-        
+
         if (!$pertanyaan) {
-            return redirect()->route('pertanyaan.index')
-                ->with('error', 'Pertanyaan tidak ditemukan.');
+            return redirect()
+                ->route("pertanyaan.index")
+                ->with("error", "Pertanyaan tidak ditemukan.");
         }
-        
-        return view('admin.pertanyaan.edit', compact('pertanyaan'));
+
+        return view("admin.pertanyaan.edit", [
+            "title" => "Pertanyaan Evaluasi",
+            "pertanyaan" => $pertanyaan,
+        ]);
     }
 
     /**
@@ -60,18 +70,20 @@ class PertanyaanEvaluasiController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'pertanyaan' => 'required|string|max:255',
+            "pertanyaan" => "required|string|max:255",
         ]);
 
         if (!PertanyaanEvaluasi::find($id)) {
-            return redirect()->route('pertanyaan.index')
-                ->with('error', 'Pertanyaan tidak ditemukan.');
+            return redirect()
+                ->route("pertanyaan.index")
+                ->with("error", "Pertanyaan tidak ditemukan.");
         }
 
         PertanyaanEvaluasi::update($id, $validated);
 
-        return redirect()->route('pertanyaan.index')
-            ->with('success', 'Pertanyaan evaluasi berhasil diperbarui.');
+        return redirect()
+            ->route("pertanyaan.index")
+            ->with("success", "Pertanyaan evaluasi berhasil diperbarui.");
     }
 
     /**
@@ -80,13 +92,15 @@ class PertanyaanEvaluasiController extends Controller
     public function destroy($id)
     {
         if (!PertanyaanEvaluasi::find($id)) {
-            return redirect()->route('pertanyaan.index')
-                ->with('error', 'Pertanyaan tidak ditemukan.');
+            return redirect()
+                ->route("pertanyaan.index")
+                ->with("error", "Pertanyaan tidak ditemukan.");
         }
-        
+
         PertanyaanEvaluasi::destroy($id);
 
-        return redirect()->route('pertanyaan.index')
-            ->with('success', 'Pertanyaan evaluasi berhasil dihapus.');
+        return redirect()
+            ->route("pertanyaan.index")
+            ->with("success", "Pertanyaan evaluasi berhasil dihapus.");
     }
-} 
+}

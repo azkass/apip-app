@@ -15,68 +15,10 @@ use App\Http\Controllers\PertanyaanEvaluasiController;
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
 
-// Periode Evaluasi
-Route::get("/periode", [
-    PeriodeEvaluasiProsedurController::class,
-    "index",
-])->name("periode.index");
-Route::get("/periode/create", [
-    PeriodeEvaluasiProsedurController::class,
-    "create",
-])->name("periode.create");
-Route::post("/periode", [
-    PeriodeEvaluasiProsedurController::class,
-    "store",
-])->name("periode.store");
-Route::get("/periode/edit/{id}", [
-    PeriodeEvaluasiProsedurController::class,
-    "edit",
-])->name("periode.edit");
-Route::put("/periode/{id}", [
-    PeriodeEvaluasiProsedurController::class,
-    "update",
-])->name("periode.update");
-Route::delete("/periode/{id}", [
-    PeriodeEvaluasiProsedurController::class,
-    "destroy",
-])->name("periode.destroy");
-
-// Evaluasi
-Route::middleware(["periode.evaluasi"])->group(function () {
-    Route::get("/evaluasi", [EvaluasiProsedurController::class, "index"])->name(
-        "evaluasi.index"
-    );
-    Route::get("/evaluasi/create/{sop_id}", [
-        EvaluasiProsedurController::class,
-        "create",
-    ])->name("evaluasi.create");
-    Route::post("/evaluasi", [
-        EvaluasiProsedurController::class,
-        "store",
-    ])->name("evaluasi.store");
-    Route::get("/evaluasi/{id}", [
-        EvaluasiProsedurController::class,
-        "show",
-    ])->name("evaluasi.show");
-    Route::get("/evaluasi/{id}/edit", [
-        EvaluasiProsedurController::class,
-        "edit",
-    ])->name("evaluasi.edit");
-    Route::put("/evaluasi/{id}", [
-        EvaluasiProsedurController::class,
-        "update",
-    ])->name("evaluasi.update");
-    Route::delete("/evaluasi/{id}", [
-        EvaluasiProsedurController::class,
-        "destroy",
-    ])->name("evaluasi.destroy");
-});
-
 // Login
 Route::get("/auth/redirect", [SocialiteController::class, "redirect"]);
 Route::get("/auth/google/callback", [SocialiteController::class, "callback"]);
 // Logout
-Route::post("/logout", [SocialiteController::class, "logout"])->name("logout");
 Route::get("/login", function () {
     return view("login", ["title" => "Login"]);
 });
@@ -96,6 +38,130 @@ Route::middleware("auth")->group(function () {
             return redirect("/login");
         }
     });
+    Route::post("/logout", [SocialiteController::class, "logout"])->name(
+        "logout"
+    );
+    // Prosedur Pengawasan Routes (Domain-Oriented)
+    Route::prefix("prosedur-pengawasan")
+        ->name("prosedur-pengawasan.")
+        ->group(function () {
+            Route::get("/", [
+                ProsedurPengawasanController::class,
+                "index",
+            ])->name("index");
+            Route::get("/create", [
+                ProsedurPengawasanController::class,
+                "create",
+            ])
+                ->name("create")
+                ->middleware("role:perencana");
+            Route::post("/", [ProsedurPengawasanController::class, "store"])
+                ->name("store")
+                ->middleware("role:perencana");
+            Route::get("/{id}", [
+                ProsedurPengawasanController::class,
+                "show",
+            ])->name("show");
+            Route::get("/{id}/edit", [
+                ProsedurPengawasanController::class,
+                "edit",
+            ])
+                ->name("edit")
+                ->middleware("role:perencana,pjk");
+            Route::put("/{id}", [ProsedurPengawasanController::class, "update"])
+                ->name("update")
+                ->middleware("role:perencana,pjk");
+            Route::delete("/{id}", [
+                ProsedurPengawasanController::class,
+                "delete",
+            ])
+                ->name("delete")
+                ->middleware("role:perencana,pjk");
+            Route::get("/{id}/cover-data", [
+                ProsedurPengawasanController::class,
+                "getCoverData",
+            ])->name("get-cover-data");
+
+            // Routes for editing cover and body, accessible by perencana
+            Route::middleware("role:perencana")->group(function () {
+                Route::get("/{id}/edit-cover", [
+                    ProsedurPengawasanController::class,
+                    "editCover",
+                ])->name("edit-cover");
+                Route::put("/{id}/update-cover", [
+                    ProsedurPengawasanController::class,
+                    "updateCover",
+                ])->name("update-cover");
+                Route::get("/{id}/edit-body", [
+                    ProsedurPengawasanController::class,
+                    "editBody",
+                ])->name("edit-body");
+                Route::put("/{id}/body", [
+                    ProsedurPengawasanController::class,
+                    "updateBody",
+                ])->name("update-body");
+            });
+        });
+
+    Route::middleware(["role:admin"])->group(function () {
+        // Periode Evaluasi
+        Route::get("/periode", [
+            PeriodeEvaluasiProsedurController::class,
+            "index",
+        ])->name("periode.index");
+        Route::get("/periode/create", [
+            PeriodeEvaluasiProsedurController::class,
+            "create",
+        ])->name("periode.create");
+        Route::post("/periode", [
+            PeriodeEvaluasiProsedurController::class,
+            "store",
+        ])->name("periode.store");
+        Route::get("/periode/edit/{id}", [
+            PeriodeEvaluasiProsedurController::class,
+            "edit",
+        ])->name("periode.edit");
+        Route::put("/periode/{id}", [
+            PeriodeEvaluasiProsedurController::class,
+            "update",
+        ])->name("periode.update");
+        Route::delete("/periode/{id}", [
+            PeriodeEvaluasiProsedurController::class,
+            "destroy",
+        ])->name("periode.destroy");
+    });
+
+    // Evaluasi
+    Route::middleware(["periode.evaluasi"])->group(function () {
+        Route::get("/evaluasi", [
+            EvaluasiProsedurController::class,
+            "index",
+        ])->name("evaluasi.index");
+        Route::get("/evaluasi/create/{sop_id}", [
+            EvaluasiProsedurController::class,
+            "create",
+        ])->name("evaluasi.create");
+        Route::post("/evaluasi", [
+            EvaluasiProsedurController::class,
+            "store",
+        ])->name("evaluasi.store");
+        Route::get("/evaluasi/{id}", [
+            EvaluasiProsedurController::class,
+            "show",
+        ])->name("evaluasi.show");
+        Route::get("/evaluasi/{id}/edit", [
+            EvaluasiProsedurController::class,
+            "edit",
+        ])->name("evaluasi.edit");
+        Route::put("/evaluasi/{id}", [
+            EvaluasiProsedurController::class,
+            "update",
+        ])->name("evaluasi.update");
+        Route::delete("/evaluasi/{id}", [
+            EvaluasiProsedurController::class,
+            "destroy",
+        ])->name("evaluasi.destroy");
+    });
 });
 Route::middleware("auth", "role:admin")->group(function () {
     Route::get("/admin/dashboard", [DashboardController::class, "index"]);
@@ -110,14 +176,6 @@ Route::middleware("auth", "role:admin")->group(function () {
         SocialiteController::class,
         "update",
     ])->name("admin.update");
-    Route::get("/admin/prosedurpengawasan", [
-        ProsedurPengawasanController::class,
-        "index",
-    ])->name("admin.prosedurpengawasan.index");
-    Route::get("/admin/prosedurpengawasan/{id}", [
-        ProsedurPengawasanController::class,
-        "detail",
-    ])->name("admin.prosedur-pengawasan.detail");
 
     // Routes untuk Inspektur Utama - hanya admin yang bisa akses
     Route::get("/admin/inspektur-utama", [
@@ -197,27 +255,6 @@ Route::middleware("auth", "role:pjk")->group(function () {
         InstrumenPengawasanController::class,
         "update",
     ])->name("pjk-instrumen-pengawasan.update");
-
-    Route::get("/penanggungjawab/prosedurpengawasan", [
-        ProsedurPengawasanController::class,
-        "index",
-    ])->name("pjk.prosedur-pengawasan.index");
-    Route::get("/penanggungjawab/prosedurpengawasan/{id}", [
-        ProsedurPengawasanController::class,
-        "detail",
-    ])->name("pjk.prosedur-pengawasan.detail");
-    Route::get("/penanggungjawab/prosedurpengawasan/{id}/edit", [
-        ProsedurPengawasanController::class,
-        "edit",
-    ])->name("pjk.prosedur-pengawasan.edit");
-    Route::put("/penanggungjawab/prosedurpengawasan/{id}", [
-        ProsedurPengawasanController::class,
-        "update",
-    ])->name("pjk.prosedur-pengawasan.update");
-    Route::delete("/penanggungjawab/prosedurpengawasan/{id}", [
-        ProsedurPengawasanController::class,
-        "delete",
-    ])->name("pjk.prosedur-pengawasan.delete");
 });
 Route::middleware("auth", "role:perencana")->group(function () {
     Route::get("/perencana/dashboard", [DashboardController::class, "index"]);
@@ -255,66 +292,6 @@ Route::middleware("auth", "role:perencana")->group(function () {
         InstrumenPengawasanController::class,
         "delete",
     ])->name("instrumen-pengawasan.delete");
-
-    Route::get("/perencana/prosedurpengawasan", [
-        ProsedurPengawasanController::class,
-        "index",
-    ])->name("perencana.prosedur-pengawasan.index");
-    Route::get("/perencana/prosedurpengawasan/create", [
-        ProsedurPengawasanController::class,
-        "create",
-    ])->name("prosedur-pengawasan.create");
-    Route::post("/perencana/prosedurpengawasan", [
-        ProsedurPengawasanController::class,
-        "store",
-    ])->name("prosedur-pengawasan.store");
-    Route::get("/perencana/prosedurpengawasan/edit/{id}", [
-        ProsedurPengawasanController::class,
-        "edit",
-    ])->name("perencana.prosedur-pengawasan.edit");
-    Route::get("/perencana/prosedurpengawasan/detail/{id}", [
-        ProsedurPengawasanController::class,
-        "detail",
-    ])->name("perencana.prosedur-pengawasan.detail");
-    Route::put("/perencana/prosedurpengawasan/{id}", [
-        ProsedurPengawasanController::class,
-        "update",
-    ])->name("perencana.prosedur-pengawasan.update");
-    Route::delete("/perencana/prosedurpengawasan/delete/{id}", [
-        ProsedurPengawasanController::class,
-        "delete",
-    ])->name("perencana.prosedur-pengawasan.delete");
-
-    Route::get("/perencana/prosedurpengawasan/create-cover", function () {
-        return view("perencana.prosedur.cover", [
-            "title" => "Buat Prosedur Pengawasan",
-        ]);
-    });
-    Route::get("/perencana/prosedurpengawasan/create-fix", function () {
-        return view("perencana.prosedur.create-fix", [
-            "title" => "Buat Prosedur Pengawasan",
-        ]);
-    });
-    Route::get("/perencana/prosedurpengawasan/edit-cover/{id}", [
-        ProsedurPengawasanController::class,
-        "editCover",
-    ])->name("perencana.prosedur-pengawasan.edit-cover");
-    Route::put("/perencana/prosedurpengawasan/update-cover/{id}", [
-        ProsedurPengawasanController::class,
-        "updateCover",
-    ])->name("perencana.prosedur-pengawasan.update-cover");
-    Route::get("/perencana/prosedur-pengawasan/{id}/cover-data", [
-        ProsedurPengawasanController::class,
-        "getCoverData",
-    ]);
-    Route::get("/perencana/prosedurpengawasan/edit-body/{id}", [
-        ProsedurPengawasanController::class,
-        "editBody",
-    ])->name("perencana.prosedur-pengawasan.edit-body");
-    Route::put("/perencana/prosedurpengawasan/body/{id}", [
-        ProsedurPengawasanController::class,
-        "updateBody",
-    ])->name("perencana.prosedur-pengawasan.update-body");
 
     Route::get("/perencana/regulasi", [
         RegulasiController::class,

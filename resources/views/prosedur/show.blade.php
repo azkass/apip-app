@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    @component('components.prosedur.detail', ['prosedurPengawasan' => $prosedurPengawasan])
+    @component('components.prosedur.show', ['prosedurPengawasan' => $prosedurPengawasan])
     @endcomponent
 
     <!-- Container untuk cover SOP -->
@@ -21,7 +21,7 @@
                 window.prosedurDetailData = {!! $prosedurPengawasan->isi ?? '{}' !!};
                 // Ambil data cover dari backend dan render cover
                 const id = {{ $prosedurPengawasan->id }};
-                axios.get(`/perencana/prosedur-pengawasan/${id}/cover-data`).then(resp => {
+                axios.get(`/prosedur-pengawasan/${id}/cover-data`).then(resp => {
                     function tryRenderCover() {
                         if (window.generateCoverMxGraph) {
                             generateCoverMxGraph(resp.data);

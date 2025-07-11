@@ -77,6 +77,9 @@ class SocialiteController extends Controller
             $request->role,
             $id,
         ]);
-        return redirect("/admin/list");
+        return redirect("/admin/list")->with(
+            "success",
+            "Edit Role pengguna berhasil diperbarui."
+        );
     }
 }

@@ -1,7 +1,5 @@
 <div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
     <div class="mb-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-6">Detail Instrumen Pengawasan</h2>
-
         <div class="mb-4">
             <h3 class="text-sm font-medium text-gray-500">Judul</h3>
             <p class="text-base text-gray-800">{{ $instrumenPengawasan->judul }}</p>
@@ -31,9 +29,9 @@
             <h3 class="text-sm font-medium text-gray-500">File</h3>
             <div class="flex items-center mt-1">
                 <p class="text-base text-gray-800 mr-3">{{ $instrumenPengawasan->file }}</p>
-                <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}" 
-                   class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
-                    <i class="fas fa-download mr-1"></i> Download
+                <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}"
+                   class="text-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
+                    <i class="fas fa-download mr-1"></i> Unduh
                 </a>
             </div>
         </div>
@@ -52,7 +50,7 @@
 
     @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
     <div class="flex space-x-3">
-        <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumenPengawasan->id) }}" 
+        <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumenPengawasan->id) }}"
            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
             Edit
         </a>
@@ -60,7 +58,7 @@
         <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" class="inline-block">
             @csrf
             @method('DELETE')
-            <button type="submit" onclick="return confirm('Yakin ingin menghapus instrumen ini?')" 
+            <button type="submit" onclick="return confirm('Yakin ingin menghapus instrumen ini?')"
                     class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition">
                 Hapus
             </button>

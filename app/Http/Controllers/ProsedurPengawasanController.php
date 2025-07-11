@@ -30,14 +30,7 @@ class ProsedurPengawasanController extends Controller
             "prosedurPengawasan" => $prosedurPengawasan,
         ];
 
-        $viewPath = match (Auth::user()->role) {
-            "admin" => "admin.prosedur.daftarprosedurpengawasan",
-            "perencana" => "perencana.prosedur.daftarprosedurpengawasan",
-            "pjk" => "penanggungjawab.prosedur.daftarprosedurpengawasan",
-            "pegawai" => "pegawai.prosedur.daftarprosedurpengawasan",
-        };
-
-        return view($viewPath, $viewData);
+        return view("prosedur.index", $viewData);
     }
     public function create()
     {
@@ -47,10 +40,10 @@ class ProsedurPengawasanController extends Controller
         $is_perencana = DB::select(
             'SELECT id, name, role FROM users WHERE role IN ("perencana")'
         ); // Ambil data user untuk dropdown
-        
+
         $inspektur_utama = InspekturUtama::getNama();
-        
-        return view("perencana.prosedur.createprosedurpengawasan", [
+
+        return view("prosedur.create", [
             "is_pjk" => $is_pjk,
             "is_perencana" => $is_perencana,
             "inspektur_utama" => $inspektur_utama,
@@ -75,29 +68,17 @@ class ProsedurPengawasanController extends Controller
         ProsedurPengawasan::create($validatedData);
 
         return redirect()
-            ->route("perencana.prosedur-pengawasan.index")
+            ->route("prosedur-pengawasan.index")
             ->with("success", "Prosedur Pengawasan berhasil ditambahkan.");
     }
 
-    public function detail($id)
+    public function show($id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::detail($id);
-        if (Auth::user()->role == "perencana") {
-            return view("perencana.prosedur.detail", [
-                "prosedurPengawasan" => $prosedurPengawasan,
-                "title" => "Detail Prosedur Pengawasan",
-            ]);
-        } elseif (Auth::user()->role == "pjk") {
-            return view("penanggungjawab.prosedur.detail", [
-                "prosedurPengawasan" => $prosedurPengawasan,
-                "title" => "Detail Prosedur Pengawasan",
-            ]);
-        } elseif (Auth::user()->role == "pegawai") {
-            return view("pegawai.prosedur.detail", [
-                "prosedurPengawasan" => $prosedurPengawasan,
-                "title" => "Detail Prosedur Pengawasan",
-            ]);
-        }
+        $prosedurPengawasan = ProsedurPengawasan::show($id);
+        return view("prosedur.show", [
+            "prosedurPengawasan" => $prosedurPengawasan,
+            "title" => "Detail Prosedur Pengawasan",
+        ]);
     }
 
     public function edit($id)
@@ -106,29 +87,20 @@ class ProsedurPengawasanController extends Controller
         $is_pjk = DB::select(
             'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
         ); // Ambil data user untuk dropdown
-        
+
         $inspektur_utama_nama = InspekturUtama::getNama();
-        
-        if (Auth::user()->role == "perencana") {
-            return view("perencana.prosedur.editprosedurpengawasan", [
-                "prosedurPengawasan" => $prosedurPengawasan,
-                "is_pjk" => $is_pjk,
-                "inspektur_utama_nama" => $inspektur_utama_nama,
-                "title" => "Edit Prosedur Pengawasan",
-            ]);
-        } elseif (Auth::user()->role == "pjk") {
-            return view("penanggungjawab.prosedur.editprosedurpengawasan", [
-                "prosedurPengawasan" => $prosedurPengawasan,
-                "is_pjk" => $is_pjk,
-                "inspektur_utama_nama" => $inspektur_utama_nama,
-                "title" => "Edit Prosedur Pengawasan",
-            ]);
-        }
+
+        return view("prosedur.edit", [
+            "prosedurPengawasan" => $prosedurPengawasan,
+            "is_pjk" => $is_pjk,
+            "inspektur_utama_nama" => $inspektur_utama_nama,
+            "title" => "Edit Prosedur Pengawasan",
+        ]);
     }
 
     public function update(Request $request, $id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+        $prosedurPengawasan = ProsedurPengawasan::show($id);
 
         $validatedData = $request->validate([
             "judul" => "required|max:255",
@@ -144,36 +116,32 @@ class ProsedurPengawasanController extends Controller
 
         ProsedurPengawasan::update($id, $request);
 
-        $updatedProsedurPengawasan = ProsedurPengawasan::detail($id);
+        $updatedProsedurPengawasan = ProsedurPengawasan::show($id);
 
-        if (Auth::user()->role == "perencana") {
-            return redirect()->route(
-                "perencana.prosedur-pengawasan.edit-cover",
+        return redirect()
+            ->route(
+                "prosedur-pengawasan.edit-cover",
                 $updatedProsedurPengawasan->id
-            );
-        } elseif (Auth::user()->role == "pjk") {
-            return redirect()->route(
-                "pjk.prosedur-pengawasan.detail",
-                $updatedProsedurPengawasan->id
-            );
-        }
+            )
+            ->with("success", "Prosedur berhasil diperbarui.");
     }
 
     public function editCover($id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+        $prosedurPengawasan = ProsedurPengawasan::show($id);
         // Pastikan field cover di-decode ke array
         if ($prosedurPengawasan) {
             // Ambil dari kolom cover jika field-field tidak ada
-            $cover = json_decode($prosedurPengawasan->cover ?? '{}', true);
-            $prosedurPengawasan->dasar_hukum = $cover['dasar_hukum'] ?? $cover['dasarHukum'] ?? [];
-            $prosedurPengawasan->keterkaitan = $cover['keterkaitan'] ?? [];
-            $prosedurPengawasan->peringatan = $cover['peringatan'] ?? [];
-            $prosedurPengawasan->kualifikasi = $cover['kualifikasi'] ?? [];
-            $prosedurPengawasan->peralatan = $cover['peralatan'] ?? [];
-            $prosedurPengawasan->pencatatan = $cover['pencatatan'] ?? [];
+            $cover = json_decode($prosedurPengawasan->cover ?? "{}", true);
+            $prosedurPengawasan->dasar_hukum =
+                $cover["dasar_hukum"] ?? ($cover["dasarHukum"] ?? []);
+            $prosedurPengawasan->keterkaitan = $cover["keterkaitan"] ?? [];
+            $prosedurPengawasan->peringatan = $cover["peringatan"] ?? [];
+            $prosedurPengawasan->kualifikasi = $cover["kualifikasi"] ?? [];
+            $prosedurPengawasan->peralatan = $cover["peralatan"] ?? [];
+            $prosedurPengawasan->pencatatan = $cover["pencatatan"] ?? [];
         }
-        return view("perencana.prosedur.edit-cover", [
+        return view("prosedur.edit-cover", [
             "prosedurPengawasan" => $prosedurPengawasan,
             "title" => "Edit Cover Prosedur Pengawasan",
         ]);
@@ -181,9 +149,9 @@ class ProsedurPengawasanController extends Controller
 
     public function getCoverData($id)
     {
-        $prosedur = ProsedurPengawasan::detail($id);
+        $prosedur = ProsedurPengawasan::show($id);
         if (!$prosedur) {
-            return response()->json(['error' => 'Not found'], 404);
+            return response()->json(["error" => "Not found"], 404);
         }
         // Ambil cover JSON jika ada, pastikan array
         $cover = [];
@@ -195,15 +163,22 @@ class ProsedurPengawasanController extends Controller
         }
         // Mapping field statis dan dinamis
         $static = [
-            'nomor_sop'         => $prosedur->nomor ?? '',
-            'tanggal_pembuatan' => $prosedur->tanggal_pembuatan ?? '',
-            'tanggal_revisi'    => $prosedur->tanggal_revisi ?? '',
-            'tanggal_efektif'   => $prosedur->tanggal_efektif ?? '',
-            'disahkan_oleh'     => $prosedur->disahkan_oleh_nama ?? '',
-            'nama_sop'          => $prosedur->judul ?? '',
-            'pejabat_nama'      => $prosedur->petugas_nama ?? '',
+            "nomor_sop" => $prosedur->nomor ?? "",
+            "tanggal_pembuatan" => $prosedur->tanggal_pembuatan ?? "",
+            "tanggal_revisi" => $prosedur->tanggal_revisi ?? "",
+            "tanggal_efektif" => $prosedur->tanggal_efektif ?? "",
+            "disahkan_oleh" => $prosedur->disahkan_oleh_nama ?? "",
+            "nama_sop" => $prosedur->judul ?? "",
+            "pejabat_nama" => $prosedur->petugas_nama ?? "",
         ];
-        $dynamic = ['dasarHukum','keterkaitan','peringatan','kualifikasi','peralatan','pencatatan'];
+        $dynamic = [
+            "dasarHukum",
+            "keterkaitan",
+            "peringatan",
+            "kualifikasi",
+            "peralatan",
+            "pencatatan",
+        ];
         foreach ($dynamic as $key) {
             $static[$key] = $cover[$key] ?? [];
         }
@@ -218,11 +193,11 @@ class ProsedurPengawasanController extends Controller
         ProsedurPengawasan::updateCover($id, $validatedData);
 
         // Re-fetch the updated model to get all data
-        $prosedur = ProsedurPengawasan::detail($id);
+        $prosedur = ProsedurPengawasan::show($id);
         if (!$prosedur) {
-            return response()->json(['error' => 'Not found after update'], 404);
+            return response()->json(["error" => "Not found after update"], 404);
         }
-        
+
         $cover = [];
         if (!empty($prosedur->cover)) {
             $decoded = json_decode($prosedur->cover, true);
@@ -233,35 +208,43 @@ class ProsedurPengawasanController extends Controller
 
         // Prepare the data structure exactly like getCoverData
         $responseData = [
-            'nomor_sop'         => $prosedur->nomor ?? '',
-            'tanggal_pembuatan' => $prosedur->tanggal_pembuatan ?? '',
-            'tanggal_revisi'    => $prosedur->tanggal_revisi ?? '',
-            'tanggal_efektif'   => $prosedur->tanggal_efektif ?? '',
-            'disahkan_oleh'     => $prosedur->disahkan_oleh_nama ?? '',
-            'nama_sop'          => $prosedur->judul ?? '',
-            'pejabat_nama'      => $prosedur->petugas_nama ?? '',
+            "nomor_sop" => $prosedur->nomor ?? "",
+            "tanggal_pembuatan" => $prosedur->tanggal_pembuatan ?? "",
+            "tanggal_revisi" => $prosedur->tanggal_revisi ?? "",
+            "tanggal_efektif" => $prosedur->tanggal_efektif ?? "",
+            "disahkan_oleh" => $prosedur->disahkan_oleh_nama ?? "",
+            "nama_sop" => $prosedur->judul ?? "",
+            "pejabat_nama" => $prosedur->petugas_nama ?? "",
         ];
-        
+
         // These are the keys the JS expects for the dynamic fields
-        $dynamicKeys = ['dasarHukum','keterkaitan','peringatan','kualifikasi','peralatan','pencatatan'];
-        
+        $dynamicKeys = [
+            "dasarHukum",
+            "keterkaitan",
+            "peringatan",
+            "kualifikasi",
+            "peralatan",
+            "pencatatan",
+        ];
+
         foreach ($dynamicKeys as $camelCaseKey) {
             // Convert camelCase to snake_case for fallback lookup
-            $snakeCaseKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camelCaseKey));
+            $snakeCaseKey = strtolower(
+                preg_replace("/([a-z])([A-Z])/", '$1_$2', $camelCaseKey)
+            );
             // Check for camelCase key first, then snake_case, then default to empty array
-            $responseData[$camelCaseKey] = $cover[$camelCaseKey] ?? $cover[$snakeCaseKey] ?? [];
+            $responseData[$camelCaseKey] =
+                $cover[$camelCaseKey] ?? ($cover[$snakeCaseKey] ?? []);
         }
-        
+
         return response()->json($responseData);
     }
 
-
-    
     public function editBody($id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::detail($id);
+        $prosedurPengawasan = ProsedurPengawasan::show($id);
 
-        return view("perencana.prosedur.edit-body", [
+        return view("prosedur.edit-body", [
             "prosedurPengawasan" => $prosedurPengawasan,
             "title" => "Edit Prosedur Pengawasan",
         ]);
@@ -280,13 +263,12 @@ class ProsedurPengawasanController extends Controller
             "message" => "Data berhasil disimpan",
         ]);
     }
-    
 
     public function delete($id)
     {
         ProsedurPengawasan::delete($id);
         return redirect()
-            ->route("perencana.prosedur-pengawasan.index")
+            ->route("prosedur-pengawasan.index")
             ->with("success", "Prosedur Pengawasan deleted successfully");
     }
 }

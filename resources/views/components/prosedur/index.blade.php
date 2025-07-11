@@ -1,12 +1,12 @@
 <div class="container mx-auto p-4">
-    
+
 
     <div class="flex items-center gap-4 mb-6">
         <!-- Search Bar -->
         <div class="flex flex-col">
             <label class="text-sm font-medium text-gray-700 mb-1">Cari</label>
             <div class="relative">
-                <input type="text" id="search" placeholder="Cari prosedur pengawasan" 
+                <input type="text" id="search" placeholder="Cari prosedur pengawasan"
                        class="w-80 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"/>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 >
                     @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
                         @foreach (range(date('Y'), 2025) as $year)
-                            <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
+                            <option value="{{ route('prosedur-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
                                     {{ request('tahun', date('Y')) == $year ? 'selected' : '' }}>
                                 {{ $year }}
                             </option>
@@ -49,22 +49,22 @@
                     onchange="window.location.href=this.value"
                 >
                     @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'semua']) }}" 
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'semua']) }}"
                                 {{ $activeTab == 'semua' ? 'selected' : '' }}>
                             Semua
                         </option>
 
-                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'draft']) }}" 
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'draft']) }}"
                                 {{ $activeTab == 'draft' ? 'selected' : '' }}>
                             Draft
                         </option>
 
-                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'diajukan']) }}" 
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'diajukan']) }}"
                                 {{ $activeTab == 'diajukan' ? 'selected' : '' }}>
                             Diajukan
                         </option>
 
-                        <option value="{{ route(Auth::user()->role .'.prosedur-pengawasan.index', ['status' => 'disetujui']) }}" 
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'disetujui']) }}"
                                 {{ $activeTab == 'disetujui' ? 'selected' : '' }}>
                             Disetujui
                         </option>
@@ -84,7 +84,7 @@
         @if (Auth::user()->role == 'perencana')
         <div class="flex flex-col">
             <label class="text-sm font-medium text-gray-700 mb-1 invisible">Aksi</label>
-            <a href="{{ route('prosedur-pengawasan.create') }}" 
+            <a href="{{ route('prosedur-pengawasan.create') }}"
                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
                 Tambah
             </a>
@@ -101,7 +101,7 @@
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Nomor SOP</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Judul</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Tanggal Pembuatan</th>
-                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Disahkan Oleh</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Disusun Oleh</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Status</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Aksi</th>
                     @if (Auth::user()->role == 'pjk')
@@ -114,12 +114,12 @@
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="border border-gray-300 px-4 py-3 text-center">{{ $index + 1 }}</td>
                     <td class="border border-gray-300 px-4 py-3">
-                        <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="hover:text-blue-600">
+                        <a href="{{ route('prosedur-pengawasan.show', $prosedur->id) }}" class="hover:text-blue-600">
                             {{ $prosedur->nomor }}
                         </a>
                     </td>
                     <td class="border border-gray-300 px-4 py-3">
-                        <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" class="hover:text-blue-600">
+                        <a href="{{ route('prosedur-pengawasan.show', $prosedur->id) }}" class="hover:text-blue-600">
                            {{ $prosedur->judul }}
                         </a>
                     </td>
@@ -127,10 +127,10 @@
                         {{ $prosedur->tanggal_pembuatan ? date('d/m/Y', strtotime($prosedur->tanggal_pembuatan)) : '-' }}
                     </td>
                     <td class="border border-gray-300 px-4 py-3 text-center">
-                        {{ $prosedur->disahkan_oleh_nama }}
+                        {{ $prosedur->petugas_nama }}
                     </td>
                     <td class="border border-gray-300 px-4 py-3 text-center">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                        <span class="inline-flex px-2 py-1 text-base font-semibold rounded-full
                             @if($prosedur->status == 'draft')
                                 bg-yellow-100 text-yellow-800
                             @elseif($prosedur->status == 'diajukan')
@@ -145,12 +145,12 @@
                     <td class="border border-gray-300 px-4 py-3 text-center">
                         <div class="flex justify-center space-x-2">
                             @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                            <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.edit', $prosedur->id) }}" 
+                                <a href="{{ route('prosedur-pengawasan.edit', $prosedur->id) }}"
                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">
                                 Edit
                             </a>
                             @endif
-                            <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedur->id) }}" 
+                            <a href="{{ route('prosedur-pengawasan.show', $prosedur->id) }}"
                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
                                 Lihat
                             </a>
@@ -166,7 +166,7 @@
                         @endphp
 
                         @if ($isPeriodeActive)
-                            <a href="{{ route('evaluasi.create', $prosedur->id) }}" 
+                            <a href="{{ route('evaluasi.create', $prosedur->id) }}"
                                class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm transition">
                                 Evaluasi
                             </a>
@@ -175,7 +175,7 @@
                     @endif
                 </tr>
                 @endforeach
-                
+
                 @if(count($prosedurPengawasan) == 0)
                 <tr>
                     <td colspan="{{ Auth::user()->role == 'pjk' ? '8' : '7' }}" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
@@ -193,7 +193,7 @@
             </tbody>
         </table>
     </div>
-    
+
     <div class="mt-4 text-sm text-gray-600">
         <div class="flex flex-wrap items-center gap-4">
             <div class="flex items-center">
@@ -209,14 +209,5 @@
                 <span>Disetujui: Prosedur telah ditinjau dan disetujui</span>
             </div>
         </div>
-    </div>
-
-    <div class="mt-6">
-        @if (Auth::user()->role == 'perencana')
-            <div class="flex space-x-3">
-                <a href="/perencana/prosedurpengawasan/create-cover" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Cover Fix Code</a>
-                <a href="/perencana/prosedurpengawasan/create-fix" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">Create Body Fix Code</a>
-            </div>
-        @endif
     </div>
 </div>

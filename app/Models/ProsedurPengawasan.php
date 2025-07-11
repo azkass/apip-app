@@ -17,11 +17,10 @@ class ProsedurPengawasan
     {
         $query = "SELECT pp.id, pp.nomor, pp.judul, pp.status, pp.updated_at,
                   pp.tanggal_pembuatan, pp.tanggal_revisi, pp.tanggal_efektif,
-                  u1.name AS petugas_nama, u2.name AS perencana_nama, iu.nama AS disahkan_oleh_nama
+                  u1.name AS petugas_nama, u2.name AS perencana_nama
                   FROM prosedur_pengawasan pp
                   JOIN users u1 ON pp.penyusun_id = u1.id
-                  JOIN users u2 ON pp.pembuat_id = u2.id
-                  JOIN inspektur_utama iu ON pp.disahkan_oleh = iu.id";
+                  JOIN users u2 ON pp.pembuat_id = u2.id";
 
         if ($status && $status !== "semua") {
             $query .= " WHERE pp.status = '" . addslashes($status) . "'";
@@ -95,7 +94,7 @@ class ProsedurPengawasan
         );
     }
 
-    public static function detail($id)
+    public static function show($id)
     {
         return DB::selectOne(
             "

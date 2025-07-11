@@ -1,8 +1,6 @@
 <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
     @props(['inspektur_utama', 'is_pjk', 'is_pjk'])
-    @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
-        <form action="{{ route(Auth::user()->role .'.prosedur-pengawasan.update', $prosedurPengawasan->id) }}" method="POST" enctype="multipart/form-data">
-    @endif
+    <form action="{{ route('prosedur-pengawasan.update', $prosedurPengawasan->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

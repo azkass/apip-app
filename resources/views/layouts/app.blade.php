@@ -31,13 +31,13 @@
                         <i class="fa-solid fa-user-shield mx-auto sidebar-icon fa-lg my-4" title="Manajemen Role"></i>
                         <span class="ml-2 hidden sidebar-text">Manajemen Role</span>
                     </a>
+                    <a href="/prosedur-pengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-pen-ruler mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
+                        <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
+                    </a>
                     <a href="{{ route('admin.inspektur-utama.index') }}" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-user-tie mx-auto sidebar-icon fa-lg my-4" title="Inspektur Utama"></i>
                         <span class="ml-2 hidden sidebar-text">Inspektur Utama</span>
-                    </a>
-                    <a href="/admin/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
-                        <i class="fa-solid fa-user-shield mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
-                        <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
                     <a href="{{ route('periode.index') }}" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
@@ -52,7 +52,7 @@
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
                     </a>
-                    <a href="/penanggungjawab/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                    <a href="prosedur-pengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-clipboard-check mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
@@ -77,7 +77,7 @@
                         <i class="fa-solid fa-house sidebar-icon mx-auto fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
                     </a>
-                    <a href="/perencana/prosedurpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                    <a href="/prosedur-pengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-pen-ruler mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
                         <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
@@ -140,15 +140,7 @@
                         <div class="float-right flex items-center space-x-6 text-white">
                             <i class="fa-solid fa-circle-user fa-2xl" style="color: #ffffff;"></i>
                             <div class="text-lg">
-                                @if (Auth::user()->role == 'admin')
-                                    <p class="font-medium">Hai, Admin</p>
-                                @elseif (Auth::user()->role == 'pjk')
-                                    <p class="font-medium">Hai, Penanggung Jawab Kegiatan</p>
-                                @elseif (Auth::user()->role == 'perencana')
-                                    <p class="font-medium">Hai, Perencana</p>
-                                @elseif (Auth::user()->role == 'pegawai')
-                                    <p class="font-medium">Hai, Pegawai</p>
-                                @endif
+                                <p class="">Hai, {{ Str::title(Auth::user()->name) }}</p>
                             </div>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -198,18 +190,18 @@
         const sidebarIcons = document.querySelectorAll('.sidebar-icon');
         const footerSmall = document.querySelector('.sidebar-footer-small');
         const footerFull = document.querySelector('.sidebar-footer-full');
-        
+
         // Get sidebar state from localStorage or default to open
         let isOpen = localStorage.getItem('sidebarOpen') !== 'false';
         let isMobile = window.innerWidth < 768;
-        
+
         // Apply sidebar state more efficiently
         function applySidebarState() {
             // Common state changes
             sidebar.classList.toggle('w-64', isOpen);
             sidebar.classList.toggle('w-16', !isOpen || !isMobile);
             sidebar.classList.toggle('hidden', isMobile && !isOpen);
-            
+
             // Update appearance based on state
             if (isOpen) {
                 sidebarTexts.forEach(text => text.classList.remove('hidden'));
@@ -236,17 +228,17 @@
                 footerSmall.classList.remove('hidden');
                 footerFull.classList.add('hidden');
             }
-            
+
             // Save state to localStorage
             localStorage.setItem('sidebarOpen', isOpen);
         }
-        
+
         // Toggle sidebar state with button
         toggleButton.addEventListener('click', function() {
             isOpen = !isOpen;
             applySidebarState();
         });
-        
+
         // We want to close the sidebar on menu click for both mobile and desktop
         document.querySelector('.p-2.flex-grow').addEventListener('click', function(e) {
             const sidebarItem = e.target.closest('.sidebar-item');
@@ -257,23 +249,23 @@
                 return true;
             }
         });
-        
+
         // Efficient window resize handling
         const handleResize = () => {
             const wasMobile = isMobile;
             isMobile = window.innerWidth < 768;
-            
+
             if (wasMobile !== isMobile) {
                 applySidebarState();
             }
         };
-        
+
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(handleResize, 100);
         });
-        
+
         // Initialize sidebar
         applySidebarState();
     });

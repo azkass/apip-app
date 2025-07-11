@@ -66,7 +66,7 @@
     <div id="previewBox" class="hidden bg-white shadow-md rounded-lg p-6">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Diagram Preview</h2>
         <div class="mb-4">
-            <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.detail', $prosedurPengawasan->id) }}"
+            <a href="{{ route('prosedur-pengawasan.show', $prosedurPengawasan->id) }}"
                class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition">
                    Simpan
             </a>
@@ -86,7 +86,6 @@
 
         <!-- Load mxGraph core -->
         <script src="/vendor/mxgraph/js/mxClient.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <!-- Load Vite script khusus untuk page ini -->
         @vite('resources/js/editBody.js')

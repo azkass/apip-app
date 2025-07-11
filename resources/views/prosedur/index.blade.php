@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    @component('components.prosedur.daftar', [
+    @component('components.prosedur.index', [
         'prosedurPengawasan' => $prosedurPengawasan,
         'activeTab' => $activeTab
     ])

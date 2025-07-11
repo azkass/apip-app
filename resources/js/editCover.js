@@ -51,7 +51,11 @@ window.addEventListener("DOMContentLoaded", () => {
         let data = [];
         if (window.coverData && Array.isArray(window.coverData[section])) {
             data = window.coverData[section];
-        } else if (window.coverData && typeof window.coverData[section] === "string" && window.coverData[section].length > 0) {
+        } else if (
+            window.coverData &&
+            typeof window.coverData[section] === "string" &&
+            window.coverData[section].length > 0
+        ) {
             try {
                 data = JSON.parse(window.coverData[section]);
             } catch {

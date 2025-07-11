@@ -50,14 +50,14 @@
 
         <div class="flex space-x-3 mt-6">
             @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
-                <a href="{{ route(Auth::user()->role . '.prosedur-pengawasan.edit', $prosedurPengawasan->id) }}" 
+                                <a href="{{ route('prosedur-pengawasan.edit', $prosedurPengawasan->id) }}" 
                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
                     Edit
                 </a>
             @endif
             
             @if (Auth::user()->role == 'perencana')
-                <form action="{{ route('perencana.prosedur-pengawasan.delete', $prosedurPengawasan->id) }}" 
+                                <form action="{{ route('prosedur-pengawasan.delete', $prosedurPengawasan->id) }}" 
                       method="POST" 
                       onsubmit="return confirm('Yakin ingin menghapus prosedur ini?')" 
                       class="inline-block">

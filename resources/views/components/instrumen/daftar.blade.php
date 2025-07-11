@@ -5,7 +5,7 @@
         <div class="flex flex-col w-full mb-2 sm:mb-0 sm:w-auto">
             <label class="text-sm font-medium text-gray-700 mb-1">Cari</label>
             <div class="relative">
-                <input type="text" id="search" placeholder="Cari instrumen pengawasan" 
+                <input type="text" id="search" placeholder="Cari instrumen pengawasan"
                        class="w-full sm:w-64 md:w-80 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"/>
             </div>
         </div>
@@ -129,13 +129,13 @@
                             </a>
                         </td>
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">
-                            <span class="py-1 px-2 sm:px-3 rounded-md text-white text-xs sm:text-sm font-semibold
+                            <span class="inline-flex px-2 py-1 text-base font-semibold rounded-full
                                 @if($instrumen->status == 'draft')
-                                    bg-yellow-500
+                                bg-yellow-100 text-yellow-800
                                 @elseif($instrumen->status == 'diajukan')
-                                    bg-blue-600
+                                bg-blue-100 text-blue-800
                                 @elseif($instrumen->status == 'disetujui')
-                                    bg-green-500
+                                bg-green-100 text-green-800
                                 @endif">
                                 {{ ucfirst($instrumen->status) }}
                             </span>
@@ -174,7 +174,7 @@
                         <td colspan="5" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
                             <div class="flex flex-col items-center">
                                 <svg class="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
                                 <p class="text-base sm:text-lg font-medium">Belum ada data instrumen</p>

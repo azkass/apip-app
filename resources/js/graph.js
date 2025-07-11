@@ -650,7 +650,7 @@ export async function preview() {
                 document.getElementById("prosedur-container").dataset
                     .prosedurId;
             const response = await axios.put(
-                `/perencana/prosedurpengawasan/body/${id}`,
+                `/prosedur-pengawasan/${id}/body`,
                 { isi: jsonBody },
                 {
                     headers: {
