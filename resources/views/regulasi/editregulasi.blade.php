@@ -7,7 +7,7 @@
         </div>
     @endif
 
-    <form action="{{ route('perencana.regulasi.update', $regulasi->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('regulasi.update', $regulasi->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="hidden" name="pembuat_id" value="{{ $regulasi->pembuat_id }}">
@@ -17,7 +17,7 @@
             <input type="text" name="kode" id="kode" value="{{ $regulasi->kode }}" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        
+
         <div class="mb-4">
             <label for="hasil_kerja" class="block font-medium text-gray-700">Hasil Kerja</label>
             <input type="text" name="hasil_kerja" id="hasil_kerja" value="{{ $regulasi->hasil_kerja }}" required
@@ -29,22 +29,22 @@
             <input type="text" name="judul" id="judul" value="{{ $regulasi->judul }}" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        
+
         <div class="mb-4">
             <label for="tautan" class="block font-medium text-gray-700">Tautan</label>
             <input type="text" name="tautan" id="tautan" value="{{ $regulasi->tautan }}" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
-        
+
         <div class="mb-4">
             <label for="pdf" class="block font-medium text-gray-700">File PDF</label>
             <input type="file" name="pdf" id="pdf" accept="application/pdf"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
-            
+
             @if($regulasi->file)
             <div class="mt-2 text-sm text-gray-600">
                 File saat ini: {{ $regulasi->file }}
-                <a href="{{ route('perencana.regulasi.download', $regulasi->id) }}" class="text-blue-500 hover:underline">
+                <a href="{{ route('regulasi.download', $regulasi->id) }}" class="text-blue-500 hover:underline">
                     Download
                 </a>
             </div>

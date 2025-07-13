@@ -71,7 +71,7 @@
                    Simpan
             </a>
         </div>
-        <div id="graphContainerBox" class="overflow-auto border border-gray-200 rounded-md p-2">
+        <div id="graphContainerBox" class="">
             <div id="graphContainer"></div>
         </div>
     </div>

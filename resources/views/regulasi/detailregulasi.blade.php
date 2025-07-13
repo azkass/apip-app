@@ -32,7 +32,7 @@
             <h3 class="text-sm font-medium text-gray-500">File</h3>
             <div class="flex items-center mt-1">
                 <p class="text-base text-gray-800 mr-3">{{ $regulasi->file }}</p>
-                <a href="{{ route('perencana.regulasi.download', $regulasi->id) }}"
+                <a href="{{ route('regulasi.download', $regulasi->id) }}"
                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
                     <i class="fas fa-download mr-1"></i> Download
                 </a>
@@ -57,11 +57,11 @@
     </div>
 
     <div class="flex space-x-3">
-        <a href="{{ route('perencana.regulasi.edit', $regulasi->id) }}"
+        <a href="{{ route('regulasi.edit', $regulasi->id) }}"
            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
             Edit
         </a>
-        <form action="{{ route('perencana.regulasi.delete', $regulasi->id) }}" method="POST" class="inline-block">
+        <form action="{{ route('regulasi.delete', $regulasi->id) }}" method="POST" class="inline-block">
             @csrf
             @method('DELETE')
             <button type="submit" onclick="return confirm('Yakin ingin menghapus regulasi ini?')"

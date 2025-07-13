@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-4">
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <table class="w-full border-collapse">
+<div class="container ml-2 sm:ml-8 mt-1 sm:mt-8">
+    <div class="bg-white rounded-lg">
+        <table class="border-collapse">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold w-12">No</th>
@@ -22,13 +22,13 @@
                         <td class="border border-gray-300 px-4 py-3">{{ Str::limit($evaluasi->sop_judul, 50) }}</td>
                         <td class="border border-gray-300 px-4 py-3 text-center">
                             @php
-                                $persentase = $evaluasi->jumlah_pertanyaan > 0 
-                                    ? ($evaluasi->jawaban_ya / $evaluasi->jumlah_pertanyaan) * 100 
+                                $persentase = $evaluasi->jumlah_pertanyaan > 0
+                                    ? ($evaluasi->jawaban_ya / $evaluasi->jumlah_pertanyaan) * 100
                                     : 0;
-                                $colorClass = $persentase >= 70 
-                                    ? 'bg-green-100 text-green-800' 
-                                    : ($persentase >= 50 
-                                        ? 'bg-yellow-100 text-yellow-800' 
+                                $colorClass = $persentase >= 70
+                                    ? 'bg-green-100 text-green-800'
+                                    : ($persentase >= 50
+                                        ? 'bg-yellow-100 text-yellow-800'
                                         : 'bg-red-100 text-red-800');
                             @endphp
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $colorClass }}">

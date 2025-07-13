@@ -23,6 +23,61 @@ var falseY = 0;
 var shapeSelections = [];
 var falseToSelections = [];
 
+// =====================
+// Konstanta & Helper Umum
+// =====================
+
+// Tinggi maksimum satu halaman diagram
+// Legal landscape: 14" x 8.5" (355.6 mm x 215.9 mm) - scaled down 75%
+const scale = 0.75;
+const pageW = Math.round(14 * 96 * scale); // 1008 px
+const pageH = Math.round(8.5 * 96 * scale); // 612 px
+const MAX_PAGE_HEIGHT = 820;
+const PAGE_WIDTH = Math.round(14 * 96 * scale); // 14 inch × 96 dpi = 1008 px
+
+/**
+ * Pastikan `rowHeights` terisi. Jika kosong, hitung otomatis.
+ */
+function ensureRowHeights() {
+    if (!rowHeights || rowHeights.length === 0) {
+        rowHeights = [];
+        for (let i = 0; i < nActivity; i++) {
+            rowHeights.push(getRowHeight(i));
+        }
+    }
+}
+
+/**
+ * Membagi aktivitas menjadi beberapa halaman.
+ * @returns {Array<{start:number,end:number,height:number}>}
+ */
+function paginateActivities(maxHeight = MAX_PAGE_HEIGHT) {
+    const pages = [];
+    let start = 1;
+
+    while (start <= nActivity) {
+        let end = start;
+        let height = 150; // header estimasi
+
+        while (end <= nActivity) {
+            const estimatedHeight = height + rowHeights[end - 1];
+            if (estimatedHeight >= maxHeight) break;
+            height = estimatedHeight;
+            end++;
+        }
+
+        // Tambah ruang off-page connector bila bukan halaman pertama/terakhir
+        if (start > 1 && end <= nActivity) {
+            height += 50;
+        }
+
+        pages.push({ start, end: end - 1, height });
+        start = end;
+    }
+
+    return pages;
+}
+
 export function addCustomActor(selectElement) {
     if (!selectElement || !selectElement.parentElement) {
         console.error("Invalid select element or missing parent");
@@ -512,6 +567,8 @@ export function getRowHeight(row) {
 
 export function loadData() {
     console.log("Loading page elements");
+    // Reset row heights to recalculate fresh on each load
+    rowHeights = [];
     graphShape = createArray(nActivity, nActor);
     graphLocation = createArray(nActivity, nActor);
     falseData = createArray(nActivity, nActor);
@@ -582,98 +639,83 @@ export function loadData() {
 }
 
 export async function preview() {
-    // Display Preview
+    // Tampilkan kotak preview
     document.getElementById("previewBox").classList.remove("hidden");
 
-    // Save all data that we need to display
+    // Kumpulkan data terbaru dari form
     loadData();
 
-    // Prepare main container
-    var totalHeight = 0;
-    var mainContainer = document.getElementById("graphContainer");
-    mainContainer.innerHTML = "";
+    // Render semua halaman dan ambil JSON terakhir
+    const lastJsonBody = renderDetailPages(true);
 
-    var start = 1;
-    var end = 1;
-    var page = 0;
-    actorLoc = createArray(nActivity + 1, nActor);
-    shape = createArray(nActivity + 2, nActor);
-    var maxWidth = (nActor + 6) * 120;
-    var maxHeight = 820;
-
-    while (end <= nActivity) {
-        var height = 150;
-        start = end;
-        while (true && end <= nActivity) {
-            page++;
-            var estimatedHeight = height + rowHeights[end - 1];
-            if (estimatedHeight >= maxHeight) break;
-
-            height = estimatedHeight;
-            end++;
-        }
-        if (start > 1 && end < nActivity) {
-            height += 50;
-        }
-        totalHeight += height;
-
-        // Draw page
-        console.log(
-            "Start " + start + " End " + (end - 1) + " Height " + height,
-        );
-        var container = document.createElement("div");
-        container.style =
-            "position:relative;overflow:hidden;width:" +
-            maxWidth +
-            "px;height:" +
-            height +
-            "px;border:black solid 1px;cursor:default;";
-        mainContainer.append(container);
-
-        //test csrf available
-        const csrfToken = document.querySelector(
-            'meta[name="csrf-token"]',
-        )?.content;
-        if (!csrfToken) {
-            console.error("CSRF token tidak ditemukan!");
-            return;
-        }
-        // Memanggil fungsi untuk menggambar SOP dan menyimpan data json
-        // Render halaman
-        const jsonBody = draw(container, start, end - 1);
-        const id =
-            document.getElementById("prosedur-container").dataset.prosedurId;
-        // Kirim data ke server
-        try {
-            const jsonBody = draw(container, start, end - 1);
-            const id =
-                document.getElementById("prosedur-container").dataset
-                    .prosedurId;
-            const response = await axios.put(
-                `/prosedur-pengawasan/${id}/body`,
-                { isi: jsonBody },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector(
-                            'meta[name="csrf-token"]',
-                        ).content,
-                    },
-                },
-            );
-
-            console.log("Data tersimpan:", response.data);
-            return response.data;
-        } catch (error) {
-            console.error("Gagal menyimpan:", error);
-            throw error;
-        }
+    // Kirim data ke server
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    if (!csrfToken) {
+        console.error("CSRF token tidak ditemukan!");
+        return;
     }
 
-    // Recalculate box height
-    var mainContainerBox = document.getElementById("graphContainerBox");
-    mainContainerBox.style = "height:" + totalHeight + "px;";
+    try {
+        const id = document.getElementById("prosedur-container").dataset.prosedurId;
+        const response = await axios.put(
+            `/prosedur-pengawasan/${id}/body`,
+            { isi: lastJsonBody },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+            },
+        );
+        console.log("Data tersimpan:", response.data);
+    } catch (error) {
+        console.error("Gagal menyimpan:", error);
+    }
+
     return true;
+}
+
+export function renderDetailPages(captureJson = false) {
+    const mainContainer = document.getElementById("graphContainer");
+    if (!mainContainer) {
+        console.error("graphContainer not found");
+        return;
+    }
+
+    // Clear previous drawings
+    mainContainer.innerHTML = "";
+
+    let totalHeight = 0;
+    const maxWidth = PAGE_WIDTH; // align with cover width
+
+    // Prepare shared arrays for draw()
+    actorLoc = createArray(nActivity + 1, nActor);
+    shape = createArray(nActivity + 2, nActor);
+
+    // Pastikan rowHeights dan pagination siap
+    ensureRowHeights();
+    const pages = paginateActivities();
+
+    let lastJsonBody = null;
+
+    pages.forEach(({ start, end, height }) => {
+        totalHeight += height;
+
+        const container = document.createElement("div");
+        container.style = `position:relative;overflow:hidden;width:${maxWidth + 1}px;height:${height}px;cursor:default;`;
+        mainContainer.append(container);
+
+        const json = draw(container, start, end);
+        if (captureJson) lastJsonBody = json;
+    });
+
+    // Adjust outer wrapper height if it exists
+    const mainContainerBox = document.getElementById("graphContainerBox");
+    if (mainContainerBox) {
+        mainContainerBox.style = `height:${totalHeight}px;`;
+    }
+
+    return captureJson ? lastJsonBody : undefined;
 }
 
 export function convTo2Dim(x) {
@@ -882,14 +924,38 @@ export function draw(container, start, end) {
             var xPointer = 0; // Penanda posisi X saat ini
             var yPointer = 0; // Penanda posisi Y saat ini
 
-            // Menentukan lebar kolom
-            var wBase = 100; // Lebar dasar per aktor
-            var wNo = 40; // Lebar kolom "No."
-            var wAct = 120; // Lebar kolom "Aktivitas"
-            var wActor = wBase * nActor; // Lebar total kolom "Pelaksana"
-            var wMutu = wBase * 3; // Lebar kolom "Mutu Baku" (3 sub-kolom)
-            var wNote = 120; // Lebar kolom "Keterangan"
-            var wTotal = wNo + wAct + wActor + wMutu + wNote; // Lebar total tabel
+            // ============================
+            // Menentukan lebar kolom dinamis
+            // ============================
+
+            var wBase = 100; // Lebar dasar per aktor (bisa disesuaikan)
+            const wNo = 40; // "No." selalu tetap
+            const wNote = 120; // "Keterangan" tetap
+
+            // Nilai awal mutu = 3 × wBase
+            var wMutu = wBase * 3;
+
+            // Hitung ulang agar total sama dengan PAGE_WIDTH
+            var wActor = wBase * nActor;
+            var remaining = PAGE_WIDTH - (wNo + wMutu + wNote + wActor);
+
+            // Sisakan ruang untuk kolom Aktivitas (minimal 100 px)
+            var wAct = remaining >= 100 ? remaining : 100;
+
+            // Jika remaining negatif (terlalu banyak aktor), perkecil wBase agar muat
+            if (remaining < 100) {
+                // Hitung wBase baru agar total pas dan wAct = 100
+                wBase = Math.floor(
+                    (PAGE_WIDTH - (wNo + 100 + wMutu + wNote)) / nActor,
+                );
+                if (wBase < 50) wBase = 50; // batas bawah
+
+                wMutu = wBase * 3;
+                wActor = wBase * nActor;
+                wAct = PAGE_WIDTH - (wNo + wActor + wMutu + wNote);
+            }
+
+            var wTotal = PAGE_WIDTH; // Pastikan total = lebar halaman
 
             // Menentukan tinggi setiap baris
             var yHeadTop = 25; // Tinggi bagian atas header
@@ -1286,12 +1352,12 @@ export function draw(container, start, end) {
             if (end != nActivity) {
                 xPointer = 0;
                 yPointer = 0;
-                num = "";
-                actL = "";
-                toolL = "";
-                timeL = "";
-                outputL = "";
-                noteL = "";
+                var num = "";
+                var actL = "";
+                var toolL = "";
+                var timeL = "";
+                var outputL = "";
+                var noteL = "";
                 if (end == nActivity) {
                     num = end;
                     actL = activities[i - 1];
@@ -1886,35 +1952,35 @@ export function draw(container, start, end) {
                 },
                 null,
             );
-            console.log("Type of data draw():", typeof jsonBody);
-            console.log("data draw:", jsonBody);
+            // console.log("Type of data draw():", typeof jsonBody);
+            // console.log("data draw:", jsonBody);
             // console.log("Type of data draw():", typeof GraphData);
             // console.log("data draw:", GraphData);
             return jsonBody;
 
-            // Fungsi untuk mengekstrak data penting dari mxCell
-            function extractCellData(cells) {
-                return cells.map((row) => {
-                    return row.map((cell) => {
-                        if (!cell) return null;
-                        return {
-                            id: cell.getId(),
-                            value: cell.getValue(),
-                            geometry: cell.getGeometry()
-                                ? {
-                                      x: cell.getGeometry().x,
-                                      y: cell.getGeometry().y,
-                                      width: cell.getGeometry().width,
-                                      height: cell.getGeometry().height,
-                                  }
-                                : null,
-                        };
-                    });
-                });
-            }
         }
     }
 }
+        // Fungsi untuk mengekstrak data penting dari mxCell
+        function extractCellData(cells) {
+            return cells.map((row) => {
+                return row.map((cell) => {
+                    if (!cell) return null;
+                    return {
+                        id: cell.getId(),
+                        value: cell.getValue(),
+                        geometry: cell.getGeometry()
+                            ? {
+                                  x: cell.getGeometry().x,
+                                  y: cell.getGeometry().y,
+                                  width: cell.getGeometry().width,
+                                  height: cell.getGeometry().height,
+                              }
+                            : null,
+                    };
+                });
+            });
+        }
 
 function initDetailPage() {
     // Cek jika kita berada di halaman detail yang memiliki data `prosedurDetailData`
@@ -1939,13 +2005,10 @@ function initDetailPage() {
             falseData = GraphData.falseData;
             actorLoc = GraphData.actorLoc;
 
-            const container = document.getElementById("graphContainer");
-            if (container) {
-                // Panggil fungsi draw() dengan container dan range activity
-                draw(container, 1, GraphData.nActivity);
-                console.log("data db:", typeof GraphData);
-                console.log("data db:", GraphData);
-            }
+            // Render seluruh halaman SOP menggunakan pagination seperti pada preview
+            renderDetailPages();
+            console.log("data db:", typeof GraphData);
+            console.log("data db:", GraphData);
         }
     }
 }

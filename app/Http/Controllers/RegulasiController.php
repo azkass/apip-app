@@ -13,7 +13,7 @@ class RegulasiController extends Controller
     public function index()
     {
         $regulasi = Regulasi::getAll();
-        return view("perencana.regulasi.daftarregulasi", [
+        return view("regulasi.daftarregulasi", [
             "regulasi" => $regulasi,
             "title" => "Regulasi Pengawasan",
         ]);
@@ -22,7 +22,7 @@ class RegulasiController extends Controller
     public function detail($id)
     {
         $regulasi = Regulasi::detail($id);
-        return view("perencana.regulasi.detailregulasi", [
+        return view("regulasi.detailregulasi", [
             "regulasi" => $regulasi,
             "title" => "Detail Regulasi",
         ]);
@@ -30,7 +30,7 @@ class RegulasiController extends Controller
 
     public function create()
     {
-        return view("perencana.regulasi.createregulasi", [
+        return view("regulasi.createregulasi", [
             "title" => "Tambah Regulasi",
         ]);
     }
@@ -62,11 +62,18 @@ class RegulasiController extends Controller
         ]);
 
         Regulasi::create(
-            $request->only(["judul", "tautan", "file", "pembuat_id", "kode", "hasil_kerja"])
+            $request->only([
+                "judul",
+                "tautan",
+                "file",
+                "pembuat_id",
+                "kode",
+                "hasil_kerja",
+            ])
         );
 
         return redirect()
-            ->route("perencana.regulasi.index")
+            ->route("regulasi.index")
             ->with("success", "Regulasi berhasil ditambahkan");
     }
 
@@ -90,7 +97,7 @@ class RegulasiController extends Controller
     public function edit($id)
     {
         $regulasi = Regulasi::find($id);
-        return view("perencana.regulasi.editregulasi", [
+        return view("regulasi.editregulasi", [
             "regulasi" => $regulasi,
             "title" => "Edit Regulasi",
         ]);
@@ -137,7 +144,14 @@ class RegulasiController extends Controller
         }
 
         // Update data dengan file yang sesuai (baru atau tetap yang lama)
-        $data = $request->only(["judul", "tautan", "status", "pembuat_id", "kode", "hasil_kerja"]);
+        $data = $request->only([
+            "judul",
+            "tautan",
+            "status",
+            "pembuat_id",
+            "kode",
+            "hasil_kerja",
+        ]);
         $data["file"] = $fileName;
 
         Regulasi::update($id, $data);
@@ -145,10 +159,9 @@ class RegulasiController extends Controller
         // Ambil data yang sudah diupdate
         $updatedRegulasi = Regulasi::detail($id);
         // $regulasi = Regulasi::detail($id);
-        return redirect()->route(
-            "perencana.regulasi.detail",
-            $updatedRegulasi->id
-        );
+        return redirect()
+            ->route("regulasi.detail", $updatedRegulasi->id)
+            ->with("success", "Regulasi berhasil diubah");
     }
 
     public function delete($id)
@@ -156,11 +169,11 @@ class RegulasiController extends Controller
         $status = Regulasi::delete($id);
         if ($status) {
             return redirect()
-                ->route("perencana.regulasi.index")
+                ->route("regulasi.index")
                 ->with("success", "Regulasi berhasil dihapus");
         } else {
             return redirect()
-                ->route("perencana.regulasi.index")
+                ->route("regulasi.index")
                 ->with("error", "Regulasi gagal dihapus");
         }
     }

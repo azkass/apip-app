@@ -3,13 +3,13 @@
     @component('components.prosedur.show', ['prosedurPengawasan' => $prosedurPengawasan])
     @endcomponent
 
-    <!-- Container untuk cover SOP -->
+    <h2 class="font-bold text-lg mb-2 ml-8">Dokumen SOP</h2>
     <div class="container mt-4 mx-4">
+        <!-- Container untuk cover SOP -->
         <div class="mb-8">
-            <h2 class="font-bold text-lg mb-2">Dokumen SOP</h2>
             <div id="coverContainer"></div>
         </div>
-        <!-- Container dan tombol untuk graph -->
+        <!-- Container untuk body SOP -->
         <div id="graphContainerBox">
             <div id="graphContainer"></div>
         </div>

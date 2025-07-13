@@ -1,12 +1,10 @@
-<div class="container mx-auto p-4">
-
-
+<div class="container ml-2 sm:ml-8 mt-2 sm:mt-6">
     <div class="flex items-center gap-4 mb-6">
         <!-- Search Bar -->
         <div class="flex flex-col">
             <label class="text-sm font-medium text-gray-700 mb-1">Cari</label>
             <div class="relative">
-                <input type="text" id="search" placeholder="Cari prosedur pengawasan"
+                <input type="text" id="search" placeholder="Cari prosedur pengawasan" autocomplete="off"
                        class="w-80 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"/>
             </div>
         </div>
@@ -93,8 +91,8 @@
     </div>
 
     <!-- Isi tabel -->
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <table class="w-full border-collapse">
+    <div class="bg-white rounded-lg">
+        <table class="border-collapse">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">No</th>
@@ -111,7 +109,7 @@
             </thead>
             <tbody>
                 @foreach ($prosedurPengawasan as $index => $prosedur)
-                <tr class="hover:bg-gray-50 transition-colors">
+                <tr class="hover:bg-gray-50 transition-colors" data-prosedur-row>
                     <td class="border border-gray-300 px-4 py-3 text-center">{{ $index + 1 }}</td>
                     <td class="border border-gray-300 px-4 py-3">
                         <a href="{{ route('prosedur-pengawasan.show', $prosedur->id) }}" class="hover:text-blue-600">
@@ -211,3 +209,15 @@
         </div>
     </div>
 </div>
+
+{{-- Live search --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        initLiveSearchTable('#search', 'table tbody', {
+            colIndex: 2,
+            colspan: {{ Auth::user()->role == 'pjk' ? 8 : 7 }},
+            rowSelector: 'tr[data-prosedur-row]',
+            noResultText: 'Tidak ada hasil'
+        });
+    });
+</script>

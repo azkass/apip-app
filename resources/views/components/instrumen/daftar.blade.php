@@ -1,11 +1,11 @@
-<div class="container mx-auto p-2 sm:p-4">
+<div class="container ml-2 sm:ml-8 mt-1 sm:mt-6">
     <!-- Filter section with responsive flex-wrap -->
     <div class="flex flex-wrap items-center gap-2 sm:gap-4 mb-6">
         <!-- Search Bar -->
         <div class="flex flex-col w-full mb-2 sm:mb-0 sm:w-auto">
             <label class="text-sm font-medium text-gray-700 mb-1">Cari</label>
             <div class="relative">
-                <input type="text" id="search" placeholder="Cari instrumen pengawasan"
+                <input type="text" id="search" placeholder="Cari instrumen pengawasan" autocomplete="off"
                        class="w-full sm:w-64 md:w-80 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"/>
             </div>
         </div>
@@ -105,9 +105,9 @@
     </div>
 
     <!-- Isi tabel dengan overflow handling -->
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="bg-white rounded-lg">
         <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
+            <table class="border-collapse">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold">No</th>
@@ -121,7 +121,7 @@
                 </thead>
                 <tbody>
                     @forelse ($instrumenPengawasan as $index => $instrumen)
-                    <tr class="hover:bg-gray-50 transition-colors">
+                    <tr class="hover:bg-gray-50 transition-colors" data-instrumen-row>
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">{{ $index + 1 }}</td>
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">
                             <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.detail', $instrumen->id) }}" class="hover:text-blue-600">
@@ -187,6 +187,18 @@
             </table>
         </div>
     </div>
+
+    {{-- Live search for instrumen --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLiveSearchTable('#search', 'table tbody', {
+                colIndex: 1, // kolom Judul
+                colspan: {{ (Auth::user()->role != 'pegawai' && Auth::user()->role != 'admin') ? 5 : 4 }},
+                rowSelector: 'tr[data-instrumen-row]',
+                noResultText: 'Tidak ada hasil'
+            });
+        });
+    </script>
     <!-- Legend with responsive layout -->
     <div class="mt-4 text-xs sm:text-sm text-gray-600">
         <div class="flex flex-wrap items-center gap-2 sm:gap-4">

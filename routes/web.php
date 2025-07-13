@@ -15,6 +15,10 @@ use App\Http\Controllers\PertanyaanEvaluasiController;
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
 
+Route::get("/test", function () {
+    return view("prosedur.create-js-fix");
+});
+
 // Login
 Route::get("/auth/redirect", [SocialiteController::class, "redirect"]);
 Route::get("/auth/google/callback", [SocialiteController::class, "callback"]);
@@ -103,12 +107,12 @@ Route::middleware("auth")->group(function () {
             });
         });
 
+    // Periode Evaluasi
+    Route::get("/periode", [
+        PeriodeEvaluasiProsedurController::class,
+        "index",
+    ])->name("periode.index");
     Route::middleware(["role:admin"])->group(function () {
-        // Periode Evaluasi
-        Route::get("/periode", [
-            PeriodeEvaluasiProsedurController::class,
-            "index",
-        ])->name("periode.index");
         Route::get("/periode/create", [
             PeriodeEvaluasiProsedurController::class,
             "create",
@@ -162,6 +166,35 @@ Route::middleware("auth")->group(function () {
             "destroy",
         ])->name("evaluasi.destroy");
     });
+
+    // Regulasi
+    Route::get("/regulasi", [RegulasiController::class, "index"])->name(
+        "regulasi.index"
+    );
+    Route::get("/regulasi/create", [RegulasiController::class, "create"])->name(
+        "regulasi.create"
+    );
+    Route::get("/regulasi/{id}/download", [
+        RegulasiController::class,
+        "downloadPdf",
+    ])->name("regulasi.download");
+    Route::get("/regulasi/{id}", [RegulasiController::class, "detail"])->name(
+        "regulasi.detail"
+    );
+    Route::post("/regulasi", [RegulasiController::class, "store"])->name(
+        "regulasi.store"
+    );
+    Route::get("/regulasi/{id}/edit", [
+        RegulasiController::class,
+        "edit",
+    ])->name("regulasi.edit");
+    Route::put("/regulasi/{id}", [RegulasiController::class, "update"])->name(
+        "regulasi.update"
+    );
+    Route::delete("/regulasi/{id}", [
+        RegulasiController::class,
+        "delete",
+    ])->name("regulasi.delete");
 });
 Route::middleware("auth", "role:admin")->group(function () {
     Route::get("/admin/dashboard", [DashboardController::class, "index"]);
@@ -177,7 +210,7 @@ Route::middleware("auth", "role:admin")->group(function () {
         "update",
     ])->name("admin.update");
 
-    // Routes untuk Inspektur Utama - hanya admin yang bisa akses
+    // Daftar Pejabat Inspektur Utama
     Route::get("/admin/inspektur-utama", [
         InspekturUtamaController::class,
         "index",
@@ -207,7 +240,7 @@ Route::middleware("auth", "role:admin")->group(function () {
         "destroy",
     ])->name("admin.inspektur-utama.destroy");
 
-    // Routes untuk Pertanyaan Evaluasi - hanya admin yang bisa akses
+    // Daftar Pertanyaan Evaluasi
     Route::get("/admin/pertanyaan-evaluasi", [
         PertanyaanEvaluasiController::class,
         "index",
@@ -292,41 +325,6 @@ Route::middleware("auth", "role:perencana")->group(function () {
         InstrumenPengawasanController::class,
         "delete",
     ])->name("instrumen-pengawasan.delete");
-
-    Route::get("/perencana/regulasi", [
-        RegulasiController::class,
-        "index",
-    ])->name("perencana.regulasi.index");
-    Route::get("/perencana/regulasi/create", [
-        RegulasiController::class,
-        "create",
-    ])->name("perencana.regulasi.create");
-
-    Route::get("/perencana/regulasi/{id}/download", [
-        RegulasiController::class,
-        "downloadPdf",
-    ])->name("perencana.regulasi.download");
-
-    Route::get("/perencana/regulasi/{id}", [
-        RegulasiController::class,
-        "detail",
-    ])->name("perencana.regulasi.detail");
-    Route::post("/perencana/regulasi", [
-        RegulasiController::class,
-        "store",
-    ])->name("perencana.regulasi.store");
-    Route::get("/perencana/regulasi/{id}/edit", [
-        RegulasiController::class,
-        "edit",
-    ])->name("perencana.regulasi.edit");
-    Route::put("/perencana/regulasi/{id}", [
-        RegulasiController::class,
-        "update",
-    ])->name("perencana.regulasi.update");
-    Route::delete("/perencana/regulasi/{id}", [
-        RegulasiController::class,
-        "delete",
-    ])->name("perencana.regulasi.delete");
 });
 
 Route::middleware("auth", "role:pegawai")->group(function () {

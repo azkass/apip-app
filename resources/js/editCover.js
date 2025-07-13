@@ -150,7 +150,7 @@ function generateCoverMxGraph(data) {
     container.innerHTML = "";
 
     // Legal landscape: 14" x 8.5" (355.6 mm x 215.9 mm) - scaled down 75%
-    const scale = 1;
+    const scale = 0.75;
     const pageW = Math.round(14 * 96 * scale); // 1008 px
     const pageH = Math.round(8.5 * 96 * scale); // 612 px
 
@@ -159,9 +159,6 @@ function generateCoverMxGraph(data) {
     container.style.border = "1px solid #808080";
     container.style.width = pageW + "px";
     container.style.height = pageH + "px";
-    container.style.overflow = "auto";
-    container.style.margin = "0 auto";
-    container.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
 
     // Inisialisasi mxGraph
     const graph = new mxGraph(container);
