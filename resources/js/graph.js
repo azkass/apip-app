@@ -414,13 +414,13 @@ export function setupActivityForm() {
     table.className = "w-full border-collapse";
     // Buat header dengan string template
     const headers = [
-        "No",
-        "Aktivitas",
-        ...actorNames,
-        "Kelengkapan",
-        "Waktu (Jam)",
-        "Output",
-        "Keterangan",
+        {text: "No.", number: "(1)"},
+        {text: "Aktivitas", number: "(2)"}, 
+        ...actorNames.map((name, index) => ({text: name, number: `(${index + 3})`})),
+        {text: "Kelengkapan", number: `(${nActor + 4})`},
+        {text: "Waktu (Jam)", number: `(${nActor + 5})`}, 
+        {text: "Output", number: `(${nActor + 6})`},
+        {text: "Keterangan", number: `(${nActor + 7})`}
     ];
     const headerRow = document.createElement("tr");
     headerRow.className = "bg-gray-100";
@@ -821,7 +821,7 @@ export function draw(container, start, end) {
         var style = graph.getStylesheet().getDefaultVertexStyle();
         style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
         style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-        style[mxConstants.STYLE_FONTSIZE] = 10;
+        style[mxConstants.STYLE_FONTSIZE] = 14;
         style[mxConstants.STYLE_ROUNDED] = false;
         style[mxConstants.STYLE_VERTICAL_ALIGN] = "middle";
         style[mxConstants.STYLE_MOVEABLE] = 0;
@@ -871,10 +871,10 @@ export function draw(container, start, end) {
         style = mxUtils.clone(style);
         style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
         style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-        style[mxConstants.STYLE_IMAGE] =
-            "https://jgraph.github.io/mxgraph/javascript/examples/images/offpage.png";
+        style[mxConstants.STYLE_IMAGE] = "/img/off-page.png";
         style[mxConstants.STYLE_FONTSIZE] = 14;
         style[mxConstants.STYLE_FONTSTYLE] = 1;
+        style[mxConstants.STYLE_STROKECOLOR] = "black";
         delete style[mxConstants.STYLE_SPACING_RIGHT];
         graph.getStylesheet().putCellStyle("off-page", style);
 
@@ -1489,10 +1489,10 @@ export function draw(container, start, end) {
                             fcPool,
                             null,
                             "",
-                            xPointer + 25,
+                            xPointer + 15,
                             yPointer + 10,
-                            50,
-                            25,
+                            70,
+                            35,
                             "off-page",
                         );
                         // console.log('top=' + top);
@@ -1699,10 +1699,10 @@ export function draw(container, start, end) {
                             fcPool,
                             null,
                             "",
-                            xPointer + 25,
-                            yPointer + 12,
-                            50,
-                            25,
+                            xPointer + 15,
+                            yPointer + 10,
+                            70,
+                            35,
                             "off-page",
                         );
                         var d = 1;

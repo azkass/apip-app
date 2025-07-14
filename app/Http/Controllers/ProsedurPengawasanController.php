@@ -122,8 +122,7 @@ class ProsedurPengawasanController extends Controller
             ->route(
                 "prosedur-pengawasan.edit-cover",
                 $updatedProsedurPengawasan->id
-            )
-            ->with("success", "Prosedur berhasil diperbarui.");
+            );
     }
 
     public function editCover($id)
@@ -168,6 +167,8 @@ class ProsedurPengawasanController extends Controller
             "tanggal_revisi" => $prosedur->tanggal_revisi ?? "",
             "tanggal_efektif" => $prosedur->tanggal_efektif ?? "",
             "disahkan_oleh" => $prosedur->disahkan_oleh_nama ?? "",
+            "disahkan_oleh_nip" => $prosedur->disahkan_oleh_nip ?? "",
+            "disahkan_oleh_jabatan" => $prosedur->disahkan_oleh_jabatan ?? "",
             "nama_sop" => $prosedur->judul ?? "",
             "pejabat_nama" => $prosedur->petugas_nama ?? "",
         ];
@@ -213,6 +214,8 @@ class ProsedurPengawasanController extends Controller
             "tanggal_revisi" => $prosedur->tanggal_revisi ?? "",
             "tanggal_efektif" => $prosedur->tanggal_efektif ?? "",
             "disahkan_oleh" => $prosedur->disahkan_oleh_nama ?? "",
+            "disahkan_oleh_nip" => $prosedur->disahkan_oleh_nip ?? "",
+            "disahkan_oleh_jabatan" => $prosedur->disahkan_oleh_jabatan ?? "",
             "nama_sop" => $prosedur->judul ?? "",
             "pejabat_nama" => $prosedur->petugas_nama ?? "",
         ];

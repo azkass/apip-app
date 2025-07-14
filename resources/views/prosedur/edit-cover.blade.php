@@ -11,14 +11,14 @@ window.coverData = {
     pencatatan: @json($prosedurPengawasan->pencatatan ?? []),
 };
 </script>
-<div class="mt-8 p-6 bg-white shadow-md rounded-lg">
+<div class="max-w-4xl mx-auto px-6 py-4 md:mt-6 bg-white shadow-md rounded-lg">
     <form id="editCoverForm" method="POST" action="{{ route('prosedur-pengawasan.update-cover', $prosedurPengawasan->id) }}">
     @csrf
     @method('PUT')
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 gap-6">
             <!-- Dasar Hukum -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Dasar Hukum</label>
+                <label class="block text-md font-medium text-black mb-1">Dasar Hukum</label>
                 <div id="dasarHukumList"></div>
                 <div class="flex gap-2 mt-2">
                     <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('dasarHukum')">Tambah</button>
@@ -27,7 +27,7 @@ window.coverData = {
             </div>
             <!-- Keterkaitan -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Keterkaitan</label>
+                <label class="block text-md font-medium text-black mb-1">Keterkaitan</label>
                 <div id="keterkaitanList"></div>
                 <div class="flex gap-2 mt-2">
                     <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('keterkaitan')">Tambah</button>
@@ -36,35 +36,28 @@ window.coverData = {
             </div>
             <!-- Peringatan -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Peringatan</label>
+                <label class="block text-md font-medium text-black mb-1">Peringatan</label>
                 <div id="peringatanList"></div>
                 <div class="flex gap-2 mt-2">
-                <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('peringatan')">Tambah</button>
-                <button type="button" id="peringatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('peringatan')">Hapus</button>
             </div>
             </div>
             <!-- Kualifikasi Pelaksanaan -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Kualifikasi Pelaksanaan</label>
+                <label class="block text-md font-medium text-black mb-1">Kualifikasi Pelaksanaan</label>
                 <div id="kualifikasiList"></div>
-                <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded mt-2 transition" onclick="addField('kualifikasi')">Tambah</button>
-                <button type="button" id="kualifikasi-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('kualifikasi')">Hapus</button>
             </div>
             <!-- Peralatan/Perlengkapan -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Peralatan/Perlengkapan</label>
+                <label class="block text-md font-medium text-black mb-1">Peralatan/Perlengkapan</label>
                 <div id="peralatanList"></div>
                 <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded mt-2 transition" onclick="addField('peralatan')">Tambah</button>
                 <button type="button" id="peralatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('peralatan')">Hapus</button>
             </div>
             <!-- Pencatatan dan Pendataan -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Pencatatan dan Pendataan</label>
+                <label class="block text-md font-medium text-black mb-1">Pencatatan dan Pendataan</label>
                 <div id="pencatatanList"></div>
-                <div class="flex gap-2 mt-2">
-                    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('pencatatan')">Tambah</button>
-                    <button type="button" id="pencatatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('pencatatan')">Hapus</button>
-                </div>
+                
             </div>
         </div>
         <div class="flex justify-start items-center gap-2 mt-6">

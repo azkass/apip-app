@@ -8,15 +8,18 @@ const sections = {
     peralatan: "Peralatan/Perlengkapan",
     pencatatan: "Pencatatan dan Pendataan",
 };
+// Sections where adding new inputs is disabled
+const noAddSections = ['kualifikasi', 'peringatan', 'pencatatan'];
 
 // Tambah input baru pada section
 function addField(section) {
+    if (noAddSections.includes(section)) return; // Disable add for specific sections
     const list = document.getElementById(section + "List");
     if (!list) return;
     const idx = list.children.length;
     const div = document.createElement("div");
-    div.className = "flex items-center gap-2 mb-2";
-    div.innerHTML = `<input type="text" name="${section}[]" class="form-input flex-1" placeholder="${sections[section]} ke-${idx + 1}" />`;
+    div.className = "flex items-center gap-2 mt-2";
+    div.innerHTML = `<input type="text" name="${section}[]" class="form-input flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 autocomplete='off'" placeholder="${sections[section]} ke-${idx + 1}" />`;
     list.appendChild(div);
     updateRemoveButton(section);
 }
@@ -66,16 +69,21 @@ window.addEventListener("DOMContentLoaded", () => {
         list.innerHTML = "";
         data.forEach((val, idx) => {
             const div = document.createElement("div");
-            div.className = "flex items-center gap-2 mb-2";
+            div.className = "flex items-center gap-2";
             // Escape value agar aman
             const safeVal = (val ?? "").toString().replace(/"/g, "&quot;");
-            div.innerHTML = `<input type="text" name="${section}[]" class="form-input flex-1" value="${safeVal}" placeholder="${sections[section]} ke-${idx + 1}" />`;
+            div.innerHTML = `<input type="text" name="${section}[]" class="form-input flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" value="${safeVal}" placeholder="${sections[section]} ke-${idx + 1}" />`;
             list.appendChild(div);
         });
         updateRemoveButton(section);
     }
     // Cache form dan section element
     const form = document.getElementById("editCoverForm");
+    if (!form) {
+        // Form tidak ada di halaman ini, keluar tanpa error
+        return;
+    }
+
     const sectionLists = {};
     for (const section in sections) {
         sectionLists[section] = document.getElementById(section + "List");
@@ -163,143 +171,201 @@ function generateCoverMxGraph(data) {
     // Inisialisasi mxGraph
     const graph = new mxGraph(container);
     graph.setEnabled(false);
+    
+    // Konfigurasi default style untuk text wrapping
+    graph.setHtmlLabels(true); // Enable HTML labels
+    const defaultStyle = graph.getStylesheet().getDefaultVertexStyle();
+    defaultStyle[mxConstants.STYLE_WHITE_SPACE] = 'wrap';
+    defaultStyle[mxConstants.STYLE_OVERFLOW] = 'hidden';
+    defaultStyle[mxConstants.STYLE_WORD_WRAP] = 'break-word';
+    defaultStyle[mxConstants.STYLE_SPACING_LEFT] = 3;
+    
+    // Pastikan cell dapat menyesuaikan tinggi dengan konten
+    graph.cellsResizable = false;
+    graph.extendParents = true;
+    graph.extendParentsOnAdd = true;
+    graph.constrainChildren = false;
+    graph.autoSizeCells = true;
+    
     const parent = graph.getDefaultParent();
     graph.getModel().beginUpdate();
 
     try {
         // Margin kertas (scaled)
-        const mX = Math.round(20 * scale),
-            mY = Math.round(20 * scale);
+        const mX = Math.round(40 * scale);
+        const mY = Math.round(50 * scale);
 
-        // Outer border
+        // === HEADER SECTION ===
+        const headerY = Math.round((mY) * scale);
+        const headerH = Math.round(280 * scale);
+        const rightSectionX = Math.round((pageW/2));
+        const widthSection = Math.round((pageW - (2*mX))/2);
+        const leftWidthSection = Math.round(widthSection-20);
+        const fontSize = Math.round(14 * scale);
+        
+        // Base styles dengan text wrapping yang tepat
+        const baseStyle = `strokeColor=#000;fillColor=none;html=1;whiteSpace=wrap;fontSize=${fontSize};fontColor=#000000;`;
+        const titleStyle = baseStyle + `align=left;verticalAlign=top;fontStyle=1;`;
+        const sectionStyle = baseStyle + `align=left;verticalAlign=top;`;
+        const cellStyle = baseStyle + `fillColor=#ffffff;align=left;verticalAlign=middle;`;
+        
+        // Header border
         graph.insertVertex(
             parent,
             null,
             "",
             mX,
             mY,
-            pageW - 2 * mX,
-            pageH - 2 * mY,
+            widthSection,
+            headerH,
             "strokeColor=#000;fillColor=none;strokeWidth=1;",
         );
-
-        // === HEADER SECTION ===
-        const headerY = Math.round((mY + 10) * scale);
-        const headerH = Math.round(120 * scale);
-
+        
         // Logo BPS (kiri)
         graph.insertVertex(
             parent,
             null,
             "",
-            Math.round((mX + 30) * scale),
-            Math.round((headerY + 15) * scale),
-            Math.round(80 * scale),
-            Math.round(90 * scale),
+            Math.round((leftWidthSection/2)-10),
+            Math.round((headerY + 40) * scale),
+            Math.round(170 * scale),
+            Math.round(170 * scale),
             "shape=image;image=/img/Logo-BPS.png;",
         );
 
-        // Judul organisasi (tengah)
+        // Text BPS & Inspektorat
         graph.insertVertex(
             parent,
             null,
             "BADAN PUSAT STATISTIK",
             Math.round((mX + 130) * scale),
-            Math.round((headerY + 20) * scale),
+            Math.round((headerY + 180) * scale),
             Math.round(400 * scale),
             Math.round(80 * scale),
-            `fontSize=${Math.round(18 * scale)};fontStyle=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#000;html=1;`,
+            `fontFamily=Arial;fontSize=${Math.round(26*scale)};fontStyle=3;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#000;html=1;whiteSpace=wrap;`,
+          );
+          
+        graph.insertVertex(
+            parent,
+            null,
+            "INSPEKTORAT UTAMA",
+            Math.round((mX + 130) * scale),
+            Math.round((headerY + 210) * scale),
+            Math.round(400 * scale),
+            Math.round(80 * scale),
+            `fontSize=${Math.round(22 * scale)};fontStyle=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#000;html=1;whiteSpace=wrap;`,
         );
-
-        // Tabel informasi SOP (kanan)
-        const tableX = Math.round((mX + 550) * scale);
-        const tableY = Math.round((headerY + 10) * scale);
-        const tableW = Math.round(550 * scale);
-        const tableH = Math.round(100 * scale);
 
         // Header tabel dengan border
         const cellH = Math.round(20 * scale);
         const labelW = Math.round(160 * scale);
-        const valueW = tableW - labelW;
+        const valueW = widthSection - labelW;
+
+        // Siapkan konten "Disahkan oleh" beserta NIP & Jabatan
+        const disahkanLines = [];
+        // Jabatan di baris pertama
+        if (data.disahkan_oleh_jabatan)
+            disahkanLines.push(data.disahkan_oleh_jabatan);
+
+        // Sisipkan satu baris kosong (spasi) bila ada nama / NIP
+        if (
+            (data.disahkan_oleh_jabatan &&
+                (data.disahkan_oleh || data.disahkan_oleh_nip))
+        ) {
+            disahkanLines.push("");
+            disahkanLines.push("");
+            disahkanLines.push("");
+            disahkanLines.push("");
+            disahkanLines.push("");
+        }
+
+        // Nama & NIP berada di bawah
+        if (data.disahkan_oleh) disahkanLines.push(data.disahkan_oleh);
+        if (data.disahkan_oleh_nip)
+            disahkanLines.push(`NIP ${data.disahkan_oleh_nip}`);
+        const disahkanValue = disahkanLines.length
+            ? disahkanLines.join("\n")
+            : "-";
 
         const tableData = [
             ["Nomor SOP", data.nomor_sop || "-"],
             ["Tanggal Pembuatan", data.tanggal_pembuatan || "-"],
             ["Tanggal Revisi", data.tanggal_revisi || "-"],
             ["Tanggal Efektif", data.tanggal_efektif || "-"],
-            ["Disahkan oleh", data.disahkan_oleh || "-"],
+            ["Disahkan oleh", disahkanValue],
             ["Nama SOP", data.nama_sop || "-"],
         ];
 
-        // Buat tabel dengan border
-        let currentY = tableY;
+        // Buat tabel dengan border dan tinggi yang dapat menyesuaikan
+        let currentY = mY;
         tableData.forEach(([label, value], index) => {
-            const isNameSOP = label === "Nama SOP";
-            const currentCellH = isNameSOP ? cellH * 2 : cellH;
+            // Special cases for cell height adjustments
+            const isDisahkanOleh = label === "Disahkan oleh";
+            const isNamaSOP = label === "Nama SOP";
+            // Tinggi minimum untuk cell, akan menyesuaikan jika konten lebih panjang
+            const minCellH = isDisahkanOleh ? cellH * 7.5 : (isNamaSOP ? cellH * 2.5 : cellH);
 
             // Cell label
-            graph.insertVertex(
+            const labelCell = graph.insertVertex(
                 parent,
                 null,
                 label,
-                tableX,
+                rightSectionX,
                 currentY,
                 labelW,
-                currentCellH,
-                `strokeColor=#000;fillColor=#ffffff;fontSize=${Math.round(12 * scale)};fontStyle=1;align=center;verticalAlign=middle;fontColor=#000000;`,
+                minCellH,
+                cellStyle + 'fontStyle=1;'
             );
 
-            // Cell value
-            graph.insertVertex(
+            // Cell value dengan auto-sizing
+            const valueCell = graph.insertVertex(
                 parent,
                 null,
                 value,
-                tableX + labelW,
+                rightSectionX + labelW,
                 currentY,
                 valueW,
-                currentCellH,
-                `strokeColor=#000;fillColor=#ffffff;fontSize=${Math.round(12 * scale)};align=center;verticalAlign=middle;fontColor=#000000;${isNameSOP ? "fontStyle=1;" : ""}html=1;`,
+                minCellH,
+                cellStyle + (isDisahkanOleh ? 'align=center;' : '')
             );
-            currentY += currentCellH;
+
+            // Update currentY berdasarkan tinggi cell yang sebenarnya
+            const actualHeight = Math.max(
+                labelCell.getGeometry().height,
+                valueCell.getGeometry().height,
+                minCellH
+            );
+            currentY += actualHeight;
         });
 
         // === CONTENT SECTIONS ===
-        let contentY = Math.round((headerY + headerH + 50) * scale);
-        const contentAreaW = Math.round((pageW - 2 * mX - 20) * scale);
-        const leftColW = Math.floor(contentAreaW * 0.52);
-        const rightColW = contentAreaW - leftColW - Math.round(20 * scale);
-        const leftColX = Math.round((mX + 20) * scale);
-        const rightColX = leftColX + leftColW + Math.round(20 * scale);
+        let contentY = Math.round((headerY + headerH + 30));
 
-        // Section styling
-        const sectionStyle = `strokeColor=#000;fillColor=none;fontSize=${Math.round(11 * scale)};align=left;verticalAlign=top;fontColor=#000;html=1;whiteSpace=wrap;`;
-        const titleStyle = `strokeColor=none;fillColor=none;fontSize=${Math.round(12 * scale)};fontStyle=1;align=left;verticalAlign=top;fontColor=#000;`;
-
-        // Dasar Hukum (kiri atas)
-        graph.insertVertex(
+        // Dasar Hukum dengan tinggi yang dapat menyesuaikan
+        const dasarHukumTitle = graph.insertVertex(
             parent,
             null,
             "Dasar Hukum:",
-            leftColX,
+            mX,
             contentY,
-            leftColW,
-            Math.round(18 * scale),
-            titleStyle,
+            leftWidthSection,
+            Math.round(18 * scale), // Tinggi minimum untuk judul
+            titleStyle
         );
 
         let dasarHukumText = (data.dasarHukum || ["-"])
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
-        graph.insertVertex(
+        const dasarHukumContent = graph.insertVertex(
             parent,
             null,
             dasarHukumText,
-            leftColX,
+            mX,
             contentY + Math.round(18 * scale),
-            leftColW,
-            Math.round(85 * scale),
-            sectionStyle,
+            leftWidthSection,
+            Math.round(85 * scale), // Tinggi minimum untuk konten
+            sectionStyle
         );
 
         // Kualifikasi Pelaksanaan (kanan atas)
@@ -307,9 +373,9 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             "Kualifikasi Pelaksanaan:",
-            rightColX,
+            rightSectionX,
             contentY,
-            rightColW,
+            widthSection,
             Math.round(18 * scale),
             titleStyle,
         );
@@ -322,22 +388,22 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             kualifikasiText,
-            rightColX,
+            rightSectionX,
             contentY + Math.round(18 * scale),
-            rightColW,
+            widthSection,
             Math.round(85 * scale),
             sectionStyle,
         );
 
         // Keterkaitan (kiri tengah)
-        contentY += Math.round(110 * scale);
+        contentY += Math.round(125 * scale);
         graph.insertVertex(
             parent,
             null,
             "Keterkaitan:",
-            leftColX,
+            mX,
             contentY,
-            leftColW,
+            leftWidthSection,
             Math.round(18 * scale),
             titleStyle,
         );
@@ -350,9 +416,9 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             keterkaitanText,
-            leftColX,
+            mX,
             contentY + Math.round(18 * scale),
-            leftColW,
+            leftWidthSection,
             Math.round(85 * scale),
             sectionStyle,
         );
@@ -362,9 +428,9 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             "Peralatan/Perlengkapan:",
-            rightColX,
+            rightSectionX,
             contentY,
-            rightColW,
+            widthSection,
             Math.round(18 * scale),
             titleStyle,
         );
@@ -377,22 +443,22 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             peralatanText,
-            rightColX,
+            rightSectionX,
             contentY + Math.round(18 * scale),
-            rightColW,
+            widthSection,
             Math.round(85 * scale),
             sectionStyle,
         );
 
-        // Peringatan (full width)
-        contentY += Math.round(110 * scale);
+        // Peringatan
+        contentY += Math.round(125 * scale);
         graph.insertVertex(
             parent,
             null,
             "Peringatan:",
-            leftColX,
+            mX,
             contentY,
-            contentAreaW,
+            leftWidthSection,
             Math.round(18 * scale),
             titleStyle,
         );
@@ -403,22 +469,21 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             peringatanText,
-            leftColX,
+            mX,
             contentY + Math.round(18 * scale),
-            contentAreaW,
+            leftWidthSection,
             Math.round(45 * scale),
             sectionStyle,
         );
 
-        // Pencatatan dan Pendataan (full width)
-        contentY += Math.round(70 * scale);
+        // Pencatatan dan Pendataan
         graph.insertVertex(
             parent,
             null,
             "Pencatatan dan Pendataan:",
-            leftColX,
+            rightSectionX,
             contentY,
-            contentAreaW,
+            widthSection,
             Math.round(18 * scale),
             titleStyle,
         );
@@ -429,10 +494,10 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             pencatatanText,
-            leftColX,
+            rightSectionX,
             contentY + Math.round(18 * scale),
-            contentAreaW,
-            Math.round(35 * scale),
+            widthSection,
+            Math.round(45 * scale),
             sectionStyle,
         );
     } finally {

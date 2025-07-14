@@ -98,7 +98,8 @@ class ProsedurPengawasan
     {
         return DB::selectOne(
             "
-            SELECT pp.*, u1.name AS petugas_nama, u2.name AS perencana_nama, iu.nama AS disahkan_oleh_nama
+            SELECT pp.*, u1.name AS petugas_nama, u2.name AS perencana_nama,
+                   iu.nama AS disahkan_oleh_nama, iu.nip AS disahkan_oleh_nip, iu.jabatan AS disahkan_oleh_jabatan
             FROM prosedur_pengawasan pp
             INNER JOIN users u1 ON pp.penyusun_id = u1.id
             INNER JOIN users u2 ON pp.pembuat_id = u2.id
