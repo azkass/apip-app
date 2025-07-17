@@ -15,12 +15,12 @@ window.coverData = {
     <form id="editCoverForm" method="POST" action="{{ route('prosedur-pengawasan.update-cover', $prosedurPengawasan->id) }}">
     @csrf
     @method('PUT')
-        <div class="grid grid-cols-1 gap-6">
+        <div class="space-y-6">
             <!-- Dasar Hukum -->
             <div>
                 <label class="block text-md font-medium text-black mb-1">Dasar Hukum</label>
                 <div id="dasarHukumList"></div>
-                <div class="flex gap-2 mt-2">
+                <div class="flex mt-2">
                     <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('dasarHukum')">Tambah</button>
                     <button type="button" id="dasarHukum-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('dasarHukum')">Hapus</button>
                 </div>
@@ -29,7 +29,7 @@ window.coverData = {
             <div>
                 <label class="block text-md font-medium text-black mb-1">Keterkaitan</label>
                 <div id="keterkaitanList"></div>
-                <div class="flex gap-2 mt-2">
+                <div class="flex mt-2">
                     <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('keterkaitan')">Tambah</button>
                     <button type="button" id="keterkaitan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('keterkaitan')">Hapus</button>
                 </div>
@@ -38,7 +38,7 @@ window.coverData = {
             <div>
                 <label class="block text-md font-medium text-black mb-1">Peringatan</label>
                 <div id="peringatanList"></div>
-                <div class="flex gap-2 mt-2">
+                <div class="flex mt-2">
             </div>
             </div>
             <!-- Kualifikasi Pelaksanaan -->
@@ -57,12 +57,12 @@ window.coverData = {
             <div>
                 <label class="block text-md font-medium text-black mb-1">Pencatatan dan Pendataan</label>
                 <div id="pencatatanList"></div>
-                
+
             </div>
         </div>
-        <div class="flex justify-start items-center gap-2 mt-6">
+        <div class="flex justify-start items-center mt-6">
             <button type="submit" id="btnSimpan" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Simpan</button>
-            <a href="{{ route('prosedur-pengawasan.edit-body', $prosedurPengawasan->id) }}" id="btnLanjut" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition hidden">Lanjut</a>
+            <a href="{{ route('prosedur-pengawasan.edit-body', $prosedurPengawasan->id) }}" id="btnLanjut" class="ml-2 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition hidden">Lanjut</a>
         </div>
     </form>
     <!-- Container hasil generate cover mxGraph -->

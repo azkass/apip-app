@@ -52,11 +52,11 @@
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
                     </a>
-                    <a href="prosedur-pengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                    <a href="/prosedur-pengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-clipboard-check mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
-                    <a href="/penanggungjawab/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                    <a href="/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-tasks mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
                     </a>
@@ -82,7 +82,7 @@
                         <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
 
-                    <a href="/perencana/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                    <a href="/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-file-signature mx-auto sidebar-icon fa-lg my-4" title="Instrumen Pengawasan"></i>
                         <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
                     </a>
@@ -103,7 +103,7 @@
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
                     </a>
-                    <a href="/pegawai/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                    <a href="/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-clipboard mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
                     </a>

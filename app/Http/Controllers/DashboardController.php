@@ -10,15 +10,17 @@ class DashboardController extends Controller
     public function index()
     {
         // Get users by role
-        $userRoles = DB::select("SELECT role, COUNT(*) as count FROM users GROUP BY role");
+        $userRoles = DB::select(
+            "SELECT role, COUNT(*) as count FROM users GROUP BY role",
+        );
         $roleLabels = [];
         $roleCounts = [];
         $totalUsers = 0;
 
         foreach ($userRoles as $role) {
             // Format the role label, changing "pjk" to "Penanggung Jawab"
-            if ($role->role == 'pjk') {
-                $roleLabels[] = 'Penanggung Jawab Kegiatan';
+            if ($role->role == "pjk") {
+                $roleLabels[] = "Penanggung Jawab Kegiatan";
             } else {
                 $roleLabels[] = ucfirst($role->role);
             }
@@ -27,13 +29,16 @@ class DashboardController extends Controller
         }
 
         // Get procedure status counts for current year
-        $currentYear = date('Y');
-        $procedureStatuses = DB::select("
-            SELECT status, COUNT(*) as count 
-            FROM prosedur_pengawasan 
+        $currentYear = date("Y");
+        $procedureStatuses = DB::select(
+            "
+            SELECT status, COUNT(*) as count
+            FROM prosedur_pengawasan
             WHERE YEAR(created_at) = ?
             GROUP BY status
-        ", [$currentYear]);
+        ",
+            [$currentYear],
+        );
 
         $statusLabels = [];
         $statusCounts = [];
@@ -46,32 +51,21 @@ class DashboardController extends Controller
         }
 
         $data = [
-            'title' => 'Dashboard',
-            'roleLabels' => $roleLabels,
-            'roleCounts' => $roleCounts,
-            'totalUsers' => $totalUsers,
-            'statusLabels' => $statusLabels,
-            'statusCounts' => $statusCounts,
-            'totalProcedures' => $totalProcedures,
-            'currentYear' => $currentYear,
-            'userRoles' => $userRoles,
-            'procedureStatuses' => $procedureStatuses
+            "title" => "Dashboard",
+            "roleLabels" => $roleLabels,
+            "roleCounts" => $roleCounts,
+            "totalUsers" => $totalUsers,
+            "statusLabels" => $statusLabels,
+            "statusCounts" => $statusCounts,
+            "totalProcedures" => $totalProcedures,
+            "currentYear" => $currentYear,
+            "userRoles" => $userRoles,
+            "procedureStatuses" => $procedureStatuses,
         ];
 
         // Determine which view to render based on user role
         $userRole = Auth::user()->role;
-        
-        switch ($userRole) {
-            case 'admin':
-                return view('admin.dashboard', $data);
-            case 'pjk':
-                return view('penanggungjawab.dashboard', $data);
-            case 'perencana':
-                return view('perencana.dashboard', $data);
-            case 'pegawai':
-                return view('pegawai.dashboard', $data);
-            default:
-                return view('admin.dashboard', $data);
-        }
+
+        return view("dashboard", $data);
     }
-} 
+}

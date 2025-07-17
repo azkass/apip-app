@@ -387,7 +387,9 @@ export function setupActivityForm() {
             activities[i] =
                 document.getElementById(`act-${actNum}`)?.value || "";
             tools[i] = document.getElementById(`tool-${actNum}`)?.value || "";
-            times[i] = document.getElementById(`time-${actNum}`)?.value || "";
+            const timeValue =
+                document.getElementById(`time-${actNum}`)?.value || "";
+            times[i] = timeValue.replace(/ jam/g, "");
             outputs[i] =
                 document.getElementById(`output-${actNum}`)?.value || "";
             notes[i] = document.getElementById(`note-${actNum}`)?.value || "";
@@ -414,18 +416,21 @@ export function setupActivityForm() {
     table.className = "w-full border-collapse";
     // Buat header dengan string template
     const headers = [
-        {text: "No.", number: "(1)"},
-        {text: "Aktivitas", number: "(2)"}, 
-        ...actorNames.map((name, index) => ({text: name, number: `(${index + 3})`})),
-        {text: "Kelengkapan", number: `(${nActor + 4})`},
-        {text: "Waktu (Jam)", number: `(${nActor + 5})`}, 
-        {text: "Output", number: `(${nActor + 6})`},
-        {text: "Keterangan", number: `(${nActor + 7})`}
+        { text: "No.", number: "(1)" },
+        { text: "Aktivitas", number: "(2)" },
+        ...actorNames.map((name, index) => ({
+            text: name,
+            number: `(${index + 3})`,
+        })),
+        { text: "Kelengkapan", number: `(${nActor + 4})` },
+        { text: "Waktu (Jam)", number: `(${nActor + 5})` },
+        { text: "Output", number: `(${nActor + 6})` },
+        { text: "Keterangan", number: `(${nActor + 7})` },
     ];
     const headerRow = document.createElement("tr");
     headerRow.className = "bg-gray-100";
     headerRow.innerHTML = headers
-        .map((header) => `<th class="border p-2">${header}</th>`)
+        .map((header) => `<th class="border p-2">${header.text}</th>`)
         .join("");
     table.appendChild(headerRow);
     // Cek apakah ada aktivitas yang memiliki opsi "Selesai"
@@ -477,7 +482,7 @@ export function setupActivityForm() {
                 <td class="border p-2"><textarea id="act-${i}" placeholder="Deskripsi Aktivitas" class="w-full p-1 border rounded">${activities[i - 1]}</textarea></td>
                 ${actorColumns}
                 <td class="border p-2"><input type="text" id="tool-${i}" placeholder="Alat/bahan" class="w-full border rounded p-1 text-sm" value="${tools[i - 1]}" /></td>
-                <td class="border p-2"><input type="text" id="time-${i}" placeholder="Waktu" class="w-full border rounded p-1 text-sm" value="${times[i - 1]}" /></td>
+                <td class="border p-2"><input type="text" id="time-${i}" placeholder="Waktu (Jam)" class="w-full border rounded p-1 text-sm" value="${times[i - 1] ? times[i - 1] + " jam" : ""}" /></td>
                 <td class="border p-2"><input type="text" id="output-${i}" placeholder="Output" class="w-full border rounded p-1 text-sm" value="${outputs[i - 1]}" /></td>
                 <td class="border p-2"><input type="text" id="note-${i}" placeholder="Catatan" class="w-full border rounded p-1 text-sm" value="${notes[i - 1]}" /></td>
             `;
@@ -493,6 +498,21 @@ export function setupActivityForm() {
     const shapeSelects = tableDiv.querySelectorAll('select[id^="gShape-"]');
     shapeSelects.forEach((select) => {
         select.addEventListener("change", setupActivityForm);
+    });
+
+    // Tambahkan event listener untuk input waktu
+    const timeInputs = tableDiv.querySelectorAll('input[id^="time-"]');
+    timeInputs.forEach((input) => {
+        input.addEventListener("focus", function () {
+            // Hapus ' jam' saat input difokuskan
+            this.value = this.value.replace(/ jam/g, "");
+        });
+        input.addEventListener("blur", function () {
+            // Tambahkan ' jam' saat fokus hilang jika nilainya angka
+            if (this.value && !isNaN(this.value.trim())) {
+                this.value = this.value.trim() + " jam";
+            }
+        });
     });
 
     // Nonaktifkan tombol "Tambah Aktivitas" jika ada opsi "Selesai"
@@ -649,14 +669,17 @@ export async function preview() {
     const lastJsonBody = renderDetailPages(true);
 
     // Kirim data ke server
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const csrfToken = document.querySelector(
+        'meta[name="csrf-token"]',
+    )?.content;
     if (!csrfToken) {
         console.error("CSRF token tidak ditemukan!");
         return;
     }
 
     try {
-        const id = document.getElementById("prosedur-container").dataset.prosedurId;
+        const id =
+            document.getElementById("prosedur-container").dataset.prosedurId;
         const response = await axios.put(
             `/prosedur-pengawasan/${id}/body`,
             { isi: lastJsonBody },
@@ -1957,30 +1980,29 @@ export function draw(container, start, end) {
             // console.log("Type of data draw():", typeof GraphData);
             // console.log("data draw:", GraphData);
             return jsonBody;
-
         }
     }
 }
-        // Fungsi untuk mengekstrak data penting dari mxCell
-        function extractCellData(cells) {
-            return cells.map((row) => {
-                return row.map((cell) => {
-                    if (!cell) return null;
-                    return {
-                        id: cell.getId(),
-                        value: cell.getValue(),
-                        geometry: cell.getGeometry()
-                            ? {
-                                  x: cell.getGeometry().x,
-                                  y: cell.getGeometry().y,
-                                  width: cell.getGeometry().width,
-                                  height: cell.getGeometry().height,
-                              }
-                            : null,
-                    };
-                });
-            });
-        }
+// Fungsi untuk mengekstrak data penting dari mxCell
+function extractCellData(cells) {
+    return cells.map((row) => {
+        return row.map((cell) => {
+            if (!cell) return null;
+            return {
+                id: cell.getId(),
+                value: cell.getValue(),
+                geometry: cell.getGeometry()
+                    ? {
+                          x: cell.getGeometry().x,
+                          y: cell.getGeometry().y,
+                          width: cell.getGeometry().width,
+                          height: cell.getGeometry().height,
+                      }
+                    : null,
+            };
+        });
+    });
+}
 
 function initDetailPage() {
     // Cek jika kita berada di halaman detail yang memiliki data `prosedurDetailData`

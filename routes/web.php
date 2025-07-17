@@ -29,22 +29,15 @@ Route::get("/login", function () {
 Route::middleware("auth")->group(function () {
     // Route yang membutuhkan login
     Route::get("/", function () {
-        $user = Auth::user();
-        if ($user->role == "admin") {
-            return redirect("/admin/dashboard");
-        } elseif ($user->role == "pegawai") {
-            return redirect("/pegawai/dashboard");
-        } elseif ($user->role == "perencana") {
-            return redirect("/perencana/dashboard");
-        } elseif ($user->role == "pjk") {
-            return redirect("/penanggungjawab/dashboard");
-        } else {
-            return redirect("/login");
-        }
+        return redirect("/dashboard");
     });
+    Route::get("/dashboard", [DashboardController::class, "index"]);
+
+    // Logout
     Route::post("/logout", [SocialiteController::class, "logout"])->name(
-        "logout"
+        "logout",
     );
+
     // Prosedur Pengawasan Routes (Domain-Oriented)
     Route::prefix("prosedur-pengawasan")
         ->name("prosedur-pengawasan.")
@@ -108,98 +101,90 @@ Route::middleware("auth")->group(function () {
         });
 
     // Periode Evaluasi
-    Route::get("/periode", [
-        PeriodeEvaluasiProsedurController::class,
-        "index",
-    ])->name("periode.index");
-    Route::middleware(["role:admin"])->group(function () {
-        Route::get("/periode/create", [
-            PeriodeEvaluasiProsedurController::class,
-            "create",
-        ])->name("periode.create");
-        Route::post("/periode", [
-            PeriodeEvaluasiProsedurController::class,
-            "store",
-        ])->name("periode.store");
-        Route::get("/periode/edit/{id}", [
-            PeriodeEvaluasiProsedurController::class,
-            "edit",
-        ])->name("periode.edit");
-        Route::put("/periode/{id}", [
-            PeriodeEvaluasiProsedurController::class,
-            "update",
-        ])->name("periode.update");
-        Route::delete("/periode/{id}", [
-            PeriodeEvaluasiProsedurController::class,
-            "destroy",
-        ])->name("periode.destroy");
-    });
+    Route::prefix("periode")
+        ->name("periode.")
+        ->controller(PeriodeEvaluasiProsedurController::class)
+        ->group(function () {
+            Route::get("/", "index")->name("index");
+        });
+
+    // Periode Evaluasi role admin untuk create, store, edit, update, destroy
+    Route::middleware(["role:admin"])
+        ->prefix("periode")
+        ->name("periode.")
+        ->controller(PeriodeEvaluasiProsedurController::class)
+        ->group(function () {
+            Route::get("/create", "create")->name("create");
+            Route::post("/", "store")->name("store");
+            Route::get("/edit/{id}", "edit")->name("edit");
+            Route::put("/{id}", "update")->name("update");
+            Route::delete("/{id}", "destroy")->name("destroy");
+        });
 
     // Evaluasi
-    Route::middleware(["periode.evaluasi"])->group(function () {
-        Route::get("/evaluasi", [
-            EvaluasiProsedurController::class,
-            "index",
-        ])->name("evaluasi.index");
-        Route::get("/evaluasi/create/{sop_id}", [
-            EvaluasiProsedurController::class,
-            "create",
-        ])->name("evaluasi.create");
-        Route::post("/evaluasi", [
-            EvaluasiProsedurController::class,
-            "store",
-        ])->name("evaluasi.store");
-        Route::get("/evaluasi/{id}", [
-            EvaluasiProsedurController::class,
-            "show",
-        ])->name("evaluasi.show");
-        Route::get("/evaluasi/{id}/edit", [
-            EvaluasiProsedurController::class,
-            "edit",
-        ])->name("evaluasi.edit");
-        Route::put("/evaluasi/{id}", [
-            EvaluasiProsedurController::class,
-            "update",
-        ])->name("evaluasi.update");
-        Route::delete("/evaluasi/{id}", [
-            EvaluasiProsedurController::class,
-            "destroy",
-        ])->name("evaluasi.destroy");
-    });
+    Route::middleware(["periode.evaluasi"])
+        ->prefix("evaluasi")
+        ->name("evaluasi.")
+        ->controller(EvaluasiProsedurController::class)
+        ->group(function () {
+            Route::get("/", "index")->name("index");
+            Route::get("/create/{sop_id}", "create")->name("create");
+            Route::post("/", "store")->name("store");
+            Route::get("{id}", "show")->name("show");
+            Route::get("{id}/edit", "edit")->name("edit");
+            Route::put("{id}", "update")->name("update");
+            Route::delete("{id}", "destroy")->name("destroy");
+        });
+
+    // Route khusus role:perencana untuk create delete
+    Route::middleware("role:perencana")
+        ->prefix("instrumenpengawasan")
+        ->name("instrumen-pengawasan.")
+        ->controller(InstrumenPengawasanController::class)
+        ->group(function () {
+            Route::get("create", "create")->name("create");
+            Route::post("/", "store")->name("store");
+            Route::delete("{id}", "delete")->name("delete");
+        });
+    // Route tanpa middleware (akses umum)
+    Route::prefix("instrumenpengawasan")
+        ->name("instrumen-pengawasan.")
+        ->controller(InstrumenPengawasanController::class)
+        ->group(function () {
+            Route::get("/", "index")->name("index");
+            Route::get("{id}", "show")->name("detail");
+            Route::get("{id}/download", "downloadPdf")->name("download");
+        });
+
+    // Route khusus role pjk atau perencana untuk edit update
+    Route::middleware("role:pjk|perencana")
+        ->prefix("instrumenpengawasan")
+        ->name("instrumen-pengawasan.")
+        ->controller(InstrumenPengawasanController::class)
+        ->group(function () {
+            Route::get("{id}/edit", "edit")->name("edit");
+            Route::put("{id}", "update")->name("update");
+        });
 
     // Regulasi
-    Route::get("/regulasi", [RegulasiController::class, "index"])->name(
-        "regulasi.index"
-    );
-    Route::get("/regulasi/create", [RegulasiController::class, "create"])->name(
-        "regulasi.create"
-    );
-    Route::get("/regulasi/{id}/download", [
-        RegulasiController::class,
-        "downloadPdf",
-    ])->name("regulasi.download");
-    Route::get("/regulasi/{id}", [RegulasiController::class, "detail"])->name(
-        "regulasi.detail"
-    );
-    Route::post("/regulasi", [RegulasiController::class, "store"])->name(
-        "regulasi.store"
-    );
-    Route::get("/regulasi/{id}/edit", [
-        RegulasiController::class,
-        "edit",
-    ])->name("regulasi.edit");
-    Route::put("/regulasi/{id}", [RegulasiController::class, "update"])->name(
-        "regulasi.update"
-    );
-    Route::delete("/regulasi/{id}", [
-        RegulasiController::class,
-        "delete",
-    ])->name("regulasi.delete");
+    Route::prefix("regulasi")
+        ->name("regulasi.")
+        ->controller(RegulasiController::class)
+        ->group(function () {
+            Route::get("/", "index")->name("index");
+            Route::get("create", "create")->name("create");
+            Route::post("/", "store")->name("store");
+            Route::get("{id}/download", "downloadPdf")->name("download");
+            Route::get("{id}", "detail")->name("detail");
+            Route::get("{id}/edit", "edit")->name("edit");
+            Route::put("{id}", "update")->name("update");
+            Route::delete("{id}", "delete")->name("delete");
+        });
 });
 Route::middleware("auth", "role:admin")->group(function () {
     Route::get("/admin/dashboard", [DashboardController::class, "index"]);
     Route::get("/admin/list", [SocialiteController::class, "list"])->name(
-        "admin.list"
+        "admin.list",
     );
     Route::get("/admin/editrole/{id}", [
         SocialiteController::class,
@@ -266,79 +251,6 @@ Route::middleware("auth", "role:admin")->group(function () {
         "destroy",
     ])->name("pertanyaan.destroy");
 });
-
-Route::middleware("auth", "role:pjk")->group(function () {
-    Route::get("/penanggungjawab/dashboard", [
-        DashboardController::class,
-        "index",
-    ]);
-    Route::get("/penanggungjawab/instrumenpengawasan", [
-        InstrumenPengawasanController::class,
-        "index",
-    ])->name("pjk.instrumen-pengawasan.index");
-    Route::get("/penanggungjawab/instrumenpengawasan/{id}", [
-        InstrumenPengawasanController::class,
-        "show",
-    ])->name("pjk.instrumen-pengawasan.detail");
-    Route::get("/penanggungjawab/instrumenpengawasan/{id}/edit", [
-        InstrumenPengawasanController::class,
-        "edit",
-    ])->name("pjk.instrumen-pengawasan.edit");
-    Route::put("/penanggungjawab/instrumenpengawasan/{id}", [
-        InstrumenPengawasanController::class,
-        "update",
-    ])->name("pjk-instrumen-pengawasan.update");
-});
-Route::middleware("auth", "role:perencana")->group(function () {
-    Route::get("/perencana/dashboard", [DashboardController::class, "index"]);
-    Route::get("/perencana/instrumenpengawasan", [
-        InstrumenPengawasanController::class,
-        "index",
-    ])->name("perencana.instrumen-pengawasan.index");
-    Route::get("/perencana/instrumenpengawasan/create", [
-        InstrumenPengawasanController::class,
-        "create",
-    ])->name("instrumen-pengawasan.create");
-    Route::get("/perencana/instrumenpengawasan/{id}", [
-        InstrumenPengawasanController::class,
-        "show",
-    ])->name("perencana.instrumen-pengawasan.detail");
-    Route::post("/perencana/instrumenpengawasan", [
-        InstrumenPengawasanController::class,
-        "store",
-    ])->name("instrumen-pengawasan.store");
-
-    Route::get("/perencana/instrumenpengawasan/{id}/download", [
-        InstrumenPengawasanController::class,
-        "downloadPdf",
-    ])->name("instrumen-pengawasan.download");
-
-    Route::get("/perencana/instrumenpengawasan/{id}/edit", [
-        InstrumenPengawasanController::class,
-        "edit",
-    ])->name("perencana.instrumen-pengawasan.edit");
-    Route::put("/perencana/instrumenpengawasan/{id}", [
-        InstrumenPengawasanController::class,
-        "update",
-    ])->name("instrumen-pengawasan.update");
-    Route::delete("/perencana/instrumenpengawasan/{id}", [
-        InstrumenPengawasanController::class,
-        "delete",
-    ])->name("instrumen-pengawasan.delete");
-});
-
-Route::middleware("auth", "role:pegawai")->group(function () {
-    Route::get("/pegawai/dashboard", [DashboardController::class, "index"]);
-    Route::get("/pegawai/instrumenpengawasan", [
-        InstrumenPengawasanController::class,
-        "index",
-    ])->name("pegawai.instrumen-pengawasan.index");
-    Route::get("/pegawai/instrumenpengawasan/{id}", [
-        InstrumenPengawasanController::class,
-        "show",
-    ])->name("pegawai.instrumen-pengawasan.detail");
-});
-
 // Route::post('/generate-pdf', function (Illuminate\Http\Request $request) {
 //     $activities = $request->input('activities');
 //     $durations = $request->input('durations');

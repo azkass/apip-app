@@ -46,15 +46,16 @@ class ProsedurPengawasan
                 $data["tanggal_efektif"] ?? null,
                 $data["disahkan_oleh"],
                 $data["cover"] ?? null,
-            ]
+            ],
         );
     }
 
-    public static function find($id)
+    public static function findHeader($id)
     {
-        return DB::selectOne("SELECT * FROM prosedur_pengawasan WHERE id = ?", [
-            $id,
-        ]);
+        return DB::selectOne(
+            "SELECT id, nomor, judul, tanggal_pembuatan, tanggal_revisi, tanggal_efektif, disahkan_oleh, penyusun_id, status, pembuat_id FROM prosedur_pengawasan WHERE id = ?",
+            [$id],
+        );
     }
 
     public static function update($id, $data)
@@ -74,15 +75,19 @@ class ProsedurPengawasan
                 $data["tanggal_efektif"] ?? null,
                 $data["disahkan_oleh"],
                 $id,
-            ]
+            ],
         );
     }
 
-    public static function updateBody($id, $data)
+    public static function findCover($id)
     {
-        return DB::update(
-            "UPDATE prosedur_pengawasan SET isi = ?, updated_at = NOW() WHERE id = ?",
-            [$data["isi"], $id]
+        return DB::selectOne(
+            "
+            SELECT pp.id, pp.nomor, pp.judul, pp.tanggal_pembuatan, pp.tanggal_revisi, pp.tanggal_efektif, pp.cover, iu.nama AS disahkan_oleh_nama, iu.nip AS disahkan_oleh_nip, iu.jabatan AS disahkan_oleh_jabatan
+            FROM prosedur_pengawasan pp
+            INNER JOIN inspektur_utama iu ON pp.disahkan_oleh = iu.id
+            WHERE pp.id = ?",
+            [$id],
         );
     }
 
@@ -90,7 +95,23 @@ class ProsedurPengawasan
     {
         return DB::update(
             "UPDATE prosedur_pengawasan SET cover = ?, updated_at = NOW() WHERE id = ?",
-            [$data["cover"], $id]
+            [$data["cover"], $id],
+        );
+    }
+
+    public static function findBody($id)
+    {
+        return DB::selectOne(
+            "SELECT id, isi FROM prosedur_pengawasan WHERE id = ?",
+            [$id],
+        );
+    }
+
+    public static function updateBody($id, $data)
+    {
+        return DB::update(
+            "UPDATE prosedur_pengawasan SET isi = ?, updated_at = NOW() WHERE id = ?",
+            [$data["isi"], $id],
         );
     }
 
@@ -105,7 +126,7 @@ class ProsedurPengawasan
             INNER JOIN users u2 ON pp.pembuat_id = u2.id
             INNER JOIN inspektur_utama iu ON pp.disahkan_oleh = iu.id
             WHERE pp.id = ?",
-            [$id]
+            [$id],
         );
     }
 

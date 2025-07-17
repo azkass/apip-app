@@ -9,7 +9,7 @@ const sections = {
     pencatatan: "Pencatatan dan Pendataan",
 };
 // Sections where adding new inputs is disabled
-const noAddSections = ['kualifikasi', 'peringatan', 'pencatatan'];
+const noAddSections = ["kualifikasi", "peringatan", "pencatatan"];
 
 // Tambah input baru pada section
 function addField(section) {
@@ -18,7 +18,7 @@ function addField(section) {
     if (!list) return;
     const idx = list.children.length;
     const div = document.createElement("div");
-    div.className = "flex items-center gap-2 mt-2";
+    div.className = "flex items-center";
     div.innerHTML = `<input type="text" name="${section}[]" class="form-input flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 autocomplete='off'" placeholder="${sections[section]} ke-${idx + 1}" />`;
     list.appendChild(div);
     updateRemoveButton(section);
@@ -69,10 +69,10 @@ window.addEventListener("DOMContentLoaded", () => {
         list.innerHTML = "";
         data.forEach((val, idx) => {
             const div = document.createElement("div");
-            div.className = "flex items-center gap-2";
+            div.className = "flex items-center";
             // Escape value agar aman
             const safeVal = (val ?? "").toString().replace(/"/g, "&quot;");
-            div.innerHTML = `<input type="text" name="${section}[]" class="form-input flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" value="${safeVal}" placeholder="${sections[section]} ke-${idx + 1}" />`;
+            div.innerHTML = `<input type="text" name="${section}[]" class="form-input mb-2 flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" value="${safeVal}" placeholder="${sections[section]} ke-${idx + 1}" />`;
             list.appendChild(div);
         });
         updateRemoveButton(section);
@@ -171,22 +171,22 @@ function generateCoverMxGraph(data) {
     // Inisialisasi mxGraph
     const graph = new mxGraph(container);
     graph.setEnabled(false);
-    
+
     // Konfigurasi default style untuk text wrapping
     graph.setHtmlLabels(true); // Enable HTML labels
     const defaultStyle = graph.getStylesheet().getDefaultVertexStyle();
-    defaultStyle[mxConstants.STYLE_WHITE_SPACE] = 'wrap';
-    defaultStyle[mxConstants.STYLE_OVERFLOW] = 'hidden';
-    defaultStyle[mxConstants.STYLE_WORD_WRAP] = 'break-word';
+    defaultStyle[mxConstants.STYLE_WHITE_SPACE] = "wrap";
+    defaultStyle[mxConstants.STYLE_OVERFLOW] = "hidden";
+    defaultStyle[mxConstants.STYLE_WORD_WRAP] = "break-word";
     defaultStyle[mxConstants.STYLE_SPACING_LEFT] = 3;
-    
+
     // Pastikan cell dapat menyesuaikan tinggi dengan konten
     graph.cellsResizable = false;
     graph.extendParents = true;
     graph.extendParentsOnAdd = true;
     graph.constrainChildren = false;
     graph.autoSizeCells = true;
-    
+
     const parent = graph.getDefaultParent();
     graph.getModel().beginUpdate();
 
@@ -196,19 +196,21 @@ function generateCoverMxGraph(data) {
         const mY = Math.round(50 * scale);
 
         // === HEADER SECTION ===
-        const headerY = Math.round((mY) * scale);
+        const headerY = Math.round(mY * scale);
         const headerH = Math.round(280 * scale);
-        const rightSectionX = Math.round((pageW/2));
-        const widthSection = Math.round((pageW - (2*mX))/2);
-        const leftWidthSection = Math.round(widthSection-20);
+        const rightSectionX = Math.round(pageW / 2);
+        const widthSection = Math.round((pageW - 2 * mX) / 2);
+        const leftWidthSection = Math.round(widthSection - 20);
         const fontSize = Math.round(14 * scale);
-        
+
         // Base styles dengan text wrapping yang tepat
         const baseStyle = `strokeColor=#000;fillColor=none;html=1;whiteSpace=wrap;fontSize=${fontSize};fontColor=#000000;`;
-        const titleStyle = baseStyle + `align=left;verticalAlign=top;fontStyle=1;`;
+        const titleStyle =
+            baseStyle + `align=left;verticalAlign=top;fontStyle=1;`;
         const sectionStyle = baseStyle + `align=left;verticalAlign=top;`;
-        const cellStyle = baseStyle + `fillColor=#ffffff;align=left;verticalAlign=middle;`;
-        
+        const cellStyle =
+            baseStyle + `fillColor=#ffffff;align=left;verticalAlign=middle;`;
+
         // Header border
         graph.insertVertex(
             parent,
@@ -220,13 +222,13 @@ function generateCoverMxGraph(data) {
             headerH,
             "strokeColor=#000;fillColor=none;strokeWidth=1;",
         );
-        
+
         // Logo BPS (kiri)
         graph.insertVertex(
             parent,
             null,
             "",
-            Math.round((leftWidthSection/2)-10),
+            Math.round(leftWidthSection / 2 - 10),
             Math.round((headerY + 40) * scale),
             Math.round(170 * scale),
             Math.round(170 * scale),
@@ -242,9 +244,9 @@ function generateCoverMxGraph(data) {
             Math.round((headerY + 180) * scale),
             Math.round(400 * scale),
             Math.round(80 * scale),
-            `fontFamily=Arial;fontSize=${Math.round(26*scale)};fontStyle=3;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#000;html=1;whiteSpace=wrap;`,
-          );
-          
+            `fontFamily=Arial;fontSize=${Math.round(26 * scale)};fontStyle=3;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#000;html=1;whiteSpace=wrap;`,
+        );
+
         graph.insertVertex(
             parent,
             null,
@@ -269,8 +271,8 @@ function generateCoverMxGraph(data) {
 
         // Sisipkan satu baris kosong (spasi) bila ada nama / NIP
         if (
-            (data.disahkan_oleh_jabatan &&
-                (data.disahkan_oleh || data.disahkan_oleh_nip))
+            data.disahkan_oleh_jabatan &&
+            (data.disahkan_oleh || data.disahkan_oleh_nip)
         ) {
             disahkanLines.push("");
             disahkanLines.push("");
@@ -303,7 +305,11 @@ function generateCoverMxGraph(data) {
             const isDisahkanOleh = label === "Disahkan oleh";
             const isNamaSOP = label === "Nama SOP";
             // Tinggi minimum untuk cell, akan menyesuaikan jika konten lebih panjang
-            const minCellH = isDisahkanOleh ? cellH * 7.5 : (isNamaSOP ? cellH * 2.5 : cellH);
+            const minCellH = isDisahkanOleh
+                ? cellH * 7.5
+                : isNamaSOP
+                  ? cellH * 2.5
+                  : cellH;
 
             // Cell label
             const labelCell = graph.insertVertex(
@@ -314,7 +320,7 @@ function generateCoverMxGraph(data) {
                 currentY,
                 labelW,
                 minCellH,
-                cellStyle + 'fontStyle=1;'
+                cellStyle + "fontStyle=1;",
             );
 
             // Cell value dengan auto-sizing
@@ -326,20 +332,20 @@ function generateCoverMxGraph(data) {
                 currentY,
                 valueW,
                 minCellH,
-                cellStyle + (isDisahkanOleh ? 'align=center;' : '')
+                cellStyle + (isDisahkanOleh ? "align=center;" : ""),
             );
 
             // Update currentY berdasarkan tinggi cell yang sebenarnya
             const actualHeight = Math.max(
                 labelCell.getGeometry().height,
                 valueCell.getGeometry().height,
-                minCellH
+                minCellH,
             );
             currentY += actualHeight;
         });
 
         // === CONTENT SECTIONS ===
-        let contentY = Math.round((headerY + headerH + 30));
+        let contentY = Math.round(headerY + headerH + 30);
 
         // Dasar Hukum dengan tinggi yang dapat menyesuaikan
         const dasarHukumTitle = graph.insertVertex(
@@ -350,7 +356,7 @@ function generateCoverMxGraph(data) {
             contentY,
             leftWidthSection,
             Math.round(18 * scale), // Tinggi minimum untuk judul
-            titleStyle
+            titleStyle,
         );
 
         let dasarHukumText = (data.dasarHukum || ["-"])
@@ -365,7 +371,7 @@ function generateCoverMxGraph(data) {
             contentY + Math.round(18 * scale),
             leftWidthSection,
             Math.round(85 * scale), // Tinggi minimum untuk konten
-            sectionStyle
+            sectionStyle,
         );
 
         // Kualifikasi Pelaksanaan (kanan atas)

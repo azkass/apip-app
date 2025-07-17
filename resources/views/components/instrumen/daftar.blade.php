@@ -21,16 +21,9 @@
                         class="block w-full sm:w-24 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
                         onchange="window.location.href=this.value"
                     >
-                        @if (Auth::user()->role == 'perencana')
+                        @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
                             @foreach (range(date('Y'), 2025) as $year)
-                                <option value="{{ route('perencana.instrumen-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
-                                        {{ request('tahun', date('Y')) == $year ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endforeach
-                        @elseif (Auth::user()->role == 'pjk')
-                            @foreach (range(date('Y'), 2025) as $year)
-                                <option value="{{ route('pjk.instrumen-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
+                                <option value="{{ route('instrumen-pengawasan.index', ['status' => $activeTab, 'tahun' => $year]) }}"
                                         {{ request('tahun', date('Y')) == $year ? 'selected' : '' }}>
                                     {{ $year }}
                                 </option>
@@ -55,30 +48,17 @@
                         class="block w-full sm:w-24 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none"
                         onchange="window.location.href=this.value"
                     >
-                    @if (Auth::user()->role == 'perencana')
-                        <option value="{{ route('perencana.instrumen-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }}>
+                    @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
+                        <option value="{{ route('instrumen-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }}>
                             Semua
                         </option>
-                        <option value="{{ route('perencana.instrumen-pengawasan.index', ['status' => 'draft']) }}" {{ $activeTab == 'draft' ? 'selected' : '' }}>
+                        <option value="{{ route('instrumen-pengawasan.index', ['status' => 'draft']) }}" {{ $activeTab == 'draft' ? 'selected' : '' }}>
                             Draft
                         </option>
-                        <option value="{{ route('perencana.instrumen-pengawasan.index', ['status' => 'diajukan']) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }}>
+                        <option value="{{ route('instrumen-pengawasan.index', ['status' => 'diajukan']) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }}>
                             Diajukan
                         </option>
-                        <option value="{{ route('perencana.instrumen-pengawasan.index', ['status' => 'disetujui']) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }}>
-                            Disetujui
-                        </option>
-                    @elseif (Auth::user()->role == 'pjk')
-                        <option value="{{ route('pjk.instrumen-pengawasan.index', ['status' => 'semua']) }}" {{ $activeTab == 'semua' ? 'selected' : '' }}>
-                            Semua
-                        </option>
-                        <option value="{{ route('pjk.instrumen-pengawasan.index', ['status' => 'draft']) }}" {{ $activeTab == 'draft' ? 'selected' : '' }}>
-                            Draft
-                        </option>
-                        <option value="{{ route('pjk.instrumen-pengawasan.index', ['status' => 'diajukan']) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }}>
-                            Diajukan
-                        </option>
-                        <option value="{{ route('pjk.instrumen-pengawasan.index', ['status' => 'disetujui']) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }}>
+                        <option value="{{ route('instrumen-pengawasan.index', ['status' => 'disetujui']) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }}>
                             Disetujui
                         </option>
                     @endif
@@ -124,7 +104,7 @@
                     <tr class="hover:bg-gray-50 transition-colors" data-instrumen-row>
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">{{ $index + 1 }}</td>
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">
-                            <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.detail', $instrumen->id) }}" class="hover:text-blue-600">
+                            <a href="{{ route('instrumen-pengawasan.detail', $instrumen->id) }}" class="hover:text-blue-600">
                                {{ $instrumen->judul }}
                             </a>
                         </td>
@@ -150,10 +130,10 @@
                         @if (Auth::user()->role != 'pegawai' || Auth::user()->role != 'admin')
                             <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">
                                 <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
-                                    <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.detail', $instrumen->id) }}" class="bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition">
+                                    <a href="{{ route('instrumen-pengawasan.detail', $instrumen->id) }}" class="bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition">
                                         Lihat
                                     </a>
-                                    <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumen->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition">
+                                    <a href="{{ route('instrumen-pengawasan.edit', $instrumen->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition">
                                         Edit
                                     </a>
                                     @if (Auth::user()->role == 'perencana')

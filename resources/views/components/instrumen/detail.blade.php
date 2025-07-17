@@ -50,7 +50,11 @@
 
     @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
     <div class="flex space-x-3">
-        <a href="{{ route(Auth::user()->role . '.instrumen-pengawasan.edit', $instrumenPengawasan->id) }}"
+        <a href="{{ route('instrumen-pengawasan.index') }}"
+           class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition">
+            Kembali
+        </a>
+        <a href="{{ route('instrumen-pengawasan.edit', $instrumenPengawasan->id) }}"
            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
             Edit
         </a>

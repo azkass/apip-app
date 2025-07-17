@@ -10,8 +10,8 @@ class EvaluasiProsedur extends Model
     protected $table = "evaluasi_prosedur";
 
     public static function getAll()
-{
-    return DB::select("
+    {
+        return DB::select("
         SELECT
             ep.id,
             ep.sop_id,
@@ -26,9 +26,9 @@ class EvaluasiProsedur extends Model
         FROM evaluasi_prosedur ep
         JOIN prosedur_pengawasan pp ON ep.sop_id = pp.id
         JOIN users u ON pp.penyusun_id = u.id
-        GROUP BY 
+        GROUP BY
             ep.id,
-            ep.sop_id, 
+            ep.sop_id,
             ep.created_at,
             ep.updated_at,
             pp.nomor,
@@ -37,11 +37,12 @@ class EvaluasiProsedur extends Model
             u.name
         ORDER BY ep.created_at DESC
     ");
-}
+    }
 
     public static function findBySopId($sop_id)
     {
-        return DB::select("
+        return DB::select(
+            "
             SELECT
                 ep.id,
                 ep.sop_id,
@@ -56,12 +57,15 @@ class EvaluasiProsedur extends Model
             JOIN pertanyaan_evaluasi pe ON ep.pertanyaan_id = pe.id
             WHERE ep.sop_id = ?
             ORDER BY pe.id ASC
-        ", [$sop_id]);
+        ",
+            [$sop_id]
+        );
     }
 
     public static function findById($id)
     {
-        return DB::selectOne("
+        return DB::selectOne(
+            "
             SELECT
                 ep.id,
                 ep.sop_id,
@@ -74,7 +78,9 @@ class EvaluasiProsedur extends Model
             JOIN prosedur_pengawasan pp ON ep.sop_id = pp.id
             JOIN pertanyaan_evaluasi pe ON ep.pertanyaan_id = pe.id
             WHERE ep.id = ?
-        ", [$id]);
+        ",
+            [$id]
+        );
     }
 
     public static function insertData($sop_id, $pertanyaan_id, $jawaban)
@@ -95,18 +101,23 @@ class EvaluasiProsedur extends Model
 
     public static function deleteDataBySopId($sop_id)
     {
-        return DB::delete("DELETE FROM evaluasi_prosedur WHERE sop_id = ?", [$sop_id]);
+        return DB::delete("DELETE FROM evaluasi_prosedur WHERE sop_id = ?", [
+            $sop_id,
+        ]);
     }
 
     public static function deleteData($id)
     {
         return DB::delete("DELETE FROM evaluasi_prosedur WHERE id = ?", [$id]);
     }
-    
+
     // Check if evaluation exists for a SOP
     public static function evaluasiExists($sop_id)
     {
-        $result = DB::selectOne("SELECT COUNT(*) as count FROM evaluasi_prosedur WHERE sop_id = ?", [$sop_id]);
+        $result = DB::selectOne(
+            "SELECT COUNT(*) as count FROM evaluasi_prosedur WHERE sop_id = ?",
+            [$sop_id]
+        );
         return $result->count > 0;
     }
 

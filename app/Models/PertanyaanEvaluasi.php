@@ -15,7 +15,7 @@ class PertanyaanEvaluasi
     {
         // Using a prepared statement with single query
         return DB::select(
-            "SELECT id, pertanyaan, created_at FROM pertanyaan_evaluasi ORDER BY created_at DESC"
+            "SELECT id, pertanyaan, created_at FROM pertanyaan_evaluasi",
         );
     }
 
@@ -30,7 +30,7 @@ class PertanyaanEvaluasi
         // Using first() for efficiency when we only need one record
         $result = DB::selectOne(
             "SELECT * FROM pertanyaan_evaluasi WHERE id = ?",
-            [$id]
+            [$id],
         );
         return $result ?: null;
     }
@@ -47,7 +47,7 @@ class PertanyaanEvaluasi
         // Using a single insert operation
         return DB::insert(
             "INSERT INTO pertanyaan_evaluasi (pertanyaan, created_at, updated_at) VALUES (?, ?, ?)",
-            [trim($data["pertanyaan"]), $now, $now]
+            [trim($data["pertanyaan"]), $now, $now],
         );
     }
 
@@ -63,7 +63,7 @@ class PertanyaanEvaluasi
         // Using a single update operation with data sanitization
         return DB::update(
             "UPDATE pertanyaan_evaluasi SET pertanyaan = ?, updated_at = ? WHERE id = ?",
-            [trim($data["pertanyaan"]), now()->format("Y-m-d H:i:s"), $id]
+            [trim($data["pertanyaan"]), now()->format("Y-m-d H:i:s"), $id],
         );
     }
 

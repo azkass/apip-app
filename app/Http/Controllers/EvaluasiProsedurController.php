@@ -27,14 +27,14 @@ class EvaluasiProsedurController extends Controller
         }
 
         // Get all pertanyaan evaluasi
-        $pertanyaan = PertanyaanEvaluasi::getAll();
+        $pertanyaan = PertanyaanEvaluasi::index();
 
         if (empty($pertanyaan)) {
             return redirect()
                 ->route("evaluasi.index")
                 ->with(
                     "error",
-                    "Tidak ada pertanyaan evaluasi! Tambahkan pertanyaan terlebih dahulu."
+                    "Tidak ada pertanyaan evaluasi! Tambahkan pertanyaan terlebih dahulu.",
                 );
         }
 
@@ -68,7 +68,7 @@ class EvaluasiProsedurController extends Controller
             EvaluasiProsedur::insertData(
                 $sop_id,
                 $pertanyaan_id,
-                $jawabanValue
+                $jawabanValue,
             );
         }
 
@@ -123,7 +123,7 @@ class EvaluasiProsedurController extends Controller
         }
 
         // Get all pertanyaan evaluasi
-        $allPertanyaan = PertanyaanEvaluasi::getAll();
+        $allPertanyaan = PertanyaanEvaluasi::index();
 
         // Create a map of pertanyaan_id => jawaban
         $jawabanMap = [];
@@ -163,7 +163,7 @@ class EvaluasiProsedurController extends Controller
             EvaluasiProsedur::insertData(
                 $sop_id,
                 $pertanyaan_id,
-                $jawabanValue
+                $jawabanValue,
             );
         }
 

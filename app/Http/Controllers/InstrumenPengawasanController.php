@@ -13,40 +13,32 @@ class InstrumenPengawasanController extends Controller
     public function index(Request $request)
     {
         $status = $request->query("status", "semua");
-        $activeTab = $status;
         $instrumenPengawasan = InstrumenPengawasan::getByStatus($status);
 
+        // Filter untuk role pegawai - hanya tampilkan yang disetujui
         if (Auth::user()->role == "pegawai") {
             $instrumenPengawasan = array_filter(
                 $instrumenPengawasan,
-                fn($i) => $i->status == "disetujui"
+                fn($i) => $i->status == "disetujui",
             );
         }
 
-        $viewData = [
+        return view("instrumen.daftarinstrumenpengawasan", [
             "title" => "Instrumen Pengawasan",
-            "activeTab" => $activeTab,
+            "activeTab" => $status,
             "instrumenPengawasan" => $instrumenPengawasan,
-        ];
-
-        $viewPath = match (Auth::user()->role) {
-            "perencana" => "perencana.instrumen.daftarinstrumenpengawasan",
-            "pjk" => "penanggungjawab.instrumen.daftarinstrumenpengawasan",
-            "pegawai" => "pegawai.instrumen.daftarinstrumenpengawasan",
-        };
-
-        return view($viewPath, $viewData);
+        ]);
     }
 
     public function create()
     {
         $is_pjk = DB::select(
-            'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
+            'SELECT id, name, role FROM users WHERE role IN ("pjk")',
         ); // Ambil data user untuk dropdown
         $is_perencana = DB::select(
-            'SELECT id, name, role FROM users WHERE role IN ("perencana")'
+            'SELECT id, name, role FROM users WHERE role IN ("perencana")',
         ); // Ambil data user untuk dropdown
-        return view("perencana.instrumen.createinstrumenpengawasan", [
+        return view("instrumen.createinstrumenpengawasan", [
             "is_pjk" => $is_pjk,
             "is_perencana" => $is_perencana,
             "title" => "Tambah Instrumen Pengawasan",
@@ -87,11 +79,11 @@ class InstrumenPengawasanController extends Controller
                 "file",
                 "status",
                 "pembuat_id",
-            ])
+            ]),
         );
 
         return redirect()
-            ->route("perencana.instrumen-pengawasan.index")
+            ->route("instrumen-pengawasan.index")
             ->with("success", "Instrumen Pengawasan berhasil dibuat.");
     }
 
@@ -115,43 +107,23 @@ class InstrumenPengawasanController extends Controller
     public function show($id)
     {
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
-        if (Auth::user()->role == "perencana") {
-            return view("perencana.instrumen.detailinstrumenpengawasan", [
-                "instrumenPengawasan" => $instrumenPengawasan,
-                "title" => "Detail Instrumen Pengawasan",
-            ]);
-        } elseif (Auth::user()->role == "pjk") {
-            return view("penanggungjawab.instrumen.detailinstrumenpengawasan", [
-                "instrumenPengawasan" => $instrumenPengawasan,
-                "title" => "Detail Instrumen Pengawasan",
-            ]);
-        } elseif (Auth::user()->role == "pegawai") {
-            return view("pegawai.instrumen.detailinstrumenpengawasan", [
-                "instrumenPengawasan" => $instrumenPengawasan,
-                "title" => "Detail Instrumen Pengawasan",
-            ]);
-        }
+        return view("instrumen.detailinstrumenpengawasan", [
+            "instrumenPengawasan" => $instrumenPengawasan,
+            "title" => "Detail Instrumen Pengawasan",
+        ]);
     }
 
     public function edit($id)
     {
         $instrumenPengawasan = InstrumenPengawasan::find($id);
         $is_pjk = DB::select(
-            'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
+            'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")',
         ); // Ambil data user untuk dropdown
-        if (Auth::user()->role == "perencana") {
-            return view("perencana.instrumen.editinstrumenpengawasan", [
-                "instrumenPengawasan" => $instrumenPengawasan,
-                "is_pjk" => $is_pjk,
-                "title" => "Edit Instrumen Pengawasan",
-            ]);
-        } elseif (Auth::user()->role == "pjk") {
-            return view("penanggungjawab.instrumen.editinstrumenpengawasan", [
-                "instrumenPengawasan" => $instrumenPengawasan,
-                "is_pjk" => $is_pjk,
-                "title" => "Edit Instrumen Pengawasan",
-            ]);
-        }
+        return view("instrumen.editinstrumenpengawasan", [
+            "instrumenPengawasan" => $instrumenPengawasan,
+            "is_pjk" => $is_pjk,
+            "title" => "Edit Instrumen Pengawasan",
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -213,24 +185,19 @@ class InstrumenPengawasanController extends Controller
         // Ambil data yang sudah diupdate
         $updatedInstrumenPengawasan = InstrumenPengawasan::detail($id);
 
-        if (Auth::user()->role == "perencana") {
-            return redirect()->route(
-                "perencana.instrumen-pengawasan.detail",
+        return redirect()
+            ->route(
+                "instrumen-pengawasan.detail",
                 $updatedInstrumenPengawasan->id,
-            )->with('success', 'Instrumen pengawasan berhasil diedit');
-        } elseif (Auth::user()->role == "pjk") {
-            return redirect()->route(
-                "pjk.instrumen-pengawasan.detail",
-                $updatedInstrumenPengawasan->id
-            )->with('success', 'Instrumen pengawasan berhasil diedit');
-        }
+            )
+            ->with("success", "Instrumen pengawasan berhasil diedit");
     }
 
     public function delete($id)
     {
         InstrumenPengawasan::delete($id);
         return redirect()
-            ->route("perencana.instrumen-pengawasan.index")
+            ->route("instrumen-pengawasan.index")
             ->with("success", "Instrumen Pengawasan deleted successfully");
     }
 }

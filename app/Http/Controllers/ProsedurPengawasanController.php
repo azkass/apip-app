@@ -17,10 +17,10 @@ class ProsedurPengawasanController extends Controller
         $activeTab = $status;
         $prosedurPengawasan = ProsedurPengawasan::getByStatus($status);
 
-        if (Auth::user()->role == "pegawai") {
+        if (\Auth::user()->role == "pegawai") {
             $prosedurPengawasan = array_filter(
                 $prosedurPengawasan,
-                fn($i) => $i->status == "disetujui"
+                fn($i) => $i->status == "disetujui",
             );
         }
 
@@ -35,10 +35,10 @@ class ProsedurPengawasanController extends Controller
     public function create()
     {
         $is_pjk = DB::select(
-            'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
+            'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")',
         ); // Ambil data user untuk dropdown
         $is_perencana = DB::select(
-            'SELECT id, name, role FROM users WHERE role IN ("perencana")'
+            'SELECT id, name, role FROM users WHERE role IN ("perencana")',
         ); // Ambil data user untuk dropdown
 
         $inspektur_utama = InspekturUtama::getNama();
@@ -83,9 +83,9 @@ class ProsedurPengawasanController extends Controller
 
     public function edit($id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::find($id);
+        $prosedurPengawasan = ProsedurPengawasan::findHeader($id);
         $is_pjk = DB::select(
-            'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")'
+            'SELECT id, name, role FROM users WHERE role IN ("pjk", "operator")',
         ); // Ambil data user untuk dropdown
 
         $inspektur_utama_nama = InspekturUtama::getNama();
@@ -100,7 +100,7 @@ class ProsedurPengawasanController extends Controller
 
     public function update(Request $request, $id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::show($id);
+        $prosedurPengawasan = ProsedurPengawasan::findHeader($id);
 
         $validatedData = $request->validate([
             "judul" => "required|max:255",
@@ -116,18 +116,17 @@ class ProsedurPengawasanController extends Controller
 
         ProsedurPengawasan::update($id, $request);
 
-        $updatedProsedurPengawasan = ProsedurPengawasan::show($id);
+        $updatedProsedurPengawasan = ProsedurPengawasan::findHeader($id);
 
-        return redirect()
-            ->route(
-                "prosedur-pengawasan.edit-cover",
-                $updatedProsedurPengawasan->id
-            );
+        return redirect()->route(
+            "prosedur-pengawasan.edit-cover",
+            $updatedProsedurPengawasan->id,
+        );
     }
 
     public function editCover($id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::show($id);
+        $prosedurPengawasan = ProsedurPengawasan::findCover($id);
         // Pastikan field cover di-decode ke array
         if ($prosedurPengawasan) {
             // Ambil dari kolom cover jika field-field tidak ada
@@ -148,7 +147,7 @@ class ProsedurPengawasanController extends Controller
 
     public function getCoverData($id)
     {
-        $prosedur = ProsedurPengawasan::show($id);
+        $prosedur = ProsedurPengawasan::findCover($id);
         if (!$prosedur) {
             return response()->json(["error" => "Not found"], 404);
         }
@@ -194,7 +193,7 @@ class ProsedurPengawasanController extends Controller
         ProsedurPengawasan::updateCover($id, $validatedData);
 
         // Re-fetch the updated model to get all data
-        $prosedur = ProsedurPengawasan::show($id);
+        $prosedur = ProsedurPengawasan::findCover($id);
         if (!$prosedur) {
             return response()->json(["error" => "Not found after update"], 404);
         }
@@ -233,7 +232,7 @@ class ProsedurPengawasanController extends Controller
         foreach ($dynamicKeys as $camelCaseKey) {
             // Convert camelCase to snake_case for fallback lookup
             $snakeCaseKey = strtolower(
-                preg_replace("/([a-z])([A-Z])/", '$1_$2', $camelCaseKey)
+                preg_replace("/([a-z])([A-Z])/", '$1_$2', $camelCaseKey),
             );
             // Check for camelCase key first, then snake_case, then default to empty array
             $responseData[$camelCaseKey] =
@@ -245,7 +244,7 @@ class ProsedurPengawasanController extends Controller
 
     public function editBody($id)
     {
-        $prosedurPengawasan = ProsedurPengawasan::show($id);
+        $prosedurPengawasan = ProsedurPengawasan::findBody($id);
 
         return view("prosedur.edit-body", [
             "prosedurPengawasan" => $prosedurPengawasan,
