@@ -5,31 +5,31 @@
             @csrf
             <div>
                 <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
-                <input type="text" name="judul" id="judul"
+                <input type="text" name="judul" id="judul" autocomplete="off"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" required>
             </div>
 
             <div>
                 <label for="nomor" class="block text-sm font-medium text-gray-700 mb-1">Nomor</label>
-                <input type="text" name="nomor" id="nomor"
+                <input type="text" name="nomor" id="nomor" autocomplete="off"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" required>
             </div>
 
             <div>
                 <label for="tanggal_pembuatan" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pembuatan</label>
-                <input type="date" name="tanggal_pembuatan" id="tanggal_pembuatan"
+                <input type="date" name="tanggal_pembuatan" id="tanggal_pembuatan" autocomplete="off"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
             </div>
 
             <div>
                 <label for="tanggal_revisi" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Revisi</label>
-                <input type="date" name="tanggal_revisi" id="tanggal_revisi"
+                <input type="date" name="tanggal_revisi" id="tanggal_revisi" autocomplete="off"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
             </div>
 
             <div>
                 <label for="tanggal_efektif" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Efektif</label>
-                <input type="date" name="tanggal_efektif" id="tanggal_efektif"
+                <input type="date" name="tanggal_efektif" id="tanggal_efektif" autocomplete="off"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
             </div>
 

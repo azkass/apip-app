@@ -14,7 +14,7 @@ export default defineConfig({
                 "resources/js/graph.js",
                 "resources/js/editCover.js",
                 "resources/js/editBody.js",
-                "resources/js/pdfExportSOP.js",
+                "resources/js/printSOP.js",
             ],
             refresh: true,
         }),

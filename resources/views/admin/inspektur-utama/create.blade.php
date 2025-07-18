@@ -22,19 +22,19 @@
 
         <div class="mb-4">
             <label for="nama" class="block font-medium text-gray-700 mb-2">Nama Lengkap</label>
-            <input type="text" name="nama" id="nama" required
+            <input type="text" name="nama" id="nama" required autocomplete="off"
                    value="{{ old('nama') }}"
                    placeholder="Masukkan nama lengkap inspektur utama"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500 @error('nama') border-red-500 @enderror">
             @error('nama')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
-            <p class="text-gray-500 text-sm mt-1">Contoh: Dr. Ahmad Susanto, S.H., M.H.</p>
+            <p class="text-gray-500 text-sm mt-1">Contoh: Dr. Dadang Hardiwan, S.Si., M.Si.</p>
         </div>
 
         <div class="mb-4">
             <label for="nip" class="block font-medium text-gray-700 mb-2">NIP</label>
-            <input type="text" name="nip" id="nip" required
+            <input type="text" name="nip" id="nip" required autocomplete="off"
                    value="{{ old('nip') }}"
                    placeholder="Masukkan Nomor Induk Pegawai"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500 @error('nip') border-red-500 @enderror">
@@ -46,14 +46,14 @@
 
         <div class="mb-6">
             <label for="jabatan" class="block font-medium text-gray-700 mb-2">Jabatan</label>
-            <input type="text" name="jabatan" id="jabatan" required
+            <input type="text" name="jabatan" id="jabatan" required autocomplete="off"
                    value="{{ old('jabatan') }}"
                    placeholder="Masukkan jabatan inspektur utama"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500 @error('jabatan') border-red-500 @enderror">
             @error('jabatan')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
-            <p class="text-gray-500 text-sm mt-1">Contoh: Inspektur Utama Kementerian Keuangan</p>
+            <p class="text-gray-500 text-sm mt-1">Contoh: Inspektur Utama</p>
         </div>
 
         <div class="flex justify-between">

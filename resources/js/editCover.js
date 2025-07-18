@@ -19,7 +19,7 @@ function addField(section) {
     const idx = list.children.length;
     const div = document.createElement("div");
     div.className = "flex items-center";
-    div.innerHTML = `<input type="text" name="${section}[]" class="form-input flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 autocomplete='off'" placeholder="${sections[section]} ke-${idx + 1}" />`;
+    div.innerHTML = `<input type="text" name="${section}[]" autocomplete="off" class="form-input flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 autocomplete='off'" placeholder="${sections[section]} ke-${idx + 1}" />`;
     list.appendChild(div);
     updateRemoveButton(section);
 }
@@ -72,7 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
             div.className = "flex items-center";
             // Escape value agar aman
             const safeVal = (val ?? "").toString().replace(/"/g, "&quot;");
-            div.innerHTML = `<input type="text" name="${section}[]" class="form-input mb-2 flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" value="${safeVal}" placeholder="${sections[section]} ke-${idx + 1}" />`;
+            div.innerHTML = `<input type="text" name="${section}[]" autocomplete="off" class="form-input mb-2 flex-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" value="${safeVal}" placeholder="${sections[section]} ke-${idx + 1}" />`;
             list.appendChild(div);
         });
         updateRemoveButton(section);
@@ -120,8 +120,10 @@ window.addEventListener("DOMContentLoaded", () => {
         const coverData = {};
         for (const section in sections) {
             coverData[section] = Array.from(
-                sectionLists[section].querySelectorAll("input"),
-            ).map((i) => i.value);
+                sectionLists[section].querySelectorAll("input")
+            )
+                .map((i) => i.value.trim())
+                .filter((val) => val !== "");
         }
         axios
             .put(form.action || window.location.href, {
@@ -158,8 +160,8 @@ function generateCoverMxGraph(data) {
     container.innerHTML = "";
 
     // Legal landscape: 14" x 8.5" (355.6 mm x 215.9 mm) - scaled down 75%
-    const scale = 0.75;
-    const pageW = Math.round(14 * 96 * scale); // 1008 px
+    const scale = 1;
+    const pageW = Math.round(14.8 * 96 * scale); // 1344 px
     const pageH = Math.round(8.5 * 96 * scale); // 612 px
 
     // Style kanvas
@@ -167,6 +169,7 @@ function generateCoverMxGraph(data) {
     container.style.border = "1px solid #808080";
     container.style.width = pageW + "px";
     container.style.height = pageH + "px";
+    container.style.boxSizing = "border-box";
 
     // Inisialisasi mxGraph
     const graph = new mxGraph(container);
@@ -179,6 +182,7 @@ function generateCoverMxGraph(data) {
     defaultStyle[mxConstants.STYLE_OVERFLOW] = "hidden";
     defaultStyle[mxConstants.STYLE_WORD_WRAP] = "break-word";
     defaultStyle[mxConstants.STYLE_SPACING_LEFT] = 3;
+    defaultStyle[mxConstants.STYLE_FONTFAMILY] = "Arial";
 
     // Pastikan cell dapat menyesuaikan tinggi dengan konten
     graph.cellsResizable = false;
@@ -192,8 +196,8 @@ function generateCoverMxGraph(data) {
 
     try {
         // Margin kertas (scaled)
-        const mX = Math.round(40 * scale);
-        const mY = Math.round(50 * scale);
+        const mX = Math.round(35 * scale);
+        const mY = Math.round(35 * scale);
 
         // === HEADER SECTION ===
         const headerY = Math.round(mY * scale);
@@ -228,8 +232,8 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             "",
-            Math.round(leftWidthSection / 2 - 10),
-            Math.round((headerY + 40) * scale),
+            Math.round(leftWidthSection / 3 + 20),
+            Math.round((headerY + 30) * scale),
             Math.round(170 * scale),
             Math.round(170 * scale),
             "shape=image;image=/img/Logo-BPS.png;",
@@ -289,11 +293,42 @@ function generateCoverMxGraph(data) {
             ? disahkanLines.join("\n")
             : "-";
 
+        // Fungsi untuk format tanggal Indonesia
+        function formatTanggalIndonesia(tanggal) {
+            if (!tanggal) return "-";
+
+            const bulanIndonesia = [
+                "",
+                "Januari",
+                "Februari",
+                "Maret",
+                "April",
+                "Mei",
+                "Juni",
+                "Juli",
+                "Agustus",
+                "September",
+                "Oktober",
+                "November",
+                "Desember",
+            ];
+
+            const date = new Date(tanggal);
+            const hari = date.getDate();
+            const bulan = bulanIndonesia[date.getMonth() + 1];
+            const tahun = date.getFullYear();
+
+            return `${hari} ${bulan} ${tahun}`;
+        }
+
         const tableData = [
             ["Nomor SOP", data.nomor_sop || "-"],
-            ["Tanggal Pembuatan", data.tanggal_pembuatan || "-"],
-            ["Tanggal Revisi", data.tanggal_revisi || "-"],
-            ["Tanggal Efektif", data.tanggal_efektif || "-"],
+            [
+                "Tanggal Pembuatan",
+                formatTanggalIndonesia(data.tanggal_pembuatan),
+            ],
+            ["Tanggal Revisi", formatTanggalIndonesia(data.tanggal_revisi)],
+            ["Tanggal Efektif", formatTanggalIndonesia(data.tanggal_efektif)],
             ["Disahkan oleh", disahkanValue],
             ["Nama SOP", data.nama_sop || "-"],
         ];
@@ -359,7 +394,8 @@ function generateCoverMxGraph(data) {
             titleStyle,
         );
 
-        let dasarHukumText = (data.dasarHukum || ["-"])
+        let dasarHukumArr = Array.isArray(data.dasarHukum) ? data.dasarHukum.filter(v => v && v.trim() !== "") : [];
+let dasarHukumText = (dasarHukumArr.length > 0 ? dasarHukumArr : ["-"])
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -386,7 +422,8 @@ function generateCoverMxGraph(data) {
             titleStyle,
         );
 
-        let kualifikasiText = (data.kualifikasi || ["-"])
+        let kualifikasiArr = Array.isArray(data.kualifikasi) ? data.kualifikasi.filter(v => v && v.trim() !== "") : [];
+let kualifikasiText = (kualifikasiArr.length > 0 ? kualifikasiArr : ["-"])
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -414,7 +451,8 @@ function generateCoverMxGraph(data) {
             titleStyle,
         );
 
-        let keterkaitanText = (data.keterkaitan || ["-"])
+        let keterkaitanArr = Array.isArray(data.keterkaitan) ? data.keterkaitan.filter(v => v && v.trim() !== "") : [];
+let keterkaitanText = (keterkaitanArr.length > 0 ? keterkaitanArr : ["-"])
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -441,7 +479,8 @@ function generateCoverMxGraph(data) {
             titleStyle,
         );
 
-        let peralatanText = (data.peralatan || ["-"])
+        let peralatanArr = Array.isArray(data.peralatan) ? data.peralatan.filter(v => v && v.trim() !== "") : [];
+let peralatanText = (peralatanArr.length > 0 ? peralatanArr : ["-"])
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -469,7 +508,8 @@ function generateCoverMxGraph(data) {
             titleStyle,
         );
 
-        let peringatanText = (data.peringatan || ["-"]).join("\n");
+        let peringatanArr = Array.isArray(data.peringatan) ? data.peringatan.filter(v => v && v.trim() !== "") : [];
+let peringatanText = (peringatanArr.length > 0 ? peringatanArr : ["-"]).join("\n");
 
         graph.insertVertex(
             parent,
@@ -494,7 +534,8 @@ function generateCoverMxGraph(data) {
             titleStyle,
         );
 
-        let pencatatanText = (data.pencatatan || ["-"]).join("\n");
+        let pencatatanArr = Array.isArray(data.pencatatan) ? data.pencatatan.filter(v => v && v.trim() !== "") : [];
+let pencatatanText = (pencatatanArr.length > 0 ? pencatatanArr : ["-"]).join("\n");
 
         graph.insertVertex(
             parent,

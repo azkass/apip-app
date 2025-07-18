@@ -31,8 +31,11 @@ class ProsedurPengawasan
 
     public static function create($data)
     {
-        // Mengubah judul menjadi title case sebelum insert
+        // Mengubah judul menjadi title case lalu normalisasi 'SOP' ke kapital
         $data["judul"] = ucwords(strtolower($data["judul"]));
+        $data["judul"] = preg_replace('/\bSOP\b/i', 'SOP', $data["judul"]);
+        // Pastikan nomor selalu kapital
+        $data["nomor"] = strtoupper($data["nomor"]);
         return DB::insert(
             "INSERT INTO prosedur_pengawasan (judul, nomor, status, pembuat_id, penyusun_id, tanggal_pembuatan, tanggal_revisi, tanggal_efektif, disahkan_oleh, cover, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())",
             [
@@ -60,8 +63,11 @@ class ProsedurPengawasan
 
     public static function update($id, $data)
     {
-        // Mengubah judul menjadi title case sebelum update
+        // Mengubah judul menjadi title case lalu normalisasi 'SOP' ke kapital
         $data["judul"] = ucwords(strtolower($data["judul"]));
+        $data["judul"] = preg_replace('/\bSOP\b/i', 'SOP', $data["judul"]);
+        // Pastikan nomor selalu kapital
+        $data["nomor"] = strtoupper($data["nomor"]);
         return DB::update(
             "UPDATE prosedur_pengawasan SET judul = ?, nomor = ?, status = ?, pembuat_id = ?, penyusun_id = ?, tanggal_pembuatan = ?, tanggal_revisi = ?, tanggal_efektif = ?, disahkan_oleh = ?, updated_at = NOW() WHERE id = ?",
             [
@@ -102,7 +108,7 @@ class ProsedurPengawasan
     public static function findBody($id)
     {
         return DB::selectOne(
-            "SELECT id, isi FROM prosedur_pengawasan WHERE id = ?",
+            "SELECT id, judul, isi FROM prosedur_pengawasan WHERE id = ?",
             [$id],
         );
     }

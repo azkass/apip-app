@@ -2,7 +2,14 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container mx-auto py-6">
-    <div class="bg-white shadow-md rounded-lg mb-6 p-6" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}" data-prosedur-isi="{{ $prosedurPengawasan->isi ?? '' }}">
+    <div class="bg-white shadow-md rounded-lg mb-6 px-6" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}" data-prosedur-isi="{{ $prosedurPengawasan->isi ?? '' }}">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">{{ $prosedurPengawasan->judul ?? '-' }}</h2>
+            <a href="{{ route('prosedur-pengawasan.edit-cover', $prosedurPengawasan->id) }}"
+                class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md transition shadow-md">
+                Kembali
+            </a>
+        </div>
         <!-- Form Input Pelaksana -->
         @csrf
         <div class="mb-6" id="formContainer">
@@ -18,7 +25,7 @@
                         <option value="Anggota Tim">Anggota Tim</option>
                         <option value="new-actor">Pelaksana Baru</option>
                     </select>
-                    <input type="text" class="hidden custom-actor-input w-64 rounded-md border-gray-300 shadow-sm py-2 px-3 ml-2 focus:ring focus:ring-blue-200" placeholder="Masukkan pelaksana baru">
+                    <input type="text" autocomplete="off" class="hidden custom-actor-input w-64 rounded-md border-gray-300 shadow-sm py-2 px-3 ml-2 focus:ring focus:ring-blue-200" placeholder="Masukkan pelaksana baru">
                 </div>
             </template>
         </div>
@@ -72,7 +79,7 @@
             </a>
         </div>
         <div id="graphContainerBox" class="">
-            <div id="graphContainer"></div>
+            <div id="graphContainer" style="transform: scale(0.8); transform-origin: top left;"></div>
         </div>
     </div>
 </div>

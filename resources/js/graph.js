@@ -29,11 +29,11 @@ var falseToSelections = [];
 
 // Tinggi maksimum satu halaman diagram
 // Legal landscape: 14" x 8.5" (355.6 mm x 215.9 mm) - scaled down 75%
-const scale = 0.75;
-const pageW = Math.round(14 * 96 * scale); // 1008 px
+const scale = 1;
+const pageW = Math.round(14 * 96 * scale); // 1344 px
 const pageH = Math.round(8.5 * 96 * scale); // 612 px
 const MAX_PAGE_HEIGHT = 820;
-const PAGE_WIDTH = Math.round(14 * 96 * scale); // 14 inch × 96 dpi = 1008 px
+const PAGE_WIDTH = Math.round(14 * 96 * scale); // 14 inch × 96 dpi = 1344 px
 
 /**
  * Pastikan `rowHeights` terisi. Jika kosong, hitung otomatis.
@@ -79,60 +79,76 @@ function paginateActivities(maxHeight = MAX_PAGE_HEIGHT) {
 }
 
 export function addCustomActor(selectElement) {
-    if (!selectElement || !selectElement.parentElement) {
+    if (!selectElement?.parentElement) {
         console.error("Invalid select element or missing parent");
         return;
     }
 
     const parentDiv = selectElement.parentElement;
-    const customActorInput = parentDiv.querySelector(".custom-actor-input");
-    const actorNumberSpan = parentDiv.querySelector(".actor-number");
+    const input = parentDiv.querySelector(".custom-actor-input");
 
-    if (!customActorInput) {
+    if (!input) {
         console.error("Custom actor input not found");
         return;
     }
 
+    // Fungsi untuk kapitalisasi awal setiap kata
+    const capitalizeWords = (str) =>
+        str
+            .toLowerCase()
+            .split(" ")
+            .filter(Boolean)
+            .map(word => word[0].toUpperCase() + word.slice(1))
+            .join(" ");
+
     if (selectElement.value === "new-actor") {
-        // Tampilkan input teks dan sembunyikan select
+        // Tampilkan input custom, sembunyikan select
         selectElement.classList.add("hidden");
-        customActorInput.classList.remove("hidden");
-        customActorInput.focus();
+        input.classList.remove("hidden");
+        input.focus();
 
-        // Event listener untuk blur
-        const handleBlur = function () {
-            if (this.value.trim() !== "") {
-                const newOption = document.createElement("option");
-                newOption.value = this.value;
-                newOption.textContent = this.value;
+        const handleBlur = () => {
+            const rawValue = input.value.trim();
 
-                const newActorOption = Array.from(selectElement.options).find(
-                    (opt) => opt.value === "new-actor",
+            if (rawValue !== "") {
+                const value = capitalizeWords(rawValue);
+
+                // Cek jika sudah ada opsi yang sama
+                const existingOption = Array.from(selectElement.options).find(
+                    (opt) => opt.value.toLowerCase() === value.toLowerCase()
                 );
-                selectElement.insertBefore(newOption, newActorOption);
 
-                selectElement.value = this.value;
-                this.classList.add("hidden");
-                selectElement.classList.remove("hidden");
+                if (!existingOption) {
+                    const newOption = document.createElement("option");
+                    newOption.value = value;
+                    newOption.textContent = value;
+
+                    const insertBeforeOption = Array.from(selectElement.options).find(
+                        (opt) => opt.value === "new-actor"
+                    );
+                    selectElement.insertBefore(newOption, insertBeforeOption);
+                }
+
+                selectElement.value = value;
             } else {
-                this.classList.add("hidden");
-                selectElement.classList.remove("hidden");
                 selectElement.value = "";
             }
-            // Hapus event listener setelah digunakan
-            this.removeEventListener("blur", handleBlur);
+
+            input.classList.add("hidden");
+            selectElement.classList.remove("hidden");
+
+            // Hapus event listener setelah dipakai
+            input.removeEventListener("blur", handleBlur);
         };
 
-        customActorInput.addEventListener("blur", handleBlur);
+        input.addEventListener("blur", handleBlur);
 
-        // Handler untuk Enter key
-        customActorInput.addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-                this.blur();
-            }
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") input.blur();
         });
     } else {
-        customActorInput.classList.add("hidden");
+        // Reset: sembunyikan input, tampilkan select
+        input.classList.add("hidden");
         selectElement.classList.remove("hidden");
     }
 }
@@ -374,197 +390,200 @@ export function loadExistingData(jsonData) {
 }
 
 export function setupActivityForm() {
+    // Validasi awal: pastikan daftar aktor sudah diisi
     if (actorNames.length === 0) {
         alert("Silakan simpan nama pelaksana terlebih dahulu!");
         return;
     }
 
-    // Hanya baca data dari form jika bukan berasal dari loading data
+    // Ambil nilai input hanya jika bukan sedang memuat data
     if (!window.isLoadingExistingData) {
-        // Simpan data sebelum render ulang dengan cara lebih efisien
         for (let i = 0; i < nActivity; i++) {
             const actNum = i + 1;
-            activities[i] =
-                document.getElementById(`act-${actNum}`)?.value || "";
-            tools[i] = document.getElementById(`tool-${actNum}`)?.value || "";
-            const timeValue =
-                document.getElementById(`time-${actNum}`)?.value || "";
-            times[i] = timeValue.replace(/ jam/g, "");
-            outputs[i] =
-                document.getElementById(`output-${actNum}`)?.value || "";
-            notes[i] = document.getElementById(`note-${actNum}`)?.value || "";
-            const currentShapes = [];
-            const currentFalseTos = [];
+            const getVal = (id) => document.getElementById(id)?.value || "";
+
+            activities[i] = getVal(`act-${actNum}`);
+            tools[i] = getVal(`tool-${actNum}`);
+            times[i] = getVal(`time-${actNum}`).replace(/ jam/g, "");
+            outputs[i] = getVal(`output-${actNum}`);
+            notes[i] = getVal(`note-${actNum}`);
+
+            shapeSelections[i] = [];
+            falseToSelections[i] = [];
             for (let j = 0; j < nActor; j++) {
                 const actorNum = j + 1;
-                currentShapes[j] =
-                    document.getElementById(`gShape-${actNum}-${actorNum}`)
-                        ?.value || "0";
-                currentFalseTos[j] =
-                    document.getElementById(`falseTo-${actNum}-${actorNum}`)
-                        ?.value || "";
+                shapeSelections[i][j] = getVal(`gShape-${actNum}-${actorNum}`) || "0";
+                falseToSelections[i][j] = getVal(`falseTo-${actNum}-${actorNum}`);
             }
-            shapeSelections[i] = currentShapes;
-            falseToSelections[i] = currentFalseTos;
         }
     }
+
+    // Persiapkan DOM fragment & tabel
     const tableDiv = document.getElementById("diagramTable");
-    // Gunakan DocumentFragment untuk mengurangi reflow
     const fragment = document.createDocumentFragment();
     const table = document.createElement("table");
     table.id = "diagramTable";
     table.className = "w-full border-collapse";
-    // Buat header dengan string template
+
+    // Header tabel
     const headers = [
-        { text: "No.", number: "(1)" },
-        { text: "Aktivitas", number: "(2)" },
-        ...actorNames.map((name, index) => ({
-            text: name,
-            number: `(${index + 3})`,
-        })),
-        { text: "Kelengkapan", number: `(${nActor + 4})` },
-        { text: "Waktu (Jam)", number: `(${nActor + 5})` },
-        { text: "Output", number: `(${nActor + 6})` },
-        { text: "Keterangan", number: `(${nActor + 7})` },
+        { text: "No." }, { text: "Aktivitas" },
+        ...actorNames.map(name => ({ text: name })),
+        { text: "Kelengkapan" }, { text: "Waktu (Jam)" },
+        { text: "Output" }, { text: "Keterangan" },
     ];
+
     const headerRow = document.createElement("tr");
     headerRow.className = "bg-gray-100";
-    headerRow.innerHTML = headers
-        .map((header) => `<th class="border p-2">${header.text}</th>`)
-        .join("");
+    headerRow.innerHTML = headers.map(h => `<th class="border p-2">${h.text}</th>`).join("");
     table.appendChild(headerRow);
-    // Cek apakah ada aktivitas yang memiliki opsi "Selesai"
-    let hasSelesai = false;
-    for (let i = 0; i < nActivity; i++) {
-        if (shapeSelections[i].includes("4")) {
-            hasSelesai = true;
-            break;
-        }
-    }
+
+    // Deteksi apakah ada aktivitas yang mengandung "Selesai"
+    const hasSelesai = shapeSelections.some(row => row.includes("4"));
+
     // Buat baris aktivitas
     for (let i = 1; i <= nActivity; i++) {
         const row = document.createElement("tr");
         row.className = "hover:bg-gray-50";
-        // Temukan indeks pertama dengan shape khusus
-        const firstSpecialIndex = shapeSelections[i - 1].findIndex(
-            (shape) => shape === "1" || shape === "3" || shape === "4",
-        );
-        // Buat kolom untuk setiap aktor
-        const actorColumns = Array(nActor)
-            .fill()
-            .map((_, j) => {
-                const actorNum = j + 1;
-                const isDisabled =
-                    firstSpecialIndex >= 0 && j !== firstSpecialIndex;
-                // HAPUS ATRIBUT ONCHANGE DARI SINI
-                return `
-                    <td class="border p-2">
-                        <select id="gShape-${i}-${actorNum}"
-                            class="w-full p-1 border rounded ${isDisabled ? "opacity-50" : ""}" ${isDisabled ? "disabled" : ""}>
-                            <option value="0" ${shapeSelections[i - 1][j] === "0" ? "selected" : ""}>Tidak ada</option>
-                            <option value="1" ${shapeSelections[i - 1][j] === "1" ? "selected" : ""}>Mulai</option>
-                            <option value="2" ${shapeSelections[i - 1][j] === "2" ? "selected" : ""}>Proses</option>
-                            <option value="3" ${shapeSelections[i - 1][j] === "3" ? "selected" : ""}>Pilihan</option>
-                            <option value="4" ${shapeSelections[i - 1][j] === "4" ? "selected" : ""}>Selesai</option>
+
+        const shapeRow = shapeSelections[i - 1];
+        const firstSpecial = shapeRow.findIndex(v => ["1", "3", "4"].includes(v));
+
+        const actorCells = shapeRow.map((val, j) => {
+            const actorNum = j + 1;
+            const disabled = firstSpecial !== -1 && j !== firstSpecial;
+            const showFalseTo = val === "3";
+            const options = [
+                { value: "0", label: "Tidak ada", show: true },
+                { value: "1", label: "Mulai", show: i === 1 },
+                { value: "2", label: "Proses", show: i !== 1 },
+                { value: "3", label: "Pilihan", show: i !== 1 },
+                { value: "4", label: "Selesai", show: i === nActivity },
+            ].filter(opt => opt.show).map(opt =>
+                `<option value="${opt.value}" ${val === opt.value ? "selected" : ""}>${opt.label}</option>`
+            ).join("");
+
+            return `
+                <td class="border p-2">
+                    <select id="gShape-${i}-${actorNum}" class="w-full p-1 border rounded ${disabled ? "opacity-50" : ""}" ${disabled ? "disabled" : ""}>
+                        ${options}
+                    </select>
+                    <div id="f-${i}-${actorNum}" class="form-group ${showFalseTo ? "" : "hidden"} mt-2">
+                        <label class="block text-xs text-gray-600 mb-1">Kondisi Salah ke:</label>
+                        <select id="falseTo-${i}-${actorNum}" class="w-full p-1 border rounded text-xs">
+                            ${generateFalseOptions(i, actorNum, falseToSelections[i - 1][j])}
                         </select>
-                        <div id="f-${i}-${actorNum}" class="form-group ${shapeSelections[i - 1][j] === "3" ? "" : "hidden"} mt-2">
-                            <label for="falseTo-${i}-${actorNum}" class="block text-xs text-gray-600 mb-1">Kondisi Salah ke:</label>
-                            <select id="falseTo-${i}-${actorNum}" class="w-full p-1 border rounded text-xs">
-                                ${generateFalseOptions(i, actorNum, falseToSelections[i - 1][j])}
-                            </select>
-                        </div>
-                    </td>
-                `;
-            })
-            .join("");
+                    </div>
+                </td>`;
+        }).join("");
+
         row.innerHTML = `
-                <td class="border p-2">${i}</td>
-                <td class="border p-2"><textarea id="act-${i}" placeholder="Deskripsi Aktivitas" class="w-full p-1 border rounded">${activities[i - 1]}</textarea></td>
-                ${actorColumns}
-                <td class="border p-2"><input type="text" id="tool-${i}" placeholder="Alat/bahan" class="w-full border rounded p-1 text-sm" value="${tools[i - 1]}" /></td>
-                <td class="border p-2"><input type="text" id="time-${i}" placeholder="Waktu (Jam)" class="w-full border rounded p-1 text-sm" value="${times[i - 1] ? times[i - 1] + " jam" : ""}" /></td>
-                <td class="border p-2"><input type="text" id="output-${i}" placeholder="Output" class="w-full border rounded p-1 text-sm" value="${outputs[i - 1]}" /></td>
-                <td class="border p-2"><input type="text" id="note-${i}" placeholder="Catatan" class="w-full border rounded p-1 text-sm" value="${notes[i - 1]}" /></td>
-            `;
+            <td class="border p-2">${i}</td>
+            <td class="border p-2"><textarea id="act-${i}" class="w-full p-1 border rounded" placeholder="Deskripsi Aktivitas" autocomplete="off">${activities[i - 1]}</textarea></td>
+            ${actorCells}
+            <td class="border p-2"><input id="tool-${i}" class="w-full border rounded p-1 text-sm" value="${tools[i - 1]}" placeholder="Alat/bahan" autocomplete="off" /></td>
+            <td class="border p-2"><input id="time-${i}" class="w-full border rounded p-1 text-sm" value="${times[i - 1] ? times[i - 1] + " jam" : ""}" placeholder="Waktu (Jam)" autocomplete="off" /></td>
+            <td class="border p-2"><input id="output-${i}" class="w-full border rounded p-1 text-sm" value="${outputs[i - 1]}" placeholder="Output" autocomplete="off" /></td>
+            <td class="border p-2"><input id="note-${i}" class="w-full border rounded p-1 text-sm" value="${notes[i - 1]}" placeholder="Catatan" autocomplete="off" /></td>
+        `;
         table.appendChild(row);
     }
+
     fragment.appendChild(table);
-    // Gunakan innerHTML sekali saja
     tableDiv.innerHTML = "";
     tableDiv.appendChild(fragment);
     document.getElementById("diagramSection").classList.remove("hidden");
 
-    // TAMBAHKAN EVENT LISTENER KE SEMUA SELECT YANG BARU DIBUAT
-    const shapeSelects = tableDiv.querySelectorAll('select[id^="gShape-"]');
-    shapeSelects.forEach((select) => {
-        select.addEventListener("change", setupActivityForm);
+    // Tambahkan event listener ke dropdown shape
+    tableDiv.querySelectorAll('select[id^="gShape-"]').forEach(select => {
+        select.addEventListener("change", (e) => {
+            const [_, actNum, actorNum] = e.target.id.split("-");
+            const selected = e.target.value;
+
+            if (["1", "3", "4"].includes(selected)) {
+                for (let j = 1; j <= nActor; j++) {
+                    if (j.toString() !== actorNum) {
+                        const other = document.getElementById(`gShape-${actNum}-${j}`);
+                        if (other) {
+                            other.value = "0";
+                            document.getElementById(`f-${actNum}-${j}`)?.classList.add("hidden");
+                        }
+                    }
+                }
+            }
+
+            setupActivityForm(); // render ulang
+        });
     });
 
-    // Tambahkan event listener untuk input waktu
-    const timeInputs = tableDiv.querySelectorAll('input[id^="time-"]');
-    timeInputs.forEach((input) => {
-        input.addEventListener("focus", function () {
-            // Hapus ' jam' saat input difokuskan
-            this.value = this.value.replace(/ jam/g, "");
+    // Event listener untuk input waktu
+    tableDiv.querySelectorAll('input[id^="time-"]').forEach(input => {
+        input.addEventListener("focus", () => {
+            input.value = input.value.replace(/ jam/g, "");
         });
-        input.addEventListener("blur", function () {
-            // Tambahkan ' jam' saat fokus hilang jika nilainya angka
-            if (this.value && !isNaN(this.value.trim())) {
-                this.value = this.value.trim() + " jam";
+        input.addEventListener("blur", () => {
+            if (input.value && !isNaN(input.value.trim())) {
+                input.value = input.value.trim() + " jam";
             }
         });
     });
 
-    // Nonaktifkan tombol "Tambah Aktivitas" jika ada opsi "Selesai"
-    const addButton = document.getElementById("add-activity");
-    if (hasSelesai) {
-        addButton.disabled = true;
-        addButton.classList.add("opacity-50", "cursor-not-allowed");
-        addButton.classList.remove("hover:bg-blue-600");
-    } else {
-        addButton.disabled = false;
-        addButton.classList.remove("opacity-50", "cursor-not-allowed");
-        addButton.classList.add("hover:bg-blue-600");
-    }
+    // Nonaktifkan tombol tambah jika sudah ada "Selesai"
+    const addBtn = document.getElementById("add-activity");
+    addBtn.disabled = hasSelesai;
+    addBtn.classList.toggle("opacity-50", hasSelesai);
+    addBtn.classList.toggle("cursor-not-allowed", hasSelesai);
+    addBtn.classList.toggle("hover:bg-blue-600", !hasSelesai);
 }
 
-export function generateFalseOptions(i, j, selectedValue) {
-    let options =
-        '<option value="" ' +
-        (!selectedValue ? "selected disabled" : "") +
-        ">-- Pilih Tujuan --</option>";
 
-    for (let row = 1; row <= nActivity; row++) {
+export function generateFalseOptions(i, j, selectedValue) {
+    // Inisialisasi flag untuk memeriksa apakah ada opsi selain default
+    let hasOption = false;
+
+    // Inisialisasi opsi default pada dropdown
+    let options = `<option value="" ${!selectedValue ? "selected disabled" : ""}>-- Pilih Tujuan --</option>`;
+
+    // Loop aktivitas dimulai dari 2 hingga sebelum aktivitas saat ini (i)
+    for (let row = 2; row < i; row++) {
+        // Loop setiap aktor
         for (let col = 1; col <= nActor; col++) {
-            // Skip current activity and actor
+            // Lewati jika baris dan kolom saat ini adalah posisi asal
             if (row === i && col === j) continue;
 
-            // Cek apakah aktor pada aktivitas ini memiliki nilai yang dipilih (bukan '0')
+            // Cek apakah shapeSelections memiliki nilai selain '0' untuk aktor ini di aktivitas tersebut
             if (
-                shapeSelections[row - 1] &&
-                shapeSelections[row - 1][col - 1] &&
+                shapeSelections?.[row - 1]?.[col - 1] &&
                 shapeSelections[row - 1][col - 1] !== "0"
             ) {
+                // Hitung nilai unik untuk opsi berdasarkan posisi
                 const value = (row - 1) * nActor + col;
-                const actorName = actorNames[col - 1] || "Pelaksana " + col;
-                const isSelected = value == selectedValue ? "selected" : "";
 
-                options += `<option value="${value}" ${isSelected}>Aktivitas ${row}, ${actorName}</option>`;
+                // Ambil nama aktor, fallback ke "Pelaksana X" jika tidak tersedia
+                const actorName = actorNames[col - 1] || `Pelaksana ${col}`;
+
+                // Tandai jika opsi ini merupakan nilai yang sedang dipilih
+                const selected = value == selectedValue ? "selected" : "";
+
+                // Tambahkan opsi ke dropdown
+                options += `<option value="${value}" ${selected}>Aktivitas ${row}, ${actorName}</option>`;
+
+                // Tandai bahwa ada opsi selain default
+                hasOption = true;
             }
         }
     }
 
-    // Jika tidak ada opsi selain default, tambahkan pesan
-    if (
-        options ===
-        '<option value="" selected disabled>-- Pilih Tujuan --</option>'
-    ) {
-        options =
-            '<option value="" selected disabled>Tidak ada tujuan tersedia</option>';
+    // Jika tidak ada opsi valid, tampilkan pesan bahwa tujuan tidak tersedia
+    if (!hasOption) {
+        options = `<option value="" selected disabled>Tidak ada tujuan tersedia</option>`;
     }
 
+    // Kembalikan string HTML opsi untuk digunakan di elemen select
     return options;
 }
+
+
 
 export function getRowHeight(row) {
     var activity = activities[row];
@@ -631,7 +650,12 @@ export function loadData() {
                 graphLocation[i - 1][j - 1] = 0;
             }
         }
-        activities[i - 1] = document.getElementById("act-" + i).value;
+        // Kapitalisasi huruf pertama aktivitas
+        let actVal = document.getElementById("act-" + i).value;
+        if (actVal && actVal.length > 0) {
+            actVal = actVal.charAt(0).toUpperCase() + actVal.slice(1);
+        }
+        activities[i - 1] = actVal;
         tools[i - 1] = document.getElementById("tool-" + i).value;
         times[i - 1] = document.getElementById("time-" + i).value;
         outputs[i - 1] = document.getElementById("output-" + i).value;
@@ -659,6 +683,12 @@ export function loadData() {
 }
 
 export async function preview() {
+    // Validasi sebelum lanjut preview
+    const validationError = validateDiagram();
+    if (validationError) {
+        alert(validationError);
+        return false;
+    }
     // Tampilkan kotak preview
     document.getElementById("previewBox").classList.remove("hidden");
 
@@ -698,6 +728,55 @@ export async function preview() {
     return true;
 }
 
+// Validasi diagram sebelum preview
+function validateDiagram() {
+    // 1. Cek false option: HANYA untuk shape 'condition' (graphShape[i][j] === 'condition')
+    for (let i = 0; i < nActivity; i++) {
+        for (let j = 0; j < nActor; j++) {
+            if (graphShape?.[i]?.[j] === 'condition') {
+                // Cek apakah dropdown false option ini seharusnya punya opsi
+                let hasOption = false;
+                for (let row = 2; row < i + 1; row++) {
+                    for (let col = 1; col <= nActor; col++) {
+                        if (row === i + 1 && col === j + 1) continue;
+                        if (shapeSelections?.[row - 1]?.[col - 1] && shapeSelections[row - 1][col - 1] !== "0") {
+                            hasOption = true;
+                        }
+                    }
+                }
+                if (hasOption && (!falseToSelections[i] || !falseToSelections[i][j] || falseToSelections[i][j] === "")) {
+                    return `Error: Aktivitas ${i + 1}, Pelaksana ${actorNames[j] || j + 1} (bentuk "condition") belum memilih tujuan "Tidak".`;
+                }
+            }
+        }
+    }
+    // 2. Cek setiap aktor punya minimal satu shape (selain '0')
+    for (let j = 0; j < nActor; j++) {
+        let found = false;
+        for (let i = 0; i < nActivity; i++) {
+            if (shapeSelections?.[i]?.[j] && shapeSelections[i][j] !== "0") {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return `Error: Pelaksana ${actorNames[j] || j + 1} belum memiliki bentuk pada diagram.`;
+        }
+    }
+    // 3. Aktivitas terakhir harus punya minimal satu shape 'Selesai' (4)
+    let lastHasFinish = false;
+    for (let j = 0; j < nActor; j++) {
+        if (shapeSelections?.[nActivity-1]?.[j] === '4') {
+            lastHasFinish = true;
+            break;
+        }
+    }
+    if (!lastHasFinish) {
+        return `Error: Aktivitas terakhir harus memiliki minimal satu pelaksana dengan bentuk 'Selesai'.`;
+    }
+    return null;
+}
+
 export function renderDetailPages(captureJson = false) {
     const mainContainer = document.getElementById("graphContainer");
     if (!mainContainer) {
@@ -720,12 +799,13 @@ export function renderDetailPages(captureJson = false) {
     const pages = paginateActivities();
 
     let lastJsonBody = null;
+    const padding = 35; // 10mm in pixels (96 DPI)
 
     pages.forEach(({ start, end, height }) => {
-        totalHeight += height;
+        totalHeight += height + padding * 2;
 
         const container = document.createElement("div");
-        container.style = `position:relative;overflow:hidden;width:${maxWidth + 1}px;height:${height}px;cursor:default;`;
+        container.style = `position:relative;overflow:hidden;width:${maxWidth + 1 + padding * 2}px;height:${height + padding * 2}px;cursor:default;padding:${padding}px;box-sizing:border-box;`;
         mainContainer.append(container);
 
         const json = draw(container, start, end);
@@ -792,6 +872,8 @@ export function draw(container, start, end) {
 
         // Disables the built-in context menu
         mxEvent.disableContextMenu(container);
+
+        container.style.border = "1px solid #808080";
 
         // =====================================
         // 2. Setup Graph Utama
@@ -941,7 +1023,7 @@ export function draw(container, start, end) {
             // Deklarasi Font Times New Roman
             const vertexStyle = graph.getStylesheet().getDefaultVertexStyle();
             vertexStyle[mxConstants.STYLE_FONTSIZE] = 14;
-            vertexStyle[mxConstants.STYLE_FONTFAMILY] = "Times New Roman";
+            vertexStyle[mxConstants.STYLE_FONTFAMILY] = "Arial";
 
             // Menentukan ukuran dan tata letak semua komponen tabel.
             var xPointer = 0; // Penanda posisi X saat ini

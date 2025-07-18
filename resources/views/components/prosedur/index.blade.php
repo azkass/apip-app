@@ -122,7 +122,7 @@
                         </a>
                     </td>
                     <td class="border border-gray-300 px-4 py-3 text-center">
-                        {{ $prosedur->tanggal_pembuatan ? date('d/m/Y', strtotime($prosedur->tanggal_pembuatan)) : '-' }}
+                        {{ formatTanggalIndonesia($prosedur->tanggal_pembuatan) }}
                     </td>
                     <td class="border border-gray-300 px-4 py-3 text-center">
                         {{ $prosedur->petugas_nama }}

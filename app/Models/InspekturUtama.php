@@ -25,9 +25,6 @@ class InspekturUtama
 
     public static function create($data)
     {
-        // Mengubah nama menjadi title case sebelum insert
-        $data["nama"] = ucwords(strtolower($data["nama"]));
-
         return DB::insert(
             "INSERT INTO inspektur_utama (nama, nip, jabatan, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
             [
@@ -40,9 +37,6 @@ class InspekturUtama
 
     public static function update($id, $data)
     {
-        // Mengubah nama menjadi title case sebelum update
-        $data["nama"] = ucwords(strtolower($data["nama"]));
-
         return DB::update(
             "UPDATE inspektur_utama SET nama = ?, nip = ?, jabatan = ?, updated_at = NOW() WHERE id = ?",
             [

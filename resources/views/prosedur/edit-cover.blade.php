@@ -16,13 +16,29 @@ window.coverData = {
     @csrf
     @method('PUT')
         <div class="space-y-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">{{ $prosedurPengawasan->judul ?? '-' }}</h2>
+                <a href="{{ route('prosedur-pengawasan.edit', $prosedurPengawasan->id) }}"
+                    class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md transition shadow-md">
+                    Kembali
+                </a>
+            </div>
+
             <!-- Dasar Hukum -->
             <div>
                 <label class="block text-md font-medium text-black mb-1">Dasar Hukum</label>
                 <div id="dasarHukumList"></div>
                 <div class="flex mt-2">
-                    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('dasarHukum')">Tambah</button>
-                    <button type="button" id="dasarHukum-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('dasarHukum')">Hapus</button>
+                    <button type="button"
+                        class="mr-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition"
+                        onclick="addField('dasarHukum')">
+                        Tambah
+                    </button>
+                    <button type="button" id="dasarHukum-remove-btn"
+                        class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition"
+                        onclick="removeLastField('dasarHukum')">
+                        Hapus
+                    </button>
                 </div>
             </div>
             <!-- Keterkaitan -->
@@ -30,8 +46,8 @@ window.coverData = {
                 <label class="block text-md font-medium text-black mb-1">Keterkaitan</label>
                 <div id="keterkaitanList"></div>
                 <div class="flex mt-2">
-                    <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('keterkaitan')">Tambah</button>
-                    <button type="button" id="keterkaitan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('keterkaitan')">Hapus</button>
+                    <button type="button" class="mr-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition" onclick="addField('keterkaitan')">Tambah</button>
+                    <button type="button" id="keterkaitan-remove-btn" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('keterkaitan')">Hapus</button>
                 </div>
             </div>
             <!-- Peringatan -->
@@ -50,8 +66,8 @@ window.coverData = {
             <div>
                 <label class="block text-md font-medium text-black mb-1">Peralatan/Perlengkapan</label>
                 <div id="peralatanList"></div>
-                <button type="button" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded mt-2 transition" onclick="addField('peralatan')">Tambah</button>
-                <button type="button" id="peralatan-remove-btn" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('peralatan')">Hapus</button>
+                <button type="button" class="mr-1 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded mt-2 transition" onclick="addField('peralatan')">Tambah</button>
+                <button type="button" id="peralatan-remove-btn" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition" onclick="removeLastField('peralatan')">Hapus</button>
             </div>
             <!-- Pencatatan dan Pendataan -->
             <div>
@@ -61,8 +77,8 @@ window.coverData = {
             </div>
         </div>
         <div class="flex justify-start items-center mt-6">
-            <button type="submit" id="btnSimpan" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Simpan</button>
-            <a href="{{ route('prosedur-pengawasan.edit-body', $prosedurPengawasan->id) }}" id="btnLanjut" class="ml-2 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition hidden">Lanjut</a>
+            <button type="submit" id="btnPreview" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Preview</button>
+            <a href="{{ route('prosedur-pengawasan.edit-body', $prosedurPengawasan->id) }}" id="btnLanjut" class="ml-2 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition hidden">Simpan</a>
         </div>
     </form>
     <!-- Container hasil generate cover mxGraph -->
