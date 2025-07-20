@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-4">
-    <div class="flex justify-between items-center mb-6">
+<div class="container p-4 md:p-8">
+    <div class="flex justify-between mb-6">
+        <h1 class="text-2xl font-semibold">Daftar Pertanyaan Evaluasi</h1>
         <a href="{{ route('pertanyaan.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
-            Tambah Pertanyaan
+            Tambah
         </a>
     </div>
 
@@ -27,12 +28,12 @@
                         <td class="border border-gray-300 px-4 py-3 text-center">
                             <div class="flex justify-center space-x-2">
                                 <a href="{{ route('pertanyaan.edit', $item->id) }}"
-                                   class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">Edit</a>
+                                   class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-1 rounded text-sm transition">Edit</a>
                                 <form action="{{ route('pertanyaan.destroy', $item->id) }}" method="POST" class="inline-block"
                                     onsubmit="return confirm('Yakin ingin menghapus pertanyaan ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">Hapus</button>
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded text-sm transition">Hapus</button>
                                 </form>
                             </div>
                         </td>

@@ -3,14 +3,15 @@
     @component('components.prosedur.show', ['prosedurPengawasan' => $prosedurPengawasan])
     @endcomponent
 
-    <div class="flex justify-between items-center mb-2 ml-8 mr-8">
-        <div class="flex justify-between items-center mt-4 mx-8">
-            <h2 class="font-bold text-lg">Dokumen SOP</h2>
-            <button id="printSopBtn" class="px-2 py-1 bg-green-500 hover:bg-green-600 ml-2 cursor-pointer rounded-sm text-white font-semibold">Cetak SOP</button>
-        </div>
+    <div class="flex justify-between items-center mb-6 ml-2 md:ml-16 mr-24 mt-4">
+        <h2 class="font-bold text-2xl">Dokumen SOP</h2>
+        <button id="printSopBtn" class="px-4 py-1 cursor-pointer bg-green-500 hover:bg-green-600 rounded-sm text-white font-semibold">
+            Cetak SOP
+        </button>
     </div>
-    <div class="ml-8" style="width: 75%; height: 75%;">
-        <div class="container scale-75 origin-top-left">
+
+    <div class="ml-2 md:ml-16" style="width: 80%; height: 80%;">
+        <div class="container scale-80 origin-top-left">
             <!-- Container untuk cover SOP -->
             <div class="mb-4">
                 <div id="coverContainer"></div>

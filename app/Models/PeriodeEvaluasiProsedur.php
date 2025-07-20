@@ -44,7 +44,7 @@ class PeriodeEvaluasiProsedur extends Model
             JOIN users u ON pep.pembuat_id = u.id
             WHERE pep.id = ?
         ",
-            [$id]
+            [$id],
         );
     }
 
@@ -52,7 +52,7 @@ class PeriodeEvaluasiProsedur extends Model
     {
         return DB::insert(
             "INSERT INTO periode_evaluasi_prosedur (pembuat_id, mulai, berakhir, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
-            [$pembuat_id, $mulai, $berakhir]
+            [$pembuat_id, $mulai, $berakhir],
         );
     }
 
@@ -60,7 +60,7 @@ class PeriodeEvaluasiProsedur extends Model
     {
         return DB::update(
             "UPDATE periode_evaluasi_prosedur SET pembuat_id = ?, mulai = ?, berakhir = ?, updated_at = NOW() WHERE id = ?",
-            [$pembuat_id, $mulai, $berakhir, $id]
+            [$pembuat_id, $mulai, $berakhir, $id],
         );
     }
 
@@ -68,7 +68,7 @@ class PeriodeEvaluasiProsedur extends Model
     {
         return DB::delete(
             "DELETE FROM periode_evaluasi_prosedur WHERE id = ?",
-            [$id]
+            [$id],
         );
     }
 
@@ -127,7 +127,7 @@ class PeriodeEvaluasiProsedur extends Model
             ORDER BY pep.created_at DESC
             LIMIT 1
         ",
-            [$today]
+            [$today],
         );
     }
 
@@ -140,7 +140,7 @@ class PeriodeEvaluasiProsedur extends Model
             WHERE ? BETWEEN mulai AND berakhir
             LIMIT 1
         ",
-            [$today]
+            [$today],
         );
 
         return $periode !== null;
@@ -149,7 +149,7 @@ class PeriodeEvaluasiProsedur extends Model
     public static function count()
     {
         $result = DB::selectOne(
-            "SELECT COUNT(*) as total FROM periode_evaluasi_prosedur"
+            "SELECT COUNT(*) as total FROM periode_evaluasi_prosedur",
         );
         return $result->total;
     }

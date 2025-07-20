@@ -2,13 +2,14 @@
 
 @section('content')
 <div class="container ml-2 sm:ml-8 mt-1 sm:mt-8">
+    <h1 class="text-2xl font-bold mb-4">Daftar Evaluasi Prosedur Pengawasan</h1>
     <div class="bg-white rounded-lg">
-        <table class="border-collapse">
+        <table class="border-collapse w-full">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold w-12">No</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold w-28">Nomor SOP</th>
-                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Judul SOP</th>
+                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Nama SOP</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold w-28">Hasil</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold w-32">Pembuat</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold w-36">Aksi</th>
@@ -19,7 +20,7 @@
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="border border-gray-300 px-4 py-3 text-center">{{ $index + 1 }}</td>
                         <td class="border border-gray-300 px-4 py-3">{{ $evaluasi->sop_nomor }}</td>
-                        <td class="border border-gray-300 px-4 py-3">{{ Str::limit($evaluasi->sop_judul, 50) }}</td>
+                        <td class="border border-gray-300 px-4 py-3">{{ $evaluasi->sop_nama }}</td>
                         <td class="border border-gray-300 px-4 py-3 text-center">
                             @php
                                 $persentase = $evaluasi->jumlah_pertanyaan > 0

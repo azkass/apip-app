@@ -2,7 +2,8 @@
 
 @section('content')
 <div class="container p-8">
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="bg-white rounded-lg">
+        <h1 class="text-2xl font-semibold mb-4">Edit Role Pengguna</h1>
         <table class="w-full border-collapse">
             <thead class="bg-gray-50">
                 <tr>

@@ -13,7 +13,7 @@ class EvaluasiProsedurController extends Controller
         $groupedData = EvaluasiProsedur::getGroupedBySop();
         return view("evaluasi.index", [
             "groupedData" => $groupedData,
-            "title" => "Daftar Evaluasi Prosedur",
+            "title" => "Evaluasi Prosedur Pengawasan",
         ]);
     }
 
@@ -41,7 +41,7 @@ class EvaluasiProsedurController extends Controller
         return view("evaluasi.create", [
             "sop_id" => $sop_id,
             "pertanyaan" => $pertanyaan,
-            "title" => "Tambah Evaluasi Prosedur",
+            "title" => "Evaluasi Prosedur Pengawasan",
         ]);
     }
 
@@ -100,6 +100,9 @@ class EvaluasiProsedurController extends Controller
         $persentase =
             $totalPertanyaan > 0 ? ($jawabanYa / $totalPertanyaan) * 100 : 0;
 
+        $catatan = $evaluasiItems[0]->catatan ?? null;
+        $penilaian = $evaluasiItems[0]->penilaian ?? null;
+        $tindakan = $evaluasiItems[0]->tindakan ?? null;
         return view("evaluasi.show", [
             "evaluasiItems" => $evaluasiItems,
             "totalPertanyaan" => $totalPertanyaan,
@@ -107,8 +110,11 @@ class EvaluasiProsedurController extends Controller
             "persentase" => $persentase,
             "sop_id" => $sop_id,
             "sop_nomor" => $evaluasiItems[0]->sop_nomor ?? "",
-            "sop_judul" => $evaluasiItems[0]->sop_judul ?? "",
-            "title" => "Detail Evaluasi Prosedur",
+            "sop_nama" => $evaluasiItems[0]->sop_nama ?? "",
+            "catatan" => $catatan,
+            "penilaian" => $penilaian,
+            "tindakan" => $tindakan,
+            "title" => "Evaluasi Prosedur Pengawasan",
         ]);
     }
 
@@ -137,8 +143,8 @@ class EvaluasiProsedurController extends Controller
             "jawabanMap" => $jawabanMap,
             "sop_id" => $sop_id,
             "sop_nomor" => $evaluasiItems[0]->sop_nomor ?? "",
-            "sop_judul" => $evaluasiItems[0]->sop_judul ?? "",
-            "title" => "Edit Evaluasi Prosedur",
+            "sop_nama" => $evaluasiItems[0]->sop_nama ?? "",
+            "title" => "Evaluasi Prosedur Pengawasan",
         ]);
     }
 

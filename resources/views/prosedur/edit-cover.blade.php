@@ -11,13 +11,13 @@ window.coverData = {
     pencatatan: @json($prosedurPengawasan->pencatatan ?? []),
 };
 </script>
-<div class="max-w-4xl mx-auto px-6 py-4 md:mt-6 bg-white shadow-md rounded-lg">
+    <div class="bg-white shadow-md rounded-lg px-6 py-4 sm:m-4 lg:mx-32 md:my-8">
     <form id="editCoverForm" method="POST" action="{{ route('prosedur-pengawasan.update-cover', $prosedurPengawasan->id) }}">
     @csrf
     @method('PUT')
         <div class="space-y-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-semibold text-gray-800">{{ $prosedurPengawasan->judul ?? '-' }}</h2>
+                <h2 class="text-2xl font-semibold text-gray-800">Edit Prosedur Pengawasan</h2>
                 <a href="{{ route('prosedur-pengawasan.edit', $prosedurPengawasan->id) }}"
                     class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md transition shadow-md">
                     Kembali
@@ -82,7 +82,7 @@ window.coverData = {
         </div>
     </form>
     <!-- Container hasil generate cover mxGraph -->
-    <div id="coverContainer" class="mt-8"></div>
+    <div id="coverContainer" class="mt-8" style="transform: scale(0.75); transform-origin: top left;"></div>
 
 </div>
 @endsection

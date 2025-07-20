@@ -30,6 +30,28 @@ class InstrumenPengawasanController extends Controller
         ]);
     }
 
+    public function view($id)
+    {
+        $instrumenPengawasan = InstrumenPengawasan::find($id);
+
+        if (!$instrumenPengawasan || !$instrumenPengawasan->file) {
+            abort(404, "File tidak ditemukan");
+        }
+
+        $filePath = "instrumen/" . $instrumenPengawasan->file;
+
+        if (!Storage::exists($filePath)) {
+            abort(404, "File tidak ditemukan di storage");
+        }
+        $path = storage_path("app/private/" . $filePath);
+
+        return response()->file($path, [
+            "Content-Type" => "application/pdf",
+            "Content-Disposition" =>
+                'inline; filename="' . $instrumenPengawasan->file . '"',
+        ]);
+    }
+
     public function create()
     {
         $is_pjk = DB::select(
@@ -48,7 +70,9 @@ class InstrumenPengawasanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "judul" => "required|string|max:255",
+            "kode" => "required|string|max:255",
+            "hasil_kerja" => "required|string|max:255",
+            "nama" => "required|string|max:255",
             "penyusun_id" => "required|exists:users,id",
             "deskripsi" => "nullable|string",
             "pdf" => "required|file|mimes:pdf|max:10240", // Menerima file PDF maksimal 10MB
@@ -73,7 +97,9 @@ class InstrumenPengawasanController extends Controller
 
         InstrumenPengawasan::create(
             $request->only([
-                "judul",
+                "kode",
+                "hasil_kerja",
+                "nama",
                 "penyusun_id",
                 "deskripsi",
                 "file",
@@ -109,7 +135,7 @@ class InstrumenPengawasanController extends Controller
         $instrumenPengawasan = InstrumenPengawasan::detail($id);
         return view("instrumen.detailinstrumenpengawasan", [
             "instrumenPengawasan" => $instrumenPengawasan,
-            "title" => "Detail Instrumen Pengawasan",
+            "title" => "Instrumen Pengawasan",
         ]);
     }
 
@@ -122,7 +148,7 @@ class InstrumenPengawasanController extends Controller
         return view("instrumen.editinstrumenpengawasan", [
             "instrumenPengawasan" => $instrumenPengawasan,
             "is_pjk" => $is_pjk,
-            "title" => "Edit Instrumen Pengawasan",
+            "title" => "Instrumen Pengawasan",
         ]);
     }
 
@@ -137,7 +163,9 @@ class InstrumenPengawasanController extends Controller
         }
 
         $validationRules = [
-            "judul" => "required|string|max:255",
+            "kode" => "required|string|max:255",
+            "hasil_kerja" => "required|string|max:255",
+            "nama" => "required|string|max:255",
             "penyusun_id" => "required|exists:users,id",
             "deskripsi" => "nullable|string",
             "status" => "required|in:draft,diajukan,disetujui",
@@ -172,7 +200,9 @@ class InstrumenPengawasanController extends Controller
 
         // Update data dengan file yang sesuai (baru atau tetap yang lama)
         $data = $request->only([
-            "judul",
+            "kode",
+            "hasil_kerja",
+            "nama",
             "penyusun_id",
             "deskripsi",
             "status",
@@ -198,6 +228,6 @@ class InstrumenPengawasanController extends Controller
         InstrumenPengawasan::delete($id);
         return redirect()
             ->route("instrumen-pengawasan.index")
-            ->with("success", "Instrumen Pengawasan deleted successfully");
+            ->with("success", "Instrumen Pengawasan berhasil dihapus");
     }
 }

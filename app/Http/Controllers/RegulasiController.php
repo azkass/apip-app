@@ -10,12 +10,51 @@ use Illuminate\Support\Facades\Storage;
 
 class RegulasiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $regulasi = Regulasi::getAll();
+        $jenisPeraturanFilter = $request->get("jenis_peraturan");
+        $statusFilter = $request->get("status");
+        $search = $request->get("search");
+
+        // Get regulasi based on filters
+        if ($search) {
+            $regulasi = Regulasi::search($search);
+        } elseif ($jenisPeraturanFilter && $statusFilter) {
+            $regulasi = Regulasi::getByJenisPeraturanAndStatus(
+                $jenisPeraturanFilter,
+                $statusFilter,
+            );
+        } elseif ($jenisPeraturanFilter) {
+            $regulasi = Regulasi::getByJenisPeraturan($jenisPeraturanFilter);
+        } elseif ($statusFilter) {
+            $regulasi = Regulasi::getByStatus($statusFilter);
+        } else {
+            $regulasi = Regulasi::getAll();
+        }
+
+        // Get filter options
+        $jenisPeraturanOptions = [
+            "peraturan_bps" => "Peraturan BPS",
+            "peraturan_kepala_bps" => "Peraturan Kepala BPS",
+            "surat_edaran_kepala_bps" => "Surat Edaran Kepala BPS",
+            "keputusan_kepala_bps" => "Keputusan Kepala BPS",
+            "surat_edaran_irtama_bps" => "Surat Edaran Irtama BPS",
+            "keputusan_irtama_bps" => "Keputusan Irtama BPS",
+        ];
+
+        $statusOptions = [
+            "berlaku" => "Berlaku",
+            "tidak_berlaku" => "Tidak Berlaku",
+        ];
+
         return view("regulasi.daftarregulasi", [
             "regulasi" => $regulasi,
-            "title" => "Regulasi Pengawasan",
+            "title" => "Regulasi",
+            "jenisPeraturanOptions" => $jenisPeraturanOptions,
+            "statusOptions" => $statusOptions,
+            "currentJenisPeraturan" => $jenisPeraturanFilter,
+            "currentStatus" => $statusFilter,
+            "currentSearch" => $search,
         ]);
     }
 
@@ -25,6 +64,29 @@ class RegulasiController extends Controller
         return view("regulasi.detailregulasi", [
             "regulasi" => $regulasi,
             "title" => "Detail Regulasi",
+        ]);
+    }
+
+    public function view($id)
+    {
+        $regulasi = Regulasi::findPdf($id);
+
+        if (!$regulasi || !$regulasi->file) {
+            abort(404, "File tidak ditemukan");
+        }
+
+        $filePath = "regulasi/" . $regulasi->file;
+
+        if (!Storage::exists($filePath)) {
+            abort(404, "File tidak ditemukan di storage");
+        }
+
+        $path = storage_path("app/private/" . $filePath);
+
+        return response()->file($path, [
+            "Content-Type" => "application/pdf",
+            "Content-Disposition" =>
+                'inline; filename="' . $regulasi->file . '"',
         ]);
     }
 
@@ -38,39 +100,39 @@ class RegulasiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "judul" => "required|string|max:255",
-            "tautan" => "required|string",
-            "pdf" => "required|file|mimes:pdf|max:10240",
-            "kode" => "required|string|max:255",
-            "hasil_kerja" => "required|string|max:255",
+            "tahun" => "required|string|max:255",
+            "nomor" => "required|string|max:255",
+            "tentang" => "required|string|max:1000",
+            "jenis_peraturan" =>
+                "required|in:peraturan_bps,peraturan_kepala_bps,surat_edaran_kepala_bps,keputusan_kepala_bps,surat_edaran_irtama_bps,keputusan_irtama_bps",
+            "status" => "required|in:berlaku,tidak_berlaku",
+            "tautan" => "nullable|url|max:500",
+            "file" => "nullable|file|mimes:pdf|max:10240",
         ]);
 
         // Handle file upload
         $fileName = null;
-        if ($request->hasFile("pdf") && $request->file("pdf")->isValid()) {
-            $file = $request->file("pdf");
-            $fileName = $file->getClientOriginalName();
+        if ($request->hasFile("file") && $request->file("file")->isValid()) {
+            $file = $request->file("file");
+            $fileName = time() . "_" . $file->getClientOriginalName();
 
             // Simpan file ke storage/app/regulasi
             $file->storeAs("regulasi", $fileName);
         }
 
-        // Merge data dengan pembuat_id dan nama file
-        $request->merge([
-            "pembuat_id" => Auth::id(),
+        // Prepare data for insertion
+        $data = [
+            "tahun" => $request->tahun,
+            "nomor" => $request->nomor,
+            "tentang" => $request->tentang,
+            "jenis_peraturan" => $request->jenis_peraturan,
+            "status" => $request->status,
+            "tautan" => $request->tautan,
             "file" => $fileName,
-        ]);
+            "pembuat_id" => Auth::id(),
+        ];
 
-        Regulasi::create(
-            $request->only([
-                "judul",
-                "tautan",
-                "file",
-                "pembuat_id",
-                "kode",
-                "hasil_kerja",
-            ])
-        );
+        Regulasi::create($data);
 
         return redirect()
             ->route("regulasi.index")
@@ -97,6 +159,13 @@ class RegulasiController extends Controller
     public function edit($id)
     {
         $regulasi = Regulasi::find($id);
+
+        if (!$regulasi) {
+            return redirect()
+                ->route("regulasi.index")
+                ->with("error", "Regulasi tidak ditemukan");
+        }
+
         return view("regulasi.editregulasi", [
             "regulasi" => $regulasi,
             "title" => "Edit Regulasi",
@@ -105,7 +174,7 @@ class RegulasiController extends Controller
 
     public function update(Request $request, $id)
     {
-        $regulasi = Regulasi::detail($id);
+        $regulasi = Regulasi::find($id);
         if (!$regulasi) {
             return redirect()
                 ->back()
@@ -113,27 +182,32 @@ class RegulasiController extends Controller
         }
 
         $validationRules = [
-            "judul" => "required|string|max:255",
-            "tautan" => "required|string",
+            "tahun" => "required|string|max:255",
+            "nomor" => "required|string|max:255",
+            "tentang" => "required|string|max:1000",
+            "jenis_peraturan" =>
+                "required|in:peraturan_bps,peraturan_kepala_bps,surat_edaran_kepala_bps,keputusan_kepala_bps,surat_edaran_irtama_bps,keputusan_irtama_bps",
+            "status" => "required|in:berlaku,tidak_berlaku",
+            "tautan" => "nullable|url|max:500",
             "pembuat_id" => "required|exists:users,id",
-            "kode" => "required|string|max:255",
-            "hasil_kerja" => "required|string|max:255",
         ];
 
         // File PDF bersifat opsional pada update
-        if ($request->hasFile("pdf")) {
-            $validationRules["pdf"] = "file|mimes:pdf|max:10240";
+        if ($request->hasFile("file")) {
+            $validationRules["file"] = "file|mimes:pdf|max:10240";
         }
 
         $request->validate($validationRules);
 
         // Handle file upload jika ada
         $fileName = $regulasi->file; // Gunakan file yang sudah ada sebagai default
-        if ($request->hasFile("pdf") && $request->file("pdf")->isValid()) {
-            $file = $request->file("pdf");
-            $fileName = $file->getClientOriginalName();
+        if ($request->hasFile("file") && $request->file("file")->isValid()) {
+            $file = $request->file("file");
+            $fileName = time() . "_" . $file->getClientOriginalName();
+
             // Simpan file baru ke storage/app/regulasi
             $file->storeAs("regulasi", $fileName);
+
             // Hapus file lama jika ada
             if (
                 $regulasi->file &&
@@ -143,30 +217,42 @@ class RegulasiController extends Controller
             }
         }
 
-        // Update data dengan file yang sesuai (baru atau tetap yang lama)
-        $data = $request->only([
-            "judul",
-            "tautan",
-            "status",
-            "pembuat_id",
-            "kode",
-            "hasil_kerja",
-        ]);
-        $data["file"] = $fileName;
+        // Prepare data for update
+        $data = [
+            "tahun" => $request->tahun,
+            "nomor" => $request->nomor,
+            "tentang" => $request->tentang,
+            "jenis_peraturan" => $request->jenis_peraturan,
+            "status" => $request->status,
+            "tautan" => $request->tautan,
+            "file" => $fileName,
+            "pembuat_id" => $request->pembuat_id,
+        ];
 
         Regulasi::update($id, $data);
 
-        // Ambil data yang sudah diupdate
-        $updatedRegulasi = Regulasi::detail($id);
-        // $regulasi = Regulasi::detail($id);
         return redirect()
-            ->route("regulasi.detail", $updatedRegulasi->id)
+            ->route("regulasi.detail", $id)
             ->with("success", "Regulasi berhasil diubah");
     }
 
     public function delete($id)
     {
+        $regulasi = Regulasi::find($id);
+
+        if (!$regulasi) {
+            return redirect()
+                ->route("regulasi.index")
+                ->with("error", "Regulasi tidak ditemukan");
+        }
+
+        // Hapus file jika ada
+        if ($regulasi->file && Storage::exists("regulasi/" . $regulasi->file)) {
+            Storage::delete("regulasi/" . $regulasi->file);
+        }
+
         $status = Regulasi::delete($id);
+
         if ($status) {
             return redirect()
                 ->route("regulasi.index")

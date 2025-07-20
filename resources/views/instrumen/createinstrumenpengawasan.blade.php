@@ -6,9 +6,24 @@
         @csrf
         <input type="hidden" name="pembuat_id" value="{{ Auth::id() }}">
 
+        <!-- Kode Instrumen -->
         <div class="mb-4">
-            <label for="judul" class="block font-medium text-gray-700">Judul</label>
-            <input type="text" name="judul" id="judul" required
+            <label for="kode" class="block font-medium text-gray-700">Kode Instrumen</label>
+            <input type="text" name="kode" id="kode" autocomplete="off" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+        </div>
+
+        <!-- Hasil Kerja -->
+        <div class="mb-4">
+            <label for="hasil_kerja" class="block font-medium text-gray-700">Hasil Kerja</label>
+            <input type="text" name="hasil_kerja" id="hasil_kerja" autocomplete="off" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+        </div>
+
+        <!-- Nama Instrumen -->
+        <div class="mb-4">
+            <label for="nama" class="block font-medium text-gray-700">Nama Instrumen</label>
+            <input type="text" name="nama" id="nama" autocomplete="off" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
 

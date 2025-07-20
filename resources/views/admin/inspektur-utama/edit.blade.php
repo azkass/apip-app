@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800 mb-2">Edit Inspektur Utama</h2>
         <p class="text-gray-600">Perbarui data inspektur utama di bawah ini</p>
@@ -54,7 +54,7 @@
             @error('jabatan')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
-            <p class="text-gray-500 text-sm mt-1">Contoh: Inspektur Utama Kementerian Keuangan</p>
+            <p class="text-gray-500 text-sm mt-1">Contoh: Inspektur Utama</p>
         </div>
 
         <div class="mb-4 p-4 bg-gray-50 rounded-md">

@@ -3,11 +3,10 @@
 @section('content')
 <div class="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
     <h2 class="text-xl font-semibold mb-6">Tambah Evaluasi Prosedur</h2>
-    
     <form method="POST" action="{{ route('evaluasi.store') }}">
         @csrf
         <input type="hidden" name="sop_id" value="{{ $sop_id }}">
-        
+
         @if(empty($pertanyaan))
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
                 Belum ada pertanyaan evaluasi. Silakan tambahkan pertanyaan terlebih dahulu.
@@ -54,7 +53,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     const radioGroups = document.querySelectorAll('input[type="radio"]');
     const pertanyaanCount = {{ count($pertanyaan) }};
     const answeredCount = document.querySelectorAll('input[type="radio"]:checked').length;
-    
+
     if (answeredCount !== pertanyaanCount) {
         e.preventDefault();
         alert('Harap jawab semua pertanyaan sebelum mengirim formulir.');

@@ -2,15 +2,18 @@
 
 @section('content')
 <div class="container ml-2 sm:ml-8 mt-1 sm:mt-8">
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold">Daftar Periode Evaluasi Prosedur Pengawasan</h2>
         @if(Auth::user()->role == 'admin')
-        <a href="{{ route('periode.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
+        <a href="{{ route('periode.create') }}"
+           class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
             Tambah Periode
         </a>
         @endif
     </div>
+
     <div class="bg-white">
-        <table class="border-collapse">
+        <table class="border-collapse w-full">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">No</th>

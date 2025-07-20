@@ -87,11 +87,11 @@
     <!-- Isi tabel dengan overflow handling -->
     <div class="bg-white rounded-lg">
         <div class="overflow-x-auto">
-            <table class="border-collapse">
+            <table class="border-collapse w-full">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold">No</th>
-                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">Judul</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold w-2xl">Nama Instrumen</th>
                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold">Status</th>
                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold">Dokumen</th>
                         @if (Auth::user()->role != 'pegawai' || Auth::user()->role != 'admin')
@@ -105,7 +105,7 @@
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">{{ $index + 1 }}</td>
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">
                             <a href="{{ route('instrumen-pengawasan.detail', $instrumen->id) }}" class="hover:text-blue-600">
-                               {{ $instrumen->judul }}
+                               {{ $instrumen->nama }}
                             </a>
                         </td>
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">
@@ -122,8 +122,8 @@
                         </td>
 
                         <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">
-                            <a href="{{ route('instrumen-pengawasan.download', $instrumen->id) }}" class="inline-flex px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold rounded bg-red-500 hover:bg-red-600 text-white transition">
-                                <i class="fas fa-download mr-1"></i> PDF
+                            <a href="{{ route('instrumen-pengawasan.view', $instrumen->id) }}" target="_blank" class="inline-flex px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded bg-green-500 hover:bg-green-600 text-white transition">
+                                <i class="fas fa-eye mr-1"></i> Lihat PDF
                             </a>
                         </td>
 
@@ -168,17 +168,6 @@
         </div>
     </div>
 
-    {{-- Live search for instrumen --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            initLiveSearchTable('#search', 'table tbody', {
-                colIndex: 1, // kolom Judul
-                colspan: {{ (Auth::user()->role != 'pegawai' && Auth::user()->role != 'admin') ? 5 : 4 }},
-                rowSelector: 'tr[data-instrumen-row]',
-                noResultText: 'Tidak ada hasil'
-            });
-        });
-    </script>
     <!-- Legend with responsive layout -->
     <div class="mt-4 text-xs sm:text-sm text-gray-600">
         <div class="flex flex-wrap items-center gap-2 sm:gap-4">
@@ -196,4 +185,16 @@
             </div>
         </div>
     </div>
+
+    {{-- Live search for instrumen --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLiveSearchTable('#search', 'table tbody', {
+                colIndex: 1, // kolom Judul
+                colspan: {{ (Auth::user()->role != 'pegawai' && Auth::user()->role != 'admin') ? 5 : 4 }},
+                rowSelector: 'tr[data-instrumen-row]',
+                noResultText: 'Tidak ada hasil'
+            });
+        });
+    </script>
 </div>

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="container mx-auto py-6">
+<div class="container sm:mx-4 sm:my-4 md:mx-8 px-6 py-4 md:my-8">
     <div class="bg-white shadow-md rounded-lg mb-6 px-6" id="prosedur-container" data-prosedur-id="{{ $prosedurPengawasan->id }}" data-prosedur-isi="{{ $prosedurPengawasan->isi ?? '' }}">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">{{ $prosedurPengawasan->judul ?? '-' }}</h2>
+        <div class="flex justify-between items-center mb-4 pr-4">
+            <h2 class="text-xl font-semibold text-gray-800">Edit Prosedur Pengawasan</h2>
             <a href="{{ route('prosedur-pengawasan.edit-cover', $prosedurPengawasan->id) }}"
                 class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md transition shadow-md">
                 Kembali
@@ -30,17 +30,17 @@
             </template>
         </div>
         <!-- Button Input Pelaksana -->
-        <div id="formContainer" class="flex justify-between p-4 w-full border-t border-gray-200 pt-4">
+        <div id="formContainer" class="flex justify-between p-4 w-full border-t border-gray-200">
             <div class="space-x-2">
-                <button id="add-actor" class="bg-blue-500 hover:bg-blue-600 h-10 text-sm text-white px-4 py-2 rounded-md transition">
+                <button id="add-actor" class="bg-blue-500 hover:bg-blue-600 h-10 text-sm font-semibold text-white px-4 py-2 rounded-md transition">
                     Tambah Pelaksana
                 </button>
-                <button id="delete-last-actor" class="bg-red-500 hover:bg-red-600 h-10 text-sm text-white py-2 px-4 rounded-md transition">
+                <button id="delete-last-actor" class="bg-red-500 hover:bg-red-600 h-10 text-sm font-semibold text-white py-2 px-4 rounded-md transition">
                     Hapus Pelaksana
                 </button>
             </div>
             <div>
-                <button id="save-actor" class="bg-green-600 hover:bg-green-700 h-10 text-sm text-white px-4 py-2 rounded-md transition">
+                <button id="save-actor" class="bg-green-600 hover:bg-green-700 h-10 text-sm font-semibold text-white px-4 py-2 rounded-md transition">
                     Simpan
                 </button>
             </div>
@@ -56,14 +56,14 @@
         <!-- Button Aktivitas -->
         <div class="flex justify-between w-full border-t border-gray-200 pt-4">
             <div class="space-x-2">
-                <button id="add-activity" class="bg-blue-500 hover:bg-blue-600 cursor-pointer h-10 text-sm text-white py-2 px-4 rounded-md transition">
+                <button id="add-activity" class="bg-blue-500 hover:bg-blue-600 cursor-pointer h-10 text-sm text-white font-semibold py-2 px-4 rounded-md transition">
                     Tambah Aktivitas
                 </button>
-                <button id="delete-last-activity" class="bg-red-500 hover:bg-red-600 cursor-pointer h-10 text-sm text-white py-2 px-4 rounded-md transition">
+                <button id="delete-last-activity" class="bg-red-500 hover:bg-red-600 cursor-pointer h-10 text-sm text-white font-semibold py-2 px-4 rounded-md transition">
                     Hapus Aktivitas
                 </button>
             </div>
-            <button id="preview" class="bg-green-600 hover:bg-green-700 cursor-pointer h-10 text-sm text-white py-2 px-4 rounded-md transition">
+            <button id="preview" class="bg-green-600 hover:bg-green-700 cursor-pointer h-10 text-sm text-white font-semibold py-2 px-4 rounded-md transition">
                 Preview Diagram
             </button>
         </div>
@@ -74,7 +74,7 @@
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Diagram Preview</h2>
         <div class="mb-4">
             <a href="{{ route('prosedur-pengawasan.show', $prosedurPengawasan->id) }}"
-               class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition">
+               class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition">
                    Simpan
             </a>
         </div>

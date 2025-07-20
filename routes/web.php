@@ -11,6 +11,8 @@ use App\Http\Controllers\PeriodeEvaluasiProsedurController;
 use App\Http\Controllers\InspekturUtamaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PertanyaanEvaluasiController;
+use App\Http\Controllers\TugasController;
+use App\Http\Controllers\MonevProsedurPengawasanController;
 
 // use Dompdf\Dompdf as PDF;
 // require __DIR__ . '/../vendor/autoload.php';
@@ -37,6 +39,57 @@ Route::middleware("auth")->group(function () {
     Route::post("/logout", [SocialiteController::class, "logout"])->name(
         "logout",
     );
+    // Tugas Saya
+    Route::middleware("role:admin|pjk|perencana")->group(function () {
+        Route::get("/tugas", [TugasController::class, "index"]);
+    });
+
+    // Monitoring Evaluasi (Monev Prosedur Pengawasan)
+    Route::prefix("monitoring-evaluasi")
+        ->name("monitoring-evaluasi.")
+        ->group(function () {
+            Route::get("/", [
+                MonevProsedurPengawasanController::class,
+                "index",
+            ])->name("index");
+            Route::get("/create/{sop_id}", [
+                MonevProsedurPengawasanController::class,
+                "create",
+            ])
+                ->where("sop_id", "[0-9]+") // Validasi parameter sebagai angka
+                ->name("create")
+                ->middleware("periode.evaluasi");
+            Route::post("/", [
+                MonevProsedurPengawasanController::class,
+                "store",
+            ])
+                ->name("store")
+                ->middleware("periode.evaluasi");
+            Route::get("/{id}", [
+                MonevProsedurPengawasanController::class,
+                "show",
+            ])->name("show");
+            Route::get("/{id}/edit", [
+                MonevProsedurPengawasanController::class,
+                "edit",
+            ])
+                ->name("edit")
+                ->middleware("periode.evaluasi");
+            Route::put("/{id}", [
+                MonevProsedurPengawasanController::class,
+                "update",
+            ])
+                ->name("update")
+                ->middleware("periode.evaluasi");
+            Route::delete("/{id}", [
+                MonevProsedurPengawasanController::class,
+                "destroy",
+            ])->name("destroy");
+            Route::get("/{id}/download", [
+                MonevProsedurPengawasanController::class,
+                "downloadMonev",
+            ])->name("download-monev");
+        });
 
     // Prosedur Pengawasan Routes (Domain-Oriented)
     Route::prefix("prosedur-pengawasan")
@@ -64,23 +117,46 @@ Route::middleware("auth")->group(function () {
                 "edit",
             ])
                 ->name("edit")
-                ->middleware("role:perencana,pjk");
+                ->middleware("role:perencana|pjk");
             Route::put("/{id}", [ProsedurPengawasanController::class, "update"])
                 ->name("update")
-                ->middleware("role:perencana,pjk");
+                ->middleware("role:perencana|pjk");
+            Route::get("/{id}/upload-ttd", [
+                ProsedurPengawasanController::class,
+                "uploadTtd",
+            ])
+                ->name("upload-ttd")
+                ->middleware("role:perencana");
+            Route::post("/{id}/upload-ttd", [
+                ProsedurPengawasanController::class,
+                "storeTtd",
+            ])
+                ->name("store-ttd")
+                ->middleware("role:perencana");
+            Route::get("/{id}/download-ttd", [
+                ProsedurPengawasanController::class,
+                "downloadTtd",
+            ])
+                ->name("download-ttd")
+                ->middleware("role:perencana|pjk|admin|pegawai");
             Route::delete("/{id}", [
                 ProsedurPengawasanController::class,
                 "delete",
             ])
                 ->name("delete")
-                ->middleware("role:perencana,pjk");
+                ->middleware("role:perencana");
             Route::get("/{id}/cover-data", [
                 ProsedurPengawasanController::class,
                 "getCoverData",
             ])->name("get-cover-data");
+            Route::get("/{id}/download-ttd-file", [
+                ProsedurPengawasanController::class,
+                "downloadTtdFile",
+            ])
+                ->name("download-ttd-file");
 
             // Routes for editing cover and body, accessible by perencana
-            Route::middleware("role:perencana")->group(function () {
+            Route::middleware("role:perencana|pjk")->group(function () {
                 Route::get("/{id}/edit-cover", [
                     ProsedurPengawasanController::class,
                     "editCover",
@@ -146,12 +222,14 @@ Route::middleware("auth")->group(function () {
             Route::post("/", "store")->name("store");
             Route::delete("{id}", "delete")->name("delete");
         });
+
     // Route tanpa middleware (akses umum)
     Route::prefix("instrumenpengawasan")
         ->name("instrumen-pengawasan.")
         ->controller(InstrumenPengawasanController::class)
         ->group(function () {
             Route::get("/", "index")->name("index");
+            Route::get("/view/{id}", "view")->name("view");
             Route::get("{id}", "show")->name("detail");
             Route::get("{id}/download", "downloadPdf")->name("download");
         });
@@ -174,6 +252,7 @@ Route::middleware("auth")->group(function () {
             Route::get("/", "index")->name("index");
             Route::get("create", "create")->name("create");
             Route::post("/", "store")->name("store");
+            Route::get("/view/{id}", "view")->name("view");
             Route::get("{id}/download", "downloadPdf")->name("download");
             Route::get("{id}", "detail")->name("detail");
             Route::get("{id}/edit", "edit")->name("edit");
@@ -182,7 +261,6 @@ Route::middleware("auth")->group(function () {
         });
 });
 Route::middleware("auth", "role:admin")->group(function () {
-    Route::get("/admin/dashboard", [DashboardController::class, "index"]);
     Route::get("/admin/list", [SocialiteController::class, "list"])->name(
         "admin.list",
     );

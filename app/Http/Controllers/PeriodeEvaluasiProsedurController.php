@@ -15,14 +15,14 @@ class PeriodeEvaluasiProsedurController extends Controller
         $periode = PeriodeEvaluasiProsedur::getAll();
         return view("periode.index", [
             "periode" => $periode,
-            "title" => "Daftar Periode Evaluasi Prosedur",
+            "title" => "Periode Evaluasi Prosedur Pengawasan",
         ]);
     }
 
     public function create()
     {
         return view("periode.create", [
-            "title" => "Tambah Periode Evaluasi Prosedur",
+            "title" => "Tambah Periode Evaluasi Prosedur Pengawasan",
         ]);
     }
 
@@ -37,7 +37,7 @@ class PeriodeEvaluasiProsedurController extends Controller
         PeriodeEvaluasiProsedur::insertData(
             $request->pembuat_id,
             $request->mulai,
-            $request->berakhir
+            $request->berakhir,
         );
 
         return redirect()
@@ -50,7 +50,7 @@ class PeriodeEvaluasiProsedurController extends Controller
         $periode = PeriodeEvaluasiProsedur::getLatest();
         return view("periode.edit", [
             "periode" => $periode,
-            "title" => "Edit Periode Evaluasi Prosedur",
+            "title" => "Periode Evaluasi Prosedur Pengawasan",
         ]);
     }
 
@@ -68,17 +68,19 @@ class PeriodeEvaluasiProsedurController extends Controller
                 $periode->id,
                 $request->pembuat_id,
                 $request->mulai,
-                $request->berakhir
+                $request->berakhir,
             );
         } else {
             PeriodeEvaluasiProsedur::insertData(
                 $request->pembuat_id,
                 $request->mulai,
-                $request->berakhir
+                $request->berakhir,
             );
         }
 
-        return back()->with("success", "Periode berhasil diperbarui.");
+        return redirect()
+            ->route("periode.index")
+            ->with("success", "Periode berhasil diubah");
     }
 
     public function destroy($id)

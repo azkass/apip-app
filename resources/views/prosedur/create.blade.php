@@ -4,8 +4,8 @@
         <form action="{{ route('prosedur-pengawasan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <div>
-                <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
-                <input type="text" name="judul" id="judul" autocomplete="off"
+                <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama SOP</label>
+                <input type="text" name="nama" id="nama" autocomplete="off"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" required>
             </div>
 
@@ -59,6 +59,8 @@
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200" required>
                     <option value="draft">Draft</option>
                     <option value="diajukan">Diajukan</option>
+                    <option value="revisi">Revisi</option>
+                    <option value="menunggu disetujui">Menunggu Disetujui</option>
                     <option value="disetujui">Disetujui</option>
                 </select>
             </div>

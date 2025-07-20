@@ -3,8 +3,8 @@
     <div class="bg-white shadow-md rounded-lg overflow-hidden p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
-                <p class="text-gray-600 text-sm font-medium">Judul</p>
-                <p class="text-lg font-semibold">{{ $prosedurPengawasan->judul }}</p>
+                <p class="text-gray-600 text-sm font-medium">Nama SOP</p>
+                <p class="text-lg font-semibold">{{ $prosedurPengawasan->nama }}</p>
             </div>
             <div>
                 <p class="text-gray-600 text-sm font-medium">Nomor SOP</p>
@@ -12,14 +12,18 @@
             </div>
             <div>
                 <p class="text-gray-600 text-sm font-medium">Status</p>
-                <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full
-                    @if($prosedurPengawasan->status == 'draft')
-                        bg-yellow-100 text-yellow-800
-                    @elseif($prosedurPengawasan->status == 'diajukan')
-                        bg-blue-100 text-blue-800
-                    @elseif($prosedurPengawasan->status == 'disetujui')
-                        bg-green-100 text-green-800
-                    @endif">
+                <span class="inline-flex px-2 py-1 text-base font-semibold rounded-full
+                        @if($prosedurPengawasan->status == 'draft')
+                            bg-yellow-100 text-yellow-800
+                        @elseif($prosedurPengawasan->status == 'diajukan')
+                            bg-blue-100 text-blue-800
+                        @elseif($prosedurPengawasan->status == 'revisi')
+                            bg-orange-100 text-orange-800
+                        @elseif($prosedurPengawasan->status == 'menunggu_disetujui')
+                            bg-purple-100 text-purple-800
+                        @elseif($prosedurPengawasan->status == 'disetujui')
+                            bg-green-100 text-green-800
+                        @endif">
                     {{ ucfirst($prosedurPengawasan->status) }}
                 </span>
             </div>
@@ -39,6 +43,19 @@
                 <p class="text-gray-600 text-sm font-medium">Disahkan Oleh</p>
                 <p class="text-base">{{ $prosedurPengawasan->disahkan_oleh_nama }}</p>
             </div>
+            <!-- if file_ttd is not null -->
+            @php
+                $filePath = $prosedurPengawasan->file_ttd ?? null;
+                @endphp
+                <div>
+                    @if ($filePath)
+                    <p class="text-gray-600 text-sm font-medium">Dokumen SOP Disetujui (Signed)</p>
+                    <div class="flex items-center space-x-3 text-sm">
+                        <a href="{{ route('prosedur-pengawasan.download-ttd', $prosedurPengawasan->id) }}" target="_blank" class="text-blue-600 hover:underline">Lihat</a>
+                        <a href="{{ route('prosedur-pengawasan.download-ttd-file', $prosedurPengawasan->id) }}" class="text-blue-600 hover:underline">Unduh</a>
+                    </div>
+                @endif
+            </div>
             <div>
                 <p class="text-gray-600 text-sm font-medium">Perencana</p>
                 <p class="text-base">{{ $prosedurPengawasan->perencana_nama }}</p>
@@ -51,21 +68,26 @@
 
         <div class="flex space-x-3 mt-6">
             @if (Auth::user()->role == 'pjk' || Auth::user()->role == 'perencana')
-                                <a href="{{ route('prosedur-pengawasan.edit', $prosedurPengawasan->id) }}"
-                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
+                <a href="{{ route('prosedur-pengawasan.edit', $prosedurPengawasan->id) }}"
+                   class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition">
                     Edit
                 </a>
             @endif
 
+
             @if (Auth::user()->role == 'perencana')
-                                <form action="{{ route('prosedur-pengawasan.delete', $prosedurPengawasan->id) }}"
+                <a href="{{ route('prosedur-pengawasan.upload-ttd', $prosedurPengawasan->id) }}"
+                   class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition">
+                       Unggah SOP Disetujui
+                </a>
+                <form action="{{ route('prosedur-pengawasan.delete', $prosedurPengawasan->id) }}"
                       method="POST"
                       onsubmit="return confirm('Yakin ingin menghapus prosedur ini?')"
                       class="inline-block">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
-                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+                            class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md transition">
                         Hapus
                     </button>
                 </form>

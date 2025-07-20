@@ -1,15 +1,34 @@
-<div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
-    @if (Auth::user()->role == 'perencana')
-        <form action="{{ route('instrumen-pengawasan.update', $instrumenPengawasan->id) }}" method="POST" enctype="multipart/form-data">
-    @elseif (Auth::user()->role == 'pjk')
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
+    @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
         <form action="{{ route('instrumen-pengawasan.update', $instrumenPengawasan->id) }}" method="POST" enctype="multipart/form-data">
     @endif
         @csrf
         @method('PUT')
-
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-gray-800">Edit Instrumen Pengawasan</h2>
+            <a href="{{ route('instrumen-pengawasan.detail', $instrumenPengawasan->id) }}"
+               class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition">
+                Kembali
+            </a>
+        </div>
+        <!-- Kode Instrumen -->
         <div class="mb-4">
-            <label for="judul" class="block font-medium text-gray-700">Judul</label>
-            <input type="text" name="judul" id="judul" value="{{ $instrumenPengawasan->judul }}" required
+            <label for="kode" class="block font-medium text-gray-700">Kode Instrumen</label>
+            <input type="text" name="kode" id="kode" value="{{ $instrumenPengawasan->kode }}" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+        </div>
+
+        <!-- Hasil Kerja -->
+        <div class="mb-4">
+            <label for="hasil_kerja" class="block font-medium text-gray-700">Hasil Kerja</label>
+            <input type="text" name="hasil_kerja" id="hasil_kerja" value="{{ $instrumenPengawasan->hasil_kerja }}" required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
+        </div>
+
+        <!-- Nama Instrumen -->
+        <div class="mb-4">
+            <label for="nama" class="block font-medium text-gray-700">Nama Instrumen</label>
+            <input type="text" name="nama" id="nama" value="{{ $instrumenPengawasan->nama }}" required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
 
@@ -66,18 +85,6 @@
             Simpan Perubahan
         </button>
     </form>
-
-    <!-- Form Hapus -->
-    @if (Auth::user()->role == 'perencana')
-        <form action="{{ route('instrumen-pengawasan.delete', $instrumenPengawasan->id) }}" method="POST" class="flex-1">
-            @csrf
-            @method('DELETE')
-            <button type="submit" onclick="return confirm('Yakin ingin menghapus instrumen ini?')"
-                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition">
-                Hapus
-            </button>
-        </form>
-    @endif
 </div>
 
 <script>

@@ -18,7 +18,7 @@ class EvaluasiProsedur extends Model
             ep.created_at,
             ep.updated_at,
             pp.nomor as sop_nomor,
-            pp.judul as sop_judul,
+            pp.nama as sop_nama,
             pp.penyusun_id as penyusun_id,
             u.name as penyusun_nama,
             COUNT(DISTINCT ep.pertanyaan_id) as jumlah_pertanyaan,
@@ -32,7 +32,7 @@ class EvaluasiProsedur extends Model
             ep.created_at,
             ep.updated_at,
             pp.nomor,
-            pp.judul,
+            pp.nama,
             pp.penyusun_id,
             u.name
         ORDER BY ep.created_at DESC
@@ -51,14 +51,14 @@ class EvaluasiProsedur extends Model
                 ep.created_at,
                 pe.pertanyaan,
                 pp.nomor as sop_nomor,
-                pp.judul as sop_judul
+                pp.nama as sop_nama
             FROM evaluasi_prosedur ep
             JOIN prosedur_pengawasan pp ON ep.sop_id = pp.id
             JOIN pertanyaan_evaluasi pe ON ep.pertanyaan_id = pe.id
             WHERE ep.sop_id = ?
             ORDER BY pe.id ASC
         ",
-            [$sop_id]
+            [$sop_id],
         );
     }
 
@@ -73,13 +73,13 @@ class EvaluasiProsedur extends Model
                 ep.jawaban,
                 pe.pertanyaan,
                 pp.nomor as sop_nomor,
-                pp.judul as sop_judul
+                pp.nama as sop_nama
             FROM evaluasi_prosedur ep
             JOIN prosedur_pengawasan pp ON ep.sop_id = pp.id
             JOIN pertanyaan_evaluasi pe ON ep.pertanyaan_id = pe.id
             WHERE ep.id = ?
         ",
-            [$id]
+            [$id],
         );
     }
 
@@ -87,7 +87,7 @@ class EvaluasiProsedur extends Model
     {
         return DB::insert(
             "INSERT INTO evaluasi_prosedur (sop_id, pertanyaan_id, jawaban, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
-            [$sop_id, $pertanyaan_id, $jawaban]
+            [$sop_id, $pertanyaan_id, $jawaban],
         );
     }
 
@@ -95,7 +95,7 @@ class EvaluasiProsedur extends Model
     {
         return DB::update(
             "UPDATE evaluasi_prosedur SET jawaban = ?, updated_at = NOW() WHERE id = ?",
-            [$jawaban, $id]
+            [$jawaban, $id],
         );
     }
 
@@ -116,7 +116,7 @@ class EvaluasiProsedur extends Model
     {
         $result = DB::selectOne(
             "SELECT COUNT(*) as count FROM evaluasi_prosedur WHERE sop_id = ?",
-            [$sop_id]
+            [$sop_id],
         );
         return $result->count > 0;
     }
@@ -129,7 +129,7 @@ class EvaluasiProsedur extends Model
                 MAX(ep.created_at) as created_at,
                 MAX(ep.updated_at) as updated_at,
                 pp.nomor as sop_nomor,
-                pp.judul as sop_judul,
+                pp.nama as sop_nama,
                 pp.penyusun_id as penyusun_id,
                 u.name as penyusun_nama,
                 COUNT(DISTINCT ep.pertanyaan_id) as jumlah_pertanyaan,
@@ -137,7 +137,7 @@ class EvaluasiProsedur extends Model
             FROM evaluasi_prosedur ep
             JOIN prosedur_pengawasan pp ON ep.sop_id = pp.id
             JOIN users u ON pp.penyusun_id = u.id
-            GROUP BY ep.sop_id, pp.nomor, pp.judul, pp.penyusun_id, u.name
+            GROUP BY ep.sop_id, pp.nomor, pp.nama, pp.penyusun_id, u.name
             ORDER BY MAX(ep.created_at) DESC
         ");
     }

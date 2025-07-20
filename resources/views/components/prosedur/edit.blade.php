@@ -1,19 +1,14 @@
-<div class="max-w-4xl mx-auto px-6 py-4 md:mt-6 bg-white shadow-md rounded-lg">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">{{ $prosedurPengawasan->judul ?? '-' }}</h2>
-        <a href="{{ route('prosedur-pengawasan.edit', $prosedurPengawasan->id) }}"
-            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md transition shadow-md">
-            Kembali
-        </a>
-    </div>
+<div class="max-w-4xl mx-auto px-6 py-4 md:mt-6 mb-8 bg-white shadow-md rounded-lg">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Edit Prosedur Pengawasan</h2>
+        
     @props(['inspektur_utama', 'is_pjk', 'is_pjk'])
     <form action="{{ route('prosedur-pengawasan.update', $prosedurPengawasan->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="grid grid-cols-1 gap-6">
             <div>
-                <label for="judul" class="block text-md font-medium text-black mb-1">Nama SOP</label>
-                <input type="text" name="judul" id="judul" autocomplete="off" value="{{ $prosedurPengawasan->judul }}" required
+                <label for="nama" class="block text-md font-medium text-black mb-1">Nama SOP</label>
+                <input type="text" name="nama" id="nama" autocomplete="off" value="{{ $prosedurPengawasan->nama }}" required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
             </div>
 
@@ -71,6 +66,8 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
                     <option value="draft" {{ $prosedurPengawasan->status == 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="diajukan" {{ $prosedurPengawasan->status == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
+                    <option value="revisi" {{ $prosedurPengawasan->status == 'revisi' ? 'selected' : '' }}>Revisi</option>
+                    <option value="menunggu_disetujui" {{ $prosedurPengawasan->status == 'menunggu_disetujui' ? 'selected' : '' }}>Menunggu Disetujui</option>
                     <option value="disetujui" {{ $prosedurPengawasan->status == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
                 </select>
             </div>
@@ -78,7 +75,11 @@
 
         <input type="hidden" name="pembuat_id" value="{{ $prosedurPengawasan->pembuat_id }}">
 
-        <div class="mt-6">
+        <div class="mt-6 flex justify-between">
+            <a href="{{ route('prosedur-pengawasan.index') }}"
+                class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md transition shadow-md">
+                Batal
+            </a>
             <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition">
                 Simpan
             </button>

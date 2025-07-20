@@ -43,27 +43,31 @@
             <div class="relative">
                 <select
                     id="statusDropdown"
-                    class="block w-32 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md appearance-none focus:ring focus:ring-blue-200"
+                    class="block w-44 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md appearance-none focus:ring focus:ring-blue-200"
                     onchange="window.location.href=this.value"
                 >
                     @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
-                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'semua']) }}"
-                                {{ $activeTab == 'semua' ? 'selected' : '' }}>
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'semua', 'tahun' => request('tahun', date('Y'))]) }}" {{ $activeTab == 'semua' ? 'selected' : '' }}>
                             Semua
                         </option>
 
-                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'draft']) }}"
-                                {{ $activeTab == 'draft' ? 'selected' : '' }}>
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'draft', 'tahun' => request('tahun', date('Y'))]) }}" {{ $activeTab == 'draft' ? 'selected' : '' }}>
                             Draft
                         </option>
 
-                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'diajukan']) }}"
-                                {{ $activeTab == 'diajukan' ? 'selected' : '' }}>
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'diajukan', 'tahun' => request('tahun', date('Y'))]) }}" {{ $activeTab == 'diajukan' ? 'selected' : '' }}>
                             Diajukan
                         </option>
 
-                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'disetujui']) }}"
-                                {{ $activeTab == 'disetujui' ? 'selected' : '' }}>
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'revisi', 'tahun' => request('tahun', date('Y'))]) }}" {{ $activeTab == 'revisi' ? 'selected' : '' }}>
+                            Revisi
+                        </option>
+
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'menunggu_disetujui', 'tahun' => request('tahun', date('Y'))]) }}" {{ $activeTab == 'menunggu_disetujui' ? 'selected' : '' }}>
+                            Menunggu disetujui
+                        </option>
+
+                        <option value="{{ route('prosedur-pengawasan.index', ['status' => 'disetujui', 'tahun' => request('tahun', date('Y'))]) }}" {{ $activeTab == 'disetujui' ? 'selected' : '' }}>
                             Disetujui
                         </option>
                     @endif
@@ -91,15 +95,15 @@
     </div>
 
     <!-- Isi tabel -->
-    <div class="bg-white rounded-lg">
-        <table class="border-collapse">
+    <div class="bg-white rounded-lg w-full">
+        <table class="border-collapse w-full">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">No</th>
                     <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Nomor SOP</th>
-                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Judul</th>
-                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Tanggal Pembuatan</th>
-                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Disusun Oleh</th>
+                    <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Nama SOP</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Pembuat</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Penyusun</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Status</th>
                     <th class="border border-gray-300 px-4 py-3 text-center font-semibold">Aksi</th>
                     @if (Auth::user()->role == 'pjk')
@@ -118,11 +122,11 @@
                     </td>
                     <td class="border border-gray-300 px-4 py-3">
                         <a href="{{ route('prosedur-pengawasan.show', $prosedur->id) }}" class="hover:text-blue-600">
-                           {{ $prosedur->judul }}
+                           {{ $prosedur->nama }}
                         </a>
                     </td>
                     <td class="border border-gray-300 px-4 py-3 text-center">
-                        {{ formatTanggalIndonesia($prosedur->tanggal_pembuatan) }}
+                        {{ $prosedur->perencana_nama }}
                     </td>
                     <td class="border border-gray-300 px-4 py-3 text-center">
                         {{ $prosedur->petugas_nama }}
@@ -133,10 +137,14 @@
                                 bg-yellow-100 text-yellow-800
                             @elseif($prosedur->status == 'diajukan')
                                 bg-blue-100 text-blue-800
+                            @elseif($prosedur->status == 'revisi')
+                                bg-orange-100 text-orange-800
+                            @elseif($prosedur->status == 'menunggu_disetujui')
+                                bg-purple-100 text-purple-800
                             @elseif($prosedur->status == 'disetujui')
                                 bg-green-100 text-green-800
                             @endif">
-                            {{ ucfirst($prosedur->status) }}
+                            {{ str_replace('_', ' ', ucfirst($prosedur->status)) }}
                         </span>
                     </td>
 
@@ -164,7 +172,7 @@
                         @endphp
 
                         @if ($isPeriodeActive)
-                            <a href="{{ route('evaluasi.create', $prosedur->id) }}"
+                            <a href="{{ route('monitoring-evaluasi.create', $prosedur->id) }}"
                                class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm transition">
                                 Evaluasi
                             </a>

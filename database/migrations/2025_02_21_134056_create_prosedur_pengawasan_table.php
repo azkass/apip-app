@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create("prosedur_pengawasan", function (Blueprint $table) {
             $table->id();
             $table->string("nomor");
-            $table->string("judul");
+            $table->string("nama");
             $table->date("tanggal_pembuatan")->nullable();
             $table->date("tanggal_revisi")->nullable();
             $table->date("tanggal_efektif")->nullable();
@@ -18,10 +18,17 @@ return new class extends Migration {
             $table->json("cover")->nullable();
             $table->json("isi")->nullable();
             $table
-                ->enum("status", ["draft", "diajukan", "disetujui"])
+                ->enum("status", [
+                    "draft",
+                    "diajukan",
+                    "revisi",
+                    "menunggu_disetujui",
+                    "disetujui",
+                ])
                 ->default("draft");
             $table->unsignedBigInteger("pembuat_id");
             $table->unsignedBigInteger("penyusun_id");
+            $table->string("file_ttd")->nullable();
             $table->timestamps();
 
             $table

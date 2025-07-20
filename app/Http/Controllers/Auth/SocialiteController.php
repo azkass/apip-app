@@ -32,7 +32,7 @@ class SocialiteController extends Controller
                     "password" => bcrypt("password"),
                     "google_token" => $socialUser->token,
                     "google_refresh_token" => $socialUser->refreshToken,
-                ]
+                ],
             );
             Auth::login($user);
             return redirect("/");
@@ -54,7 +54,7 @@ class SocialiteController extends Controller
     {
         $users = DB::select("SELECT id, name, email, role FROM users");
         return view("admin.manajemen-role.listrole", [
-            "title" => "Daftar Pengguna",
+            "title" => "Manajemen Role",
             "users" => $users,
         ]);
     }
@@ -63,10 +63,10 @@ class SocialiteController extends Controller
     {
         $user = DB::selectOne(
             "SELECT id, name, email, role FROM users WHERE id = ?",
-            [$id]
+            [$id],
         );
         return view("admin.manajemen-role.editrole", [
-            "title" => "Daftar Pengguna",
+            "title" => "Manajemen Role",
             "user" => $user,
         ]);
     }
@@ -79,7 +79,7 @@ class SocialiteController extends Controller
         ]);
         return redirect("/admin/list")->with(
             "success",
-            "Edit Role pengguna berhasil diperbarui."
+            "Edit Role pengguna berhasil diperbarui.",
         );
     }
 }

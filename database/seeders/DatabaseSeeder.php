@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,9 +13,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Buat direktori penyimpanan jika belum ada
+        $this->createStorageDirectories();
+
+        // Jalankan seeders
         $this->call([
-            PertanyaanEvaluasiSeeder::class,
+            // PertanyaanEvaluasiSeeder::class,
             InspekturUtamaSeeder::class,
         ]);
+    }
+
+    /**
+     * Membuat direktori penyimpanan yang diperlukan
+     */
+    protected function createStorageDirectories(): void
+    {
+        $directories = ["private/prosedur"];
+
+        foreach ($directories as $directory) {
+            $path = storage_path("app/" . $directory);
+
+            if (!File::exists($path)) {
+                File::makeDirectory($path, 0755, true);
+                $this->command->info("Created directory: {$path}");
+            }
+        }
     }
 }

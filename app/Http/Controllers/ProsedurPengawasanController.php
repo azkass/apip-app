@@ -17,7 +17,7 @@ class ProsedurPengawasanController extends Controller
         $activeTab = $status;
         $prosedurPengawasan = ProsedurPengawasan::getByStatus($status);
 
-        if (\Auth::user()->role == "pegawai") {
+        if (Auth::user()->role == "pegawai") {
             $prosedurPengawasan = array_filter(
                 $prosedurPengawasan,
                 fn($i) => $i->status == "disetujui",
@@ -54,9 +54,12 @@ class ProsedurPengawasanController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            "judul" => "required|max:255",
+            "nama" => "required|max:255",
             "nomor" => "required|max:255",
-            "status" => "required|max:255",
+            "status" => [
+                "required",
+                "in:draft,diajukan,revisi,menunggu_disetujui,disetujui",
+            ],
             "pembuat_id" => "required|exists:users,id",
             "penyusun_id" => "required|exists:users,id",
             "tanggal_pembuatan" => "nullable|date",
@@ -77,7 +80,8 @@ class ProsedurPengawasanController extends Controller
         $prosedurPengawasan = ProsedurPengawasan::show($id);
         return view("prosedur.show", [
             "prosedurPengawasan" => $prosedurPengawasan,
-            "title" => "Detail Prosedur Pengawasan",
+            "title" =>
+                $prosedurPengawasan->nomor . " - " . $prosedurPengawasan->nama,
         ]);
     }
 
@@ -94,7 +98,7 @@ class ProsedurPengawasanController extends Controller
             "prosedurPengawasan" => $prosedurPengawasan,
             "is_pjk" => $is_pjk,
             "inspektur_utama_nama" => $inspektur_utama_nama,
-            "title" => "Edit Prosedur Pengawasan",
+            "title" => "Prosedur Pengawasan",
         ]);
     }
 
@@ -103,9 +107,12 @@ class ProsedurPengawasanController extends Controller
         $prosedurPengawasan = ProsedurPengawasan::findHeader($id);
 
         $validatedData = $request->validate([
-            "judul" => "required|max:255",
+            "nama" => "required|max:255",
             "nomor" => "required|max:255",
-            "status" => "required|max:255",
+            "status" => [
+                "required",
+                "in:draft,diajukan,revisi,menunggu_disetujui,disetujui",
+            ],
             "pembuat_id" => "required|exists:users,id",
             "penyusun_id" => "required|exists:users,id",
             "tanggal_pembuatan" => "nullable|date",
@@ -141,7 +148,7 @@ class ProsedurPengawasanController extends Controller
         }
         return view("prosedur.edit-cover", [
             "prosedurPengawasan" => $prosedurPengawasan,
-            "title" => "Edit Cover Prosedur Pengawasan",
+            "title" => "Prosedur Pengawasan",
         ]);
     }
 
@@ -248,7 +255,7 @@ class ProsedurPengawasanController extends Controller
 
         return view("prosedur.edit-body", [
             "prosedurPengawasan" => $prosedurPengawasan,
-            "title" => "Edit Prosedur Pengawasan",
+            "title" => "Prosedur Pengawasan",
         ]);
     }
 
@@ -264,6 +271,101 @@ class ProsedurPengawasanController extends Controller
             "success" => true,
             "message" => "Data berhasil disimpan",
         ]);
+    }
+
+    public function uploadTtd($id)
+    {
+        $prosedurPengawasan = ProsedurPengawasan::findById($id);
+
+        return view("prosedur.upload-ttd", [
+            "prosedurPengawasan" => $prosedurPengawasan,
+            "title" => "Prosedur Pengawasan",
+        ]);
+    }
+
+    public function storeTtd(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'file' => 'required|mimes:pdf|max:2048',
+        ]);
+
+        // Dapatkan data SOP untuk membuat nama file
+        $prosedur = ProsedurPengawasan::findById($id);
+        // Ganti karakter ilegal pada nama file
+        $sanitizePattern = '/[\\\\\/\:\*\?\"\<\>\|]/';
+        $nomor = preg_replace($sanitizePattern, '-', $prosedur->nomor);
+        $nama  = preg_replace($sanitizePattern, '-', $prosedur->nama);
+
+        $filename = $nomor . ', ' . $nama . ' - signed.pdf';
+
+        // Simpan file ke storage/app/prosedur
+        $request->file('file')->storeAs('prosedur', $filename);
+
+        // Hanya simpan nama file di database (kolom file_ttd)
+        ProsedurPengawasan::updateTtd($id, ['file_ttd' => $filename]);
+
+        return redirect()
+            ->route('prosedur-pengawasan.show', $id)
+            ->with('success', 'Dokumen Prosedur Pengawasan berhasil diunggah.');
+    }
+
+    public function downloadTtd($id)
+    {
+        $prosedur = ProsedurPengawasan::findById($id);
+        $filename = $prosedur->file_ttd ?? null;
+        if (!$filename) {
+            return abort(404);
+        }
+
+        $primaryPath = 'prosedur/' . $filename;
+        $fallbackPath = 'private/prosedur/' . $filename; // path lama (sebelum migrasi)
+
+        $chosenPath = null;
+        if (\Illuminate\Support\Facades\Storage::exists($primaryPath)) {
+            $chosenPath = $primaryPath;
+        } elseif (\Illuminate\Support\Facades\Storage::exists($fallbackPath)) {
+            $chosenPath = $fallbackPath;
+        } else {
+            return abort(404, 'File tidak ditemukan');
+        }
+
+        $fullPath = storage_path('app/private/' . $chosenPath);
+
+        // Jika file ternyata tidak ada (mis-match Storage::exists), coba fallback sekali lagi
+        if (!file_exists($fullPath)) {
+            $altPath = $chosenPath === $primaryPath ? $fallbackPath : $primaryPath;
+            if (\Illuminate\Support\Facades\Storage::exists($altPath)) {
+                $fullPath = storage_path('app/' . $altPath);
+            }
+        }
+
+        return response()->file($fullPath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"'
+        ]);
+    }
+
+    public function downloadTtdFile($id)
+    {
+        $prosedur = ProsedurPengawasan::findById($id);
+        $filename = $prosedur->file_ttd ?? $prosedur->ttd ?? null;
+        if (!$filename) {
+            return abort(404);
+        }
+
+        $primaryPath = 'prosedur/' . $filename;
+        $fallbackPath = 'private/prosedur/' . $filename;
+
+        $chosenPath = null;
+        if (\Illuminate\Support\Facades\Storage::exists($primaryPath)) {
+            $chosenPath = $primaryPath;
+        } elseif (\Illuminate\Support\Facades\Storage::exists($fallbackPath)) {
+            $chosenPath = $fallbackPath;
+        } else {
+            return abort(404, 'File tidak ditemukan');
+        }
+
+        return \Illuminate\Support\Facades\Storage::download($chosenPath, $filename);
     }
 
     public function delete($id)

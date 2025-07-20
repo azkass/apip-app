@@ -9,9 +9,18 @@ return new class extends Migration {
     {
         Schema::create("regulasi", function (Blueprint $table) {
             $table->id();
-            $table->string("kode");
-            $table->string("hasil_kerja");
-            $table->string("judul");
+            $table->string("tahun");
+            $table->string("nomor");
+            $table->string("tentang");
+            $table->enum("jenis_peraturan", [
+                "peraturan_bps",
+                "peraturan_kepala_bps",
+                "surat_edaran_kepala_bps",
+                "keputusan_kepala_bps",
+                "surat_edaran_irtama_bps",
+                "keputusan_irtama_bps",
+            ]);
+            $table->enum("status", ["berlaku", "tidak_berlaku"]);
             $table->string("tautan")->nullable();
             $table->string("file")->nullable();
             $table->unsignedBigInteger("pembuat_id");

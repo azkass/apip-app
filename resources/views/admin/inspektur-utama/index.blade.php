@@ -1,14 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-4">
-    <div class="flex justify-between items-center mb-6">
-        <a href="{{ route('admin.inspektur-utama.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
-            Tambah Inspektur Utama
+<div class="container p-8">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-semibold">Daftar Identitas Inspektur Utama</h1>
+        <a href="{{ route('admin.inspektur-utama.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition">
+            Tambah
         </a>
     </div>
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="bg-white shadow-md rounded-sm overflow-hidden">
         <table class="w-full border-collapse">
             <thead class="bg-gray-50">
                 <tr>
@@ -26,7 +27,6 @@
                         <td class="border border-gray-300 px-4 py-3 text-center">{{ $index + 1 }}</td>
                         <td class="border border-gray-300 px-4 py-3">
                             <div class="font-medium">{{ $inspektur->nama }}</div>
-                            <div class="text-sm text-gray-500">ID: {{ $inspektur->id }}</div>
                         </td>
                         <td class="border border-gray-300 px-4 py-3">
                             <span class="inline-flex px-2 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -40,16 +40,16 @@
                         <td class="border border-gray-300 px-4 py-3 text-center">
                             <div class="flex justify-center space-x-2">
                                 <a href="{{ route('admin.inspektur-utama.show', $inspektur->id) }}"
-                                   class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
+                                   class="bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded text-sm transition">
                                     Detail
                                 </a>
                                 <a href="{{ route('admin.inspektur-utama.edit', $inspektur->id) }}"
-                                   class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">
+                                   class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-1 rounded text-sm transition">
                                     Edit
                                 </a>
                                 <button type="button"
                                         onclick="confirmDelete({{ $inspektur->id }}, '{{ $inspektur->nama }}')"
-                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
+                                        class="bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer px-3 py-1 rounded text-sm transition">
                                     Hapus
                                 </button>
                             </div>

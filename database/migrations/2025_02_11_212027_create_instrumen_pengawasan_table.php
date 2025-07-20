@@ -8,7 +8,9 @@ return new class extends Migration {
     {
         Schema::create("instrumen_pengawasan", function (Blueprint $table) {
             $table->id();
-            $table->string("judul");
+            $table->string("kode");
+            $table->string("hasil_kerja");
+            $table->string("nama");
             $table->text("deskripsi")->nullable();
             $table->string("file");
             $table
