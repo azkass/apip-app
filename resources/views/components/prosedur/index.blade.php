@@ -160,6 +160,19 @@
                                 Edit
                             </a>
                             @endif
+                            @if (Auth::user()->role == 'perencana')
+                            <form action="{{ route('prosedur-pengawasan.delete', $prosedur->id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Yakin ingin menghapus prosedur ini?')"
+                                  class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-1 rounded-md transition">
+                                    Hapus
+                                </button>
+                            </form>
+                            @endif
                         </div>
                     </td>
 
