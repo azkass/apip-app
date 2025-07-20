@@ -45,7 +45,7 @@
 
         <div class="mb-4">
             <label for="pdf" class="block font-medium text-gray-700">File PDF</label>
-            <input type="file" name="pdf" id="pdf" accept="application/pdf" required
+            <input type="file" name="pdf" id="pdf" accept="application/pdf"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
         </div>
 

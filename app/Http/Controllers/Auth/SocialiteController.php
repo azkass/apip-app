@@ -31,7 +31,6 @@ class SocialiteController extends Controller
                     "email" => $socialUser->email,
                     "password" => bcrypt("password"),
                     "google_token" => $socialUser->token,
-                    "google_refresh_token" => $socialUser->refreshToken,
                 ],
             );
             Auth::login($user);
@@ -62,7 +61,7 @@ class SocialiteController extends Controller
     public function edit($id)
     {
         $user = DB::selectOne(
-            "SELECT id, name, email, role FROM users WHERE id = ?",
+            "SELECT id, name, email, role FROM users WHERE id = ? LIMIT 1",
             [$id],
         );
         return view("admin.manajemen-role.editrole", [

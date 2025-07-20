@@ -1,4 +1,4 @@
-<div class="container ml-2 sm:ml-8 mt-1 sm:mt-6">
+<div class="w-full p-8">
     <!-- Filter section with responsive flex-wrap -->
     <div class="flex flex-wrap items-center gap-2 sm:gap-4 mb-6">
         <!-- Search Bar -->
@@ -91,7 +91,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold">No</th>
-                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold w-2xl">Nama Instrumen</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold w-xl">Nama Instrumen</th>
                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold">Status</th>
                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold">Dokumen</th>
                         @if (Auth::user()->role != 'pegawai' || Auth::user()->role != 'admin')

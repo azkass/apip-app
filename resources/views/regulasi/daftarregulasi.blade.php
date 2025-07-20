@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="container ml-2 sm:ml-8 mt-1 sm:mt-8">
+<div class="w-full p-8">
     <!-- Search and Filter Section -->
     <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
         <form method="GET" action="{{ route('regulasi.index') }}" class="space-y-4">

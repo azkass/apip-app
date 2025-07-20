@@ -21,18 +21,24 @@
 
     <div>
         <div class="mb-6">
-            <p class="text-black font-semibold text-xl">Monitoring Pelaksanaan SOP </p>
-            <p class="text-gray-700 font-semibold text-lg">Penilaian Terhadap Penerapan</p>
-            <p class="text-gray-600">{{ $penilaian }}</p>
-            <p class="text-gray-700 font-semibold text-lg">Catatan Hasil Penilaian</p>
-            <p class="text-gray-600">{{ $catatan }}</p>
-            <p class="text-gray-700 font-semibold text-lg">Tindakan yang Harus Diambil</p>
-            <p class="text-gray-600">{{ $tindakan }}</p>
+            <p class="text-black font-semibold text-2xl mb-4">Monitoring Pelaksanaan SOP </p>
+            <div class="mb-4">
+                <p class="text-gray-700 font-semibold text-lg">Penilaian Terhadap Penerapan</p>
+                <p class="text-gray-600">{{ $penilaian }}</p>
+            </div>
+            <div class="mb-4">
+                <p class="text-gray-700 font-semibold text-lg">Catatan Hasil Penilaian</p>
+                <p class="text-gray-600">{{ $catatan }}</p>
+            </div>
+            <div class="mb-4">
+                <p class="text-gray-700 font-semibold text-lg">Tindakan yang Harus Diambil</p>
+                <p class="text-gray-600">{{ $tindakan }}</p>
+            </div>
         </div>
     </div>
 
     <div class="mb-8">
-        <h3 class="text-black font-semibold text-xl mb-2">Evaluasi Penerapan SOP</h3>
+        <h3 class="text-black font-semibold text-2xl mb-2">Evaluasi Penerapan SOP</h3>
         <div class="bg-gray-50 p-4 rounded-lg mb-4">
             <h4 class="font-semibold text-gray-700 mb-2">Ringkasan Hasil Evaluasi</h4>
             <div class="grid grid-cols-3 gap-4 text-center">
@@ -72,7 +78,7 @@
             @endforeach
         </div>
     </div>
-    
+
     <div class="flex justify-between mt-8">
         <div>
             <a href="{{ route('monitoring-evaluasi.index') }}"

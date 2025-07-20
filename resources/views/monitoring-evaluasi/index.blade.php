@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container ml-2 sm:ml-8 mt-1 sm:mt-8">
+<div class="w-full p-8">
     <h1 class="text-2xl font-bold mb-4">Daftar Monitoring Evaluasi Prosedur Pengawasan</h1>
     <div class="bg-white rounded-lg">
         <table class="border-collapse w-full">

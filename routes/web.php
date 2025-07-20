@@ -6,20 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InstrumenPengawasanController;
 use App\Http\Controllers\RegulasiController;
 use App\Http\Controllers\ProsedurPengawasanController;
-use App\Http\Controllers\EvaluasiProsedurController;
 use App\Http\Controllers\PeriodeEvaluasiProsedurController;
 use App\Http\Controllers\InspekturUtamaController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PertanyaanEvaluasiController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\MonevProsedurPengawasanController;
-
-// use Dompdf\Dompdf as PDF;
-// require __DIR__ . '/../vendor/autoload.php';
-
-Route::get("/test", function () {
-    return view("prosedur.create-js-fix");
-});
 
 // Login
 Route::get("/auth/redirect", [SocialiteController::class, "redirect"]);
@@ -126,13 +117,13 @@ Route::middleware("auth")->group(function () {
                 "uploadTtd",
             ])
                 ->name("upload-ttd")
-                ->middleware("role:perencana");
+                ->middleware("role:pjk");
             Route::post("/{id}/upload-ttd", [
                 ProsedurPengawasanController::class,
                 "storeTtd",
             ])
                 ->name("store-ttd")
-                ->middleware("role:perencana");
+                ->middleware("role:pjk");
             Route::get("/{id}/download-ttd", [
                 ProsedurPengawasanController::class,
                 "downloadTtd",
@@ -152,8 +143,7 @@ Route::middleware("auth")->group(function () {
             Route::get("/{id}/download-ttd-file", [
                 ProsedurPengawasanController::class,
                 "downloadTtdFile",
-            ])
-                ->name("download-ttd-file");
+            ])->name("download-ttd-file");
 
             // Routes for editing cover and body, accessible by perencana
             Route::middleware("role:perencana|pjk")->group(function () {
@@ -195,21 +185,6 @@ Route::middleware("auth")->group(function () {
             Route::get("/edit/{id}", "edit")->name("edit");
             Route::put("/{id}", "update")->name("update");
             Route::delete("/{id}", "destroy")->name("destroy");
-        });
-
-    // Evaluasi
-    Route::middleware(["periode.evaluasi"])
-        ->prefix("evaluasi")
-        ->name("evaluasi.")
-        ->controller(EvaluasiProsedurController::class)
-        ->group(function () {
-            Route::get("/", "index")->name("index");
-            Route::get("/create/{sop_id}", "create")->name("create");
-            Route::post("/", "store")->name("store");
-            Route::get("{id}", "show")->name("show");
-            Route::get("{id}/edit", "edit")->name("edit");
-            Route::put("{id}", "update")->name("update");
-            Route::delete("{id}", "destroy")->name("destroy");
         });
 
     // Route khusus role:perencana untuk create delete
@@ -302,32 +277,6 @@ Route::middleware("auth", "role:admin")->group(function () {
         InspekturUtamaController::class,
         "destroy",
     ])->name("admin.inspektur-utama.destroy");
-
-    // Daftar Pertanyaan Evaluasi
-    Route::get("/admin/pertanyaan-evaluasi", [
-        PertanyaanEvaluasiController::class,
-        "index",
-    ])->name("pertanyaan.index");
-    Route::get("/admin/pertanyaan-evaluasi/create", [
-        PertanyaanEvaluasiController::class,
-        "create",
-    ])->name("pertanyaan.create");
-    Route::post("/admin/pertanyaan-evaluasi", [
-        PertanyaanEvaluasiController::class,
-        "store",
-    ])->name("pertanyaan.store");
-    Route::get("/admin/pertanyaan-evaluasi/{pertanyaan}/edit", [
-        PertanyaanEvaluasiController::class,
-        "edit",
-    ])->name("pertanyaan.edit");
-    Route::put("/admin/pertanyaan-evaluasi/{pertanyaan}", [
-        PertanyaanEvaluasiController::class,
-        "update",
-    ])->name("pertanyaan.update");
-    Route::delete("/admin/pertanyaan-evaluasi/{pertanyaan}", [
-        PertanyaanEvaluasiController::class,
-        "destroy",
-    ])->name("pertanyaan.destroy");
 });
 // Route::post('/generate-pdf', function (Illuminate\Http\Request $request) {
 //     $activities = $request->input('activities');
@@ -349,3 +298,10 @@ Route::post("/generate-table", [
     ActivityController::class,
     "generateTable",
 ])->name("activity.generate");
+
+// use Dompdf\Dompdf as PDF;
+// require __DIR__ . '/../vendor/autoload.php';
+
+Route::get("/test", function () {
+    return view("prosedur.create-js-fix");
+});

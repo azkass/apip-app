@@ -40,6 +40,19 @@ class MonevProsedurPengawasan
         return $results[0] ?? null;
     }
 
+    public static function findWithProsedurPengawasanBySopId($sop_id)
+    {
+        $results = DB::select(
+            "
+            SELECT id FROM monev_prosedur_pengawasan
+            WHERE sop_id = ?
+        ",
+            [$sop_id],
+        );
+
+        return $results[0] ?? null;
+    }
+
     public static function create(array $data)
     {
         $columns = implode(", ", array_keys($data));

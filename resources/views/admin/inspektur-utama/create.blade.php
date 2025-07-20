@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
     <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">Tambah Inspektur Utama</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Tambah Identitas Inspektur Utama</h2>
         <p class="text-gray-600">Lengkapi form di bawah untuk menambahkan data inspektur utama baru</p>
     </div>
 
@@ -63,7 +63,7 @@
             </a>
             <button type="submit"
                     class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                Simpan Data
+                Simpan
             </button>
         </div>
     </form>

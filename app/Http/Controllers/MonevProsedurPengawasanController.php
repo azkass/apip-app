@@ -84,8 +84,14 @@ class MonevProsedurPengawasanController extends Controller
 
         // Check if evaluasi already exists for this SOP
         if (MonevProsedurPengawasan::monevExists($sop_id)) {
+            $result = MonevProsedurPengawasan::findWithProsedurPengawasanBySopId(
+                $sop_id,
+            );
+
+            // Akses properti id dari objek
+            $id = $result->id;
             return redirect()
-                ->route("monitoring-evaluasi.index")
+                ->route("monitoring-evaluasi.show", $id)
                 ->with("error", "Evaluasi untuk SOP ini sudah ada!");
         }
 
@@ -212,84 +218,106 @@ class MonevProsedurPengawasanController extends Controller
             "mampu_mendorong_kinerja" => "Mampu mendorong peningkatan kinerja",
             "mampu_dipahami" => "Mudah dipahami",
             "mudah_dilaksanakan" => "Mudah dilaksanakan",
-            "dapat_menjalankan_peran" => "Semua orang dapat menjalankan perannya masing-masing",
-            "mampu_mengatasi_permasalahan" => "Mampu mengatasi permasalahan yang berkaitan dengan proses",
-            "mampu_menjawab_kebutuhan" => "Mampu menjawab kebutuhan peningkatan kinerja organisasi",
+            "dapat_menjalankan_peran" =>
+                "Semua orang dapat menjalankan perannya masing-masing",
+            "mampu_mengatasi_permasalahan" =>
+                "Mampu mengatasi permasalahan yang berkaitan dengan proses",
+            "mampu_menjawab_kebutuhan" =>
+                "Mampu menjawab kebutuhan peningkatan kinerja organisasi",
             "sinergi_dengan_lainnya" => "Sinergi satu dengan lainnya",
         ];
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        $sheet->setCellValue('B2', 'Tim : ');
-        $sheet->setCellValue('C4', 'Monitoring Pelaksanaan SOP AP');
+        $sheet->setCellValue("B2", "Tim : ");
+        $sheet->setCellValue("C4", "Monitoring Pelaksanaan SOP AP");
 
-        $sheet->setCellValue('B6', 'No');
-        $sheet->setCellValue('B7', '1');
-        $sheet->setCellValue('C6', 'Prosedur');
-        $sheet->setCellValue('C7', $item->sop_nama);
-        $sheet->setCellValue('D6', 'Penilaian Terhadap Penerapan');
-        $sheet->setCellValue('D7', $item->penilaian_penerapan);
-        $sheet->setCellValue('E6', 'Catatan Hasil Penilaian');
-        $sheet->setCellValue('E7', $item->catatan_penilaian);
-        $sheet->setCellValue('F6', 'Tindakan yang Harus Diambil');
-        $sheet->setCellValue('F7', $item->tindakan);
+        $sheet->setCellValue("B6", "No");
+        $sheet->setCellValue("B7", "1");
+        $sheet->setCellValue("C6", "Prosedur");
+        $sheet->setCellValue("C7", $item->sop_nama);
+        $sheet->setCellValue("D6", "Penilaian Terhadap Penerapan");
+        $sheet->setCellValue("D7", $item->penilaian_penerapan);
+        $sheet->setCellValue("E6", "Catatan Hasil Penilaian");
+        $sheet->setCellValue("E7", $item->catatan_penilaian);
+        $sheet->setCellValue("F6", "Tindakan yang Harus Diambil");
+        $sheet->setCellValue("F7", $item->tindakan);
 
-        $sheet->setCellValue('C10', 'Evaluasi Penerapan SOP AP');
-        $sheet->setCellValue('B12', 'No');
-        $sheet->setCellValue('C12', 'Pertanyaan');
-        $sheet->setCellValue('D12', 'Jawaban');
+        $sheet->setCellValue("C10", "Evaluasi Penerapan SOP AP");
+        $sheet->setCellValue("B12", "No");
+        $sheet->setCellValue("C12", "Pertanyaan");
+        $sheet->setCellValue("D12", "Jawaban");
 
         $row = 13;
         $index = 1;
         foreach ($pertanyaan_map as $field => $pertanyaan) {
-            $sheet->setCellValue('B' . $row, $index);
-            $sheet->setCellValue('C' . $row, $pertanyaan);
-            $sheet->setCellValue('D' . $row, $item->$field === 'ya' ? 'Ya' : 'Tidak');
+            $sheet->setCellValue("B" . $row, $index);
+            $sheet->setCellValue("C" . $row, $pertanyaan);
+            $sheet->setCellValue(
+                "D" . $row,
+                $item->$field === "ya" ? "Ya" : "Tidak",
+            );
             $row++;
             $index++;
         }
 
         // Border
         $borderStyle = [
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            "borders" => [
+                "allBorders" => [
+                    "borderStyle" =>
+                        \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ],
         ];
-        $sheet->getStyle('B6:F7')->applyFromArray($borderStyle);
-        $sheet->getStyle('B12:D19')->applyFromArray($borderStyle);
+        $sheet->getStyle("B6:F7")->applyFromArray($borderStyle);
+        $sheet->getStyle("B12:D19")->applyFromArray($borderStyle);
 
         // Apply style: center alignment & gray background to B6:F6 and B12:D12
-        $ranges = ['B6:F6', 'B12:D12'];
+        $ranges = ["B6:F6", "B12:D12"];
         foreach ($ranges as $rng) {
-            $sheet->getStyle($rng)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle($rng)->getFill()
+            $sheet
+                ->getStyle($rng)
+                ->getAlignment()
+                ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet
+                ->getStyle($rng)
+                ->getFill()
                 ->setFillType(Fill::FILL_SOLID)
-                ->getStartColor()->setARGB('FFD9D9D9'); // light gray
+                ->getStartColor()
+                ->setARGB("FFD9D9D9"); // light gray
         }
 
         // Apply vertical center alignment to specific cells
-        foreach (['B7', 'C7', 'D7', 'F7'] as $cell) {
-            $sheet->getStyle($cell)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        foreach (["B7", "C7", "D7", "F7"] as $cell) {
+            $sheet
+                ->getStyle($cell)
+                ->getAlignment()
+                ->setVertical(Alignment::VERTICAL_CENTER);
         }
         // E7 vertical top and wrap text
-        $sheet->getStyle('E7')
-        ->getAlignment()
-        ->setVertical(Alignment::VERTICAL_TOP)
-        ->setWrapText(true);
-        $sheet->getStyle('C7')->getAlignment()->setWrapText(true);
+        $sheet
+            ->getStyle("E7")
+            ->getAlignment()
+            ->setVertical(Alignment::VERTICAL_TOP)
+            ->setWrapText(true);
+        $sheet->getStyle("C7")->getAlignment()->setWrapText(true);
 
         // Center horizontally D13:D19
-        $sheet->getStyle('D13:D19')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
+        $sheet
+            ->getStyle("D13:D19")
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         // Atur lebar kolom Excel‐units
-        $sheet->getColumnDimension('B')->setWidth(5);
-        $sheet->getStyle('B')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getColumnDimension("B")->setWidth(5);
+        $sheet
+            ->getStyle("B")
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
         // Ubah beberapa kolom sekaligus
-        foreach (['C', 'D', 'E', 'F'] as $col) {
+        foreach (["C", "D", "E", "F"] as $col) {
             $sheet->getColumnDimension($col)->setWidth(40);
         }
 
@@ -301,15 +329,19 @@ class MonevProsedurPengawasanController extends Controller
         //     $sheet->getRowDimension($r)->setRowHeight(22);
         // }
 
-
-        $fileName = 'monev_' . str_replace(['/', '\\'], '-', $item->sop_nama) . '.xlsx';
+        $fileName =
+            "monev_" . str_replace(["/", "\\"], "-", $item->sop_nama) . ".xlsx";
         $writer = new Xlsx($spreadsheet);
 
-        return response()->streamDownload(function () use ($writer) {
-            $writer->save('php://output');
-        }, $fileName, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ]);
+        return response()->streamDownload(
+            function () use ($writer) {
+                $writer->save("php://output");
+            },
+            $fileName,
+            [
+                "Content-Type" =>
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            ],
+        );
     }
 }
-

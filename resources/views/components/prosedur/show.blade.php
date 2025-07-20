@@ -75,7 +75,7 @@
             @endif
 
 
-            @if (Auth::user()->role == 'perencana')
+            @if (Auth::user()->role == 'pjk')
                 <a href="{{ route('prosedur-pengawasan.upload-ttd', $prosedurPengawasan->id) }}"
                    class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition">
                        Unggah SOP Disetujui

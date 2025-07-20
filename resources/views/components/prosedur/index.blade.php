@@ -1,4 +1,4 @@
-<div class="container ml-2 sm:ml-8 mt-2 sm:mt-6">
+<div class="w-fit p-8">
     <div class="flex items-center gap-4 mb-6">
         <!-- Search Bar -->
         <div class="flex flex-col">
@@ -150,16 +150,16 @@
 
                     <td class="border border-gray-300 px-4 py-3 text-center">
                         <div class="flex justify-center space-x-2">
+                            <a href="{{ route('prosedur-pengawasan.show', $prosedur->id) }}"
+                               class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
+                                Lihat
+                            </a>
                             @if (Auth::user()->role == 'perencana' || Auth::user()->role == 'pjk')
                                 <a href="{{ route('prosedur-pengawasan.edit', $prosedur->id) }}"
                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">
                                 Edit
                             </a>
                             @endif
-                            <a href="{{ route('prosedur-pengawasan.show', $prosedur->id) }}"
-                               class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
-                                Lihat
-                            </a>
                         </div>
                     </td>
 

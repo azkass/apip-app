@@ -7,12 +7,12 @@
     <p><span class="font-medium">Nomor:</span> {{ $prosedurPengawasan->nomor ?? '-' }}</p>
         <p><span class="font-medium">Nama:</span> {{ $prosedurPengawasan->nama ?? '-' }}</p>
     </div>
-    
+
     @php
         $filePath = $prosedurPengawasan->file_ttd ?? null;
     @endphp
 
-    
+
     <form action="{{ route('prosedur-pengawasan.store-ttd', $prosedurPengawasan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         <label class="block">
@@ -28,10 +28,10 @@
             <a href="{{ route('prosedur-pengawasan.download-ttd', $prosedurPengawasan->id) }}" target="_blank" class="ml-2 text-blue-500 hover:underline">Lihat PDF</a>
             </div>
         @endif
-        
+
         <div class="flex justify-between items-center mb-4">
         <a href="{{ route('prosedur-pengawasan.show', $prosedurPengawasan->id) }}" class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition">Batal</a>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Upload</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Simpan</button>
     </form>
 </div>
 @endsection

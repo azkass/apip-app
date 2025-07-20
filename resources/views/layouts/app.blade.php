@@ -35,6 +35,14 @@
                         <i class="fa-solid fa-pen-ruler mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
                         <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
+                    <a href="/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-tasks mx-auto sidebar-icon fa-lg my-4" title=""></i>
+                        <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
+                    </a>
+                    <a href="/regulasi" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Regulasi"></i>
+                        <span class="ml-2 hidden sidebar-text">Regulasi</span>
+                    </a>
                     <a href="{{ route('admin.inspektur-utama.index') }}" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-user-tie mx-auto sidebar-icon fa-lg my-4" title="Inspektur Utama"></i>
                         <span class="ml-2 hidden sidebar-text">Inspektur Utama</span>
@@ -42,10 +50,6 @@
                     <a href="{{ route('periode.index') }}" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
                         <span class="ml-2 hidden sidebar-text">Periode Evaluasi</span>
-                    </a>
-                    <a href="{{ route('pertanyaan.index') }}" class="flex items-center py-2 justify-center sidebar-item">
-                        <i class="fa-solid fa-question-circle mx-auto sidebar-icon fa-lg my-4" title="Pertanyaan Evaluasi"></i>
-                        <span class="ml-2 hidden sidebar-text">Pertanyaan Evaluasi</span>
                     </a>
                 @elseif (Auth::user()->role == 'pjk')
                     <a href="/dashboard" class="flex items-center py-2 justify-center sidebar-item">
@@ -64,13 +68,9 @@
                         <i class="fa-solid fa-tasks mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
                     </a>
-                    <a href="/regulasi" class="flex items-center py-2 justify-center sidebar-item">
-                        <i class="fa-solid fa-book mx-auto sidebar-icon fa-lg my-4" title=""></i>
-                        <span class="ml-2 hidden sidebar-text">Regulasi</span>
-                    </a>
                     <a href="/monitoring-evaluasi" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-clipboard-list mx-auto sidebar-icon fa-lg my-4" title="Evaluasi Prosedur"></i>
-                        <span class="ml-2 hidden sidebar-text">Monitoring Evaluasi Prosedur Pengawasan</span>
+                        <span class="ml-2 hidden sidebar-text">Monitoring Evaluasi</span>
                     </a>
                     <a href="{{ route('periode.index') }}" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
@@ -89,9 +89,8 @@
                         <i class="fa-solid fa-pen-ruler mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
                         <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
-
                     <a href="/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
-                        <i class="fa-solid fa-file-signature mx-auto sidebar-icon fa-lg my-4" title="Instrumen Pengawasan"></i>
+                        <i class="fa-solid fa-tasks mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
                     </a>
                     <a href="/regulasi" class="flex items-center py-2 justify-center sidebar-item">
@@ -100,20 +99,28 @@
                     </a>
                     <a href="/monitoring-evaluasi" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-clipboard-list mx-auto sidebar-icon fa-lg my-4" title="Evaluasi Prosedur"></i>
-                        <span class="ml-2 hidden sidebar-text">Monitoring Evaluasi Prosedur Pengawasan</span>
+                        <span class="ml-2 hidden sidebar-text">Monitoring Evaluasi</span>
                     </a>
                     <a href="{{ route('periode.index') }}" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
                         <span class="ml-2 hidden sidebar-text">Periode Evaluasi</span>
                     </a>
                 @elseif (Auth::user()->role == 'pegawai')
-                    <a href="/pegawai/dashboard" class="flex items-center py-2 justify-center sidebar-item">
+                    <a href="/dashboard" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="/prosedur-pengawasan" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-pen-ruler mx-auto sidebar-icon fa-lg my-4" title="Prosedur Pengawasan"></i>
+                        <span class="ml-2 hidden sidebar-text">Prosedur Pengawasan</span>
                     </a>
                     <a href="/instrumenpengawasan" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-clipboard mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
+                    </a>
+                    <a href="/regulasi" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Regulasi"></i>
+                        <span class="ml-2 hidden sidebar-text">Regulasi</span>
                     </a>
                 @endif
             </div>

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container ml-2 sm:ml-8 mt-1 sm:mt-8">
+<div class="w-full p-8">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-semibold">Daftar Periode Evaluasi Prosedur Pengawasan</h2>
         @if(Auth::user()->role == 'admin')
         <a href="{{ route('periode.create') }}"
-           class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
-            Tambah Periode
+           class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition">
+            Tambah
         </a>
         @endif
     </div>

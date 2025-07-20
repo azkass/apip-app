@@ -1,5 +1,4 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -28,7 +27,11 @@ class DatabaseSeeder extends Seeder
      */
     protected function createStorageDirectories(): void
     {
-        $directories = ["private/prosedur"];
+        $directories = [
+            "private/prosedur",
+            "private/instrumen",
+            "private/regulasi",
+        ];
 
         foreach ($directories as $directory) {
             $path = storage_path("app/" . $directory);
@@ -36,6 +39,8 @@ class DatabaseSeeder extends Seeder
             if (!File::exists($path)) {
                 File::makeDirectory($path, 0755, true);
                 $this->command->info("Created directory: {$path}");
+            } else {
+                $this->command->info("Directory already exists: {$path}");
             }
         }
     }
