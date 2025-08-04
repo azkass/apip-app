@@ -43,6 +43,7 @@ class PeriodeEvaluasiProsedur extends Model
             FROM periode_evaluasi_prosedur pep
             JOIN users u ON pep.pembuat_id = u.id
             WHERE pep.id = ?
+            LIMIT 1
         ",
             [$id],
         );

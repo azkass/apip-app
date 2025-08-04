@@ -50,7 +50,8 @@ class InstrumenPengawasan
             FROM instrumen_pengawasan ip
             INNER JOIN users u1 ON ip.penyusun_id = u1.id
             INNER JOIN users u2 ON ip.pembuat_id = u2.id
-            WHERE ip.id = ?",
+            WHERE ip.id = ?
+            LIMIT 1",
             [$id],
         );
     }

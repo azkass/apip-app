@@ -48,17 +48,21 @@
 
         <div class="mb-4">
             <h3 class="text-sm font-medium text-gray-500">File</h3>
-            <p class="text-base text-gray-800 mt-1">{{ $instrumenPengawasan->file }}</p>
-            <div class="flex space-x-2 mt-2">
-                <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}"
-                   class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">
-                    <i class="fas fa-download mr-1"></i> Unduh
-                </a>
-                <a href="{{ route('instrumen-pengawasan.view', $instrumenPengawasan->id) }}" target="_blank"
-                   class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
-                    <i class="fas fa-eye mr-1"></i> Lihat
-                </a>
-            </div>
+            @if ($instrumenPengawasan->file)
+                <p class="text-base text-gray-800 mt-1">{{ $instrumenPengawasan->file }}</p>
+                <div class="flex space-x-2 mt-2">
+                    <a href="{{ route('instrumen-pengawasan.download', $instrumenPengawasan->id) }}"
+                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition">
+                        <i class="fas fa-download mr-1"></i> Unduh
+                    </a>
+                    <a href="{{ route('instrumen-pengawasan.view', $instrumenPengawasan->id) }}" target="_blank"
+                       class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
+                        <i class="fas fa-eye mr-1"></i> Lihat
+                    </a>
+                </div>
+            @else
+                <p class="text-base text-gray-400 mt-1">-</p>
+            @endif
         </div>
 
         <div class="grid grid-cols-2 gap-4 mb-4">

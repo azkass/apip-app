@@ -43,13 +43,19 @@
         </div>
 
         <div class="mb-4">
-            <label for="deskripsi" class="block font-medium text-gray-700">Deskripsi</label>
+            <label for="deskripsi" class="block font-medium text-gray-700">
+                Deskripsi
+                <span class="text-sm text-gray-400">(Opsional)</span>
+            </label>
             <textarea name="deskripsi" id="deskripsi"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">{{ $instrumenPengawasan->deskripsi }}</textarea>
         </div>
 
         <div class="mb-4">
-            <label for="pdf" class="block font-medium text-gray-700">File PDF</label>
+            <label for="pdf" class="block font-medium text-gray-700">
+                File PDF
+                <span class="text-sm text-gray-400">(Opsional)</span>
+            </label>
             <input type="file" name="pdf" id="pdf" accept="application/pdf"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200">
 

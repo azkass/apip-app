@@ -1,8 +1,6 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
-import jsPDF from "jspdf";
-import "svg2pdf.js";
 
 export default defineConfig({
     plugins: [

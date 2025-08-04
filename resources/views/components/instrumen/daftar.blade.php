@@ -75,12 +75,12 @@
 
         <!-- Button Tambah -->
         @if (Auth::user()->role == 'perencana')
-        <div class="flex flex-col w-full sm:w-auto mt-2 sm:mt-0">
-            <label class="text-sm font-medium text-gray-700 mb-1 invisible">Aksi</label>
-            <a href="{{ route('instrumen-pengawasan.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition w-full sm:w-auto text-center">
-                Tambah
-            </a>
-        </div>
+            <div class="flex flex-col w-full sm:w-auto mt-2 sm:mt-0">
+                <label class="text-sm font-medium text-gray-700 mb-1 invisible">Aksi</label>
+                <a href="{{ route('instrumen-pengawasan.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition w-full sm:w-auto text-center">
+                    Tambah
+                </a>
+            </div>
         @endif
     </div>
 
@@ -121,26 +121,31 @@
                             </span>
                         </td>
 
-                        <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">
-                            <a href="{{ route('instrumen-pengawasan.view', $instrumen->id) }}" target="_blank" class="inline-flex px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded bg-green-500 hover:bg-green-600 text-white transition">
-                                <i class="fas fa-eye mr-1"></i> Lihat PDF
-                            </a>
+                        <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center align-middle">
+                            @if ($instrumen->file)
+                                <a href="{{ route('instrumen-pengawasan.view', $instrumen->id) }}" target="_blank"
+                                   class="inline-flex px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded bg-green-500 hover:bg-green-600 text-white transition font-semibold">
+                                    <i class="fas fa-eye mr-1 align-middle"></i> Lihat PDF
+                                </a>
+                            @else
+                                <span class="text-gray-400">-</span>
+                            @endif
                         </td>
 
                         @if (Auth::user()->role != 'pegawai' || Auth::user()->role != 'admin')
                             <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">
                                 <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
-                                    <a href="{{ route('instrumen-pengawasan.detail', $instrumen->id) }}" class="bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition">
+                                    <a href="{{ route('instrumen-pengawasan.detail', $instrumen->id) }}" class="bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded font-semibold text-xs sm:text-sm transition">
                                         Lihat
                                     </a>
-                                    <a href="{{ route('instrumen-pengawasan.edit', $instrumen->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition">
+                                    <a href="{{ route('instrumen-pengawasan.edit', $instrumen->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 rounded font-semibold text-xs sm:text-sm transition">
                                         Edit
                                     </a>
                                     @if (Auth::user()->role == 'perencana')
-                                    <form action="{{ route('instrumen-pengawasan.delete', $instrumen->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus instrumen ini?')">
+                                    <form action="{{ route('instrumen-pengawasan.delete', $instrumen->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus instrumen pengawasan ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition">
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 sm:px-3 py-1 rounded font-semibold text-xs sm:text-sm transition">
                                             Hapus
                                         </button>
                                     </form>

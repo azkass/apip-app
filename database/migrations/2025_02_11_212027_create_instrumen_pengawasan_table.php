@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string("hasil_kerja");
             $table->string("nama");
             $table->text("deskripsi")->nullable();
-            $table->string("file");
+            $table->string("file")->nullable();
             $table
                 ->enum("status", ["draft", "diajukan", "disetujui"])
                 ->default("draft");

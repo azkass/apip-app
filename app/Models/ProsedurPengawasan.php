@@ -98,7 +98,7 @@ class ProsedurPengawasan
     public static function findHeader($id)
     {
         return DB::selectOne(
-            "SELECT id, nomor, nama, tanggal_pembuatan, tanggal_revisi, tanggal_efektif, disahkan_oleh, penyusun_id, status, pembuat_id FROM prosedur_pengawasan WHERE id = ?",
+            "SELECT id, nomor, nama, tanggal_pembuatan, tanggal_revisi, tanggal_efektif, disahkan_oleh, penyusun_id, status, pembuat_id FROM prosedur_pengawasan WHERE id = ? LIMIT 1",
             [$id],
         );
     }

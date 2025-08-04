@@ -87,7 +87,7 @@
                         $isPeriodeActive = $periode && $now >= $periode->mulai && $now <= $periode->berakhir;
                     @endphp
 
-                    @if ($isPeriodeActive)
+                    @if ($isPeriodeActive and $prosedur->status == 'disetujui')
                         <a href="{{ route('monitoring-evaluasi.create', $prosedur->id) }}"
                             class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm transition">
                             Evaluasi

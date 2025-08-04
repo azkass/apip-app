@@ -75,7 +75,7 @@ class InstrumenPengawasanController extends Controller
             "nama" => "required|string|max:255",
             "penyusun_id" => "required|exists:users,id",
             "deskripsi" => "nullable|string",
-            "pdf" => "required|file|mimes:pdf|max:10240", // Menerima file PDF maksimal 10MB
+            "pdf" => "nullable|file|mimes:pdf|max:10240", // Menerima file PDF maksimal 10MB
             "status" => "required|in:draft,diajukan,disetujui",
         ]);
 
