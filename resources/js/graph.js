@@ -98,7 +98,7 @@ export function addCustomActor(selectElement) {
             .toLowerCase()
             .split(" ")
             .filter(Boolean)
-            .map(word => word[0].toUpperCase() + word.slice(1))
+            .map((word) => word[0].toUpperCase() + word.slice(1))
             .join(" ");
 
     if (selectElement.value === "new-actor") {
@@ -115,7 +115,7 @@ export function addCustomActor(selectElement) {
 
                 // Cek jika sudah ada opsi yang sama
                 const existingOption = Array.from(selectElement.options).find(
-                    (opt) => opt.value.toLowerCase() === value.toLowerCase()
+                    (opt) => opt.value.toLowerCase() === value.toLowerCase(),
                 );
 
                 if (!existingOption) {
@@ -123,9 +123,9 @@ export function addCustomActor(selectElement) {
                     newOption.value = value;
                     newOption.textContent = value;
 
-                    const insertBeforeOption = Array.from(selectElement.options).find(
-                        (opt) => opt.value === "new-actor"
-                    );
+                    const insertBeforeOption = Array.from(
+                        selectElement.options,
+                    ).find((opt) => opt.value === "new-actor");
                     selectElement.insertBefore(newOption, insertBeforeOption);
                 }
 
@@ -412,8 +412,11 @@ export function setupActivityForm() {
             falseToSelections[i] = [];
             for (let j = 0; j < nActor; j++) {
                 const actorNum = j + 1;
-                shapeSelections[i][j] = getVal(`gShape-${actNum}-${actorNum}`) || "0";
-                falseToSelections[i][j] = getVal(`falseTo-${actNum}-${actorNum}`);
+                shapeSelections[i][j] =
+                    getVal(`gShape-${actNum}-${actorNum}`) || "0";
+                falseToSelections[i][j] = getVal(
+                    `falseTo-${actNum}-${actorNum}`,
+                );
             }
         }
     }
@@ -427,19 +430,24 @@ export function setupActivityForm() {
 
     // Header tabel
     const headers = [
-        { text: "No." }, { text: "Aktivitas" },
-        ...actorNames.map(name => ({ text: name })),
-        { text: "Kelengkapan" }, { text: "Waktu (Jam)" },
-        { text: "Output" }, { text: "Keterangan" },
+        { text: "No." },
+        { text: "Aktivitas" },
+        ...actorNames.map((name) => ({ text: name })),
+        { text: "Kelengkapan" },
+        { text: "Waktu (Jam)" },
+        { text: "Output" },
+        { text: "Keterangan" },
     ];
 
     const headerRow = document.createElement("tr");
     headerRow.className = "bg-gray-100";
-    headerRow.innerHTML = headers.map(h => `<th class="border p-2">${h.text}</th>`).join("");
+    headerRow.innerHTML = headers
+        .map((h) => `<th class="border p-2">${h.text}</th>`)
+        .join("");
     table.appendChild(headerRow);
 
     // Deteksi apakah ada aktivitas yang mengandung "Selesai"
-    const hasSelesai = shapeSelections.some(row => row.includes("4"));
+    const hasSelesai = shapeSelections.some((row) => row.includes("4"));
 
     // Buat baris aktivitas
     for (let i = 1; i <= nActivity; i++) {
@@ -447,23 +455,30 @@ export function setupActivityForm() {
         row.className = "hover:bg-gray-50";
 
         const shapeRow = shapeSelections[i - 1];
-        const firstSpecial = shapeRow.findIndex(v => ["1", "3", "4"].includes(v));
+        const firstSpecial = shapeRow.findIndex((v) =>
+            ["1", "3", "4"].includes(v),
+        );
 
-        const actorCells = shapeRow.map((val, j) => {
-            const actorNum = j + 1;
-            const disabled = firstSpecial !== -1 && j !== firstSpecial;
-            const showFalseTo = val === "3";
-            const options = [
-                { value: "0", label: "Tidak ada", show: true },
-                { value: "1", label: "Mulai", show: i === 1 },
-                { value: "2", label: "Proses", show: i !== 1 },
-                { value: "3", label: "Pilihan", show: i !== 1 },
-                { value: "4", label: "Selesai", show: i === nActivity },
-            ].filter(opt => opt.show).map(opt =>
-                `<option value="${opt.value}" ${val === opt.value ? "selected" : ""}>${opt.label}</option>`
-            ).join("");
+        const actorCells = shapeRow
+            .map((val, j) => {
+                const actorNum = j + 1;
+                const disabled = firstSpecial !== -1 && j !== firstSpecial;
+                const showFalseTo = val === "3";
+                const options = [
+                    { value: "0", label: "Tidak ada", show: true },
+                    { value: "1", label: "Mulai", show: i === 1 },
+                    { value: "2", label: "Proses", show: i !== 1 },
+                    { value: "3", label: "Pilihan", show: i !== 1 },
+                    { value: "4", label: "Selesai", show: i === nActivity },
+                ]
+                    .filter((opt) => opt.show)
+                    .map(
+                        (opt) =>
+                            `<option value="${opt.value}" ${val === opt.value ? "selected" : ""}>${opt.label}</option>`,
+                    )
+                    .join("");
 
-            return `
+                return `
                 <td class="border p-2">
                     <select id="gShape-${i}-${actorNum}" class="w-full p-1 border rounded ${disabled ? "opacity-50" : ""}" ${disabled ? "disabled" : ""}>
                         ${options}
@@ -475,7 +490,8 @@ export function setupActivityForm() {
                         </select>
                     </div>
                 </td>`;
-        }).join("");
+            })
+            .join("");
 
         row.innerHTML = `
             <td class="border p-2">${i}</td>
@@ -495,7 +511,7 @@ export function setupActivityForm() {
     document.getElementById("diagramSection").classList.remove("hidden");
 
     // Tambahkan event listener ke dropdown shape
-    tableDiv.querySelectorAll('select[id^="gShape-"]').forEach(select => {
+    tableDiv.querySelectorAll('select[id^="gShape-"]').forEach((select) => {
         select.addEventListener("change", (e) => {
             const [_, actNum, actorNum] = e.target.id.split("-");
             const selected = e.target.value;
@@ -503,10 +519,14 @@ export function setupActivityForm() {
             if (["1", "3", "4"].includes(selected)) {
                 for (let j = 1; j <= nActor; j++) {
                     if (j.toString() !== actorNum) {
-                        const other = document.getElementById(`gShape-${actNum}-${j}`);
+                        const other = document.getElementById(
+                            `gShape-${actNum}-${j}`,
+                        );
                         if (other) {
                             other.value = "0";
-                            document.getElementById(`f-${actNum}-${j}`)?.classList.add("hidden");
+                            document
+                                .getElementById(`f-${actNum}-${j}`)
+                                ?.classList.add("hidden");
                         }
                     }
                 }
@@ -517,7 +537,7 @@ export function setupActivityForm() {
     });
 
     // Event listener untuk input waktu
-    tableDiv.querySelectorAll('input[id^="time-"]').forEach(input => {
+    tableDiv.querySelectorAll('input[id^="time-"]').forEach((input) => {
         input.addEventListener("focus", () => {
             input.value = input.value.replace(/ jam/g, "");
         });
@@ -535,7 +555,6 @@ export function setupActivityForm() {
     addBtn.classList.toggle("cursor-not-allowed", hasSelesai);
     addBtn.classList.toggle("hover:bg-blue-600", !hasSelesai);
 }
-
 
 export function generateFalseOptions(i, j, selectedValue) {
     // Inisialisasi flag untuk memeriksa apakah ada opsi selain default
@@ -582,8 +601,6 @@ export function generateFalseOptions(i, j, selectedValue) {
     // Kembalikan string HTML opsi untuk digunakan di elemen select
     return options;
 }
-
-
 
 export function getRowHeight(row) {
     var activity = activities[row];
@@ -731,25 +748,25 @@ export async function preview() {
 // Validasi diagram sebelum preview
 function validateDiagram() {
     // 1. Cek false option: HANYA untuk shape 'condition' (graphShape[i][j] === 'condition')
-    for (let i = 0; i < nActivity; i++) {
-        for (let j = 0; j < nActor; j++) {
-            if (graphShape?.[i]?.[j] === 'condition') {
-                // Cek apakah dropdown false option ini seharusnya punya opsi
-                let hasOption = false;
-                for (let row = 2; row < i + 1; row++) {
-                    for (let col = 1; col <= nActor; col++) {
-                        if (row === i + 1 && col === j + 1) continue;
-                        if (shapeSelections?.[row - 1]?.[col - 1] && shapeSelections[row - 1][col - 1] !== "0") {
-                            hasOption = true;
-                        }
-                    }
-                }
-                if (hasOption && (!falseToSelections[i] || !falseToSelections[i][j] || falseToSelections[i][j] === "")) {
-                    return `Error: Aktivitas ${i + 1}, Pelaksana ${actorNames[j] || j + 1} (bentuk "condition") belum memilih tujuan "Tidak".`;
-                }
-            }
-        }
-    }
+    // for (let i = 0; i < nActivity; i++) {
+    //     for (let j = 0; j < nActor; j++) {
+    //         if (graphShape?.[i]?.[j] === 'condition') {
+    //             // Cek apakah dropdown false option ini seharusnya punya opsi
+    //             let hasOption = false;
+    //             for (let row = 2; row < i + 1; row++) {
+    //                 for (let col = 1; col <= nActor; col++) {
+    //                     if (row === i + 1 && col === j + 1) continue;
+    //                     if (shapeSelections?.[row - 1]?.[col - 1] && shapeSelections[row - 1][col - 1] !== "0") {
+    //                         hasOption = true;
+    //                     }
+    //                 }
+    //             }
+    //             if (hasOption && (!falseToSelections[i] || !falseToSelections[i][j] || falseToSelections[i][j] === "")) {
+    //                 return `Error: Aktivitas ${i + 1}, Pelaksana ${actorNames[j] || j + 1} (bentuk "condition") belum memilih tujuan "Tidak".`;
+    //             }
+    //         }
+    //     }
+    // }
     // 2. Cek setiap aktor punya minimal satu shape (selain '0')
     for (let j = 0; j < nActor; j++) {
         let found = false;
@@ -766,7 +783,7 @@ function validateDiagram() {
     // 3. Aktivitas terakhir harus punya minimal satu shape 'Selesai' (4)
     let lastHasFinish = false;
     for (let j = 0; j < nActor; j++) {
-        if (shapeSelections?.[nActivity-1]?.[j] === '4') {
+        if (shapeSelections?.[nActivity - 1]?.[j] === "4") {
             lastHasFinish = true;
             break;
         }

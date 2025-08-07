@@ -18,7 +18,7 @@
         <!-- Sidebar -->
         <aside id="sidebar" class="w-16 bg-white text-gray-600 transition-all duration-300 flex flex-col h-screen">
             <div class="p-4 flex justify-center">
-                <a class="text-2xl font-bold" href="/">AP</a>
+                <a class="text-2xl font-bold text-white" href="/">AP</a>
             </div>
 
             <div class="p-2 flex-grow">

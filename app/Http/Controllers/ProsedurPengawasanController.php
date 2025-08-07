@@ -186,7 +186,7 @@ class ProsedurPengawasanController extends Controller
             "disahkan_oleh" => $prosedur->disahkan_oleh_nama ?? "",
             "disahkan_oleh_nip" => $prosedur->disahkan_oleh_nip ?? "",
             "disahkan_oleh_jabatan" => $prosedur->disahkan_oleh_jabatan ?? "",
-            "nama_sop" => $prosedur->judul ?? "",
+            "nama_sop" => $prosedur->nama ?? "",
             "pejabat_nama" => $prosedur->petugas_nama ?? "",
         ];
         $dynamic = [

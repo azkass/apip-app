@@ -64,7 +64,7 @@
                 </button>
             </div>
             <button id="preview" class="bg-green-600 hover:bg-green-700 cursor-pointer h-10 text-sm text-white font-semibold py-2 px-4 rounded-md transition">
-                Preview Diagram
+                Simpan
             </button>
         </div>
     </div>
@@ -75,7 +75,7 @@
         <div class="mb-4">
             <a href="{{ route('prosedur-pengawasan.show', $prosedurPengawasan->id) }}"
                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition">
-                   Simpan
+                   Selesai
             </a>
         </div>
         <div id="graphContainerBox" class="">

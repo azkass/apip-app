@@ -120,7 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const coverData = {};
         for (const section in sections) {
             coverData[section] = Array.from(
-                sectionLists[section].querySelectorAll("input")
+                sectionLists[section].querySelectorAll("input"),
             )
                 .map((i) => i.value.trim())
                 .filter((val) => val !== "");
@@ -232,7 +232,7 @@ function generateCoverMxGraph(data) {
             parent,
             null,
             "",
-            Math.round(leftWidthSection / 3 + 20),
+            Math.round(leftWidthSection / 2 - 30),
             Math.round((headerY + 30) * scale),
             Math.round(170 * scale),
             Math.round(170 * scale),
@@ -394,8 +394,10 @@ function generateCoverMxGraph(data) {
             titleStyle,
         );
 
-        let dasarHukumArr = Array.isArray(data.dasarHukum) ? data.dasarHukum.filter(v => v && v.trim() !== "") : [];
-let dasarHukumText = (dasarHukumArr.length > 0 ? dasarHukumArr : ["-"])
+        let dasarHukumArr = Array.isArray(data.dasarHukum)
+            ? data.dasarHukum.filter((v) => v && v.trim() !== "")
+            : [];
+        let dasarHukumText = (dasarHukumArr.length > 0 ? dasarHukumArr : ["-"])
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -422,8 +424,12 @@ let dasarHukumText = (dasarHukumArr.length > 0 ? dasarHukumArr : ["-"])
             titleStyle,
         );
 
-        let kualifikasiArr = Array.isArray(data.kualifikasi) ? data.kualifikasi.filter(v => v && v.trim() !== "") : [];
-let kualifikasiText = (kualifikasiArr.length > 0 ? kualifikasiArr : ["-"])
+        let kualifikasiArr = Array.isArray(data.kualifikasi)
+            ? data.kualifikasi.filter((v) => v && v.trim() !== "")
+            : [];
+        let kualifikasiText = (
+            kualifikasiArr.length > 0 ? kualifikasiArr : ["-"]
+        )
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -451,8 +457,12 @@ let kualifikasiText = (kualifikasiArr.length > 0 ? kualifikasiArr : ["-"])
             titleStyle,
         );
 
-        let keterkaitanArr = Array.isArray(data.keterkaitan) ? data.keterkaitan.filter(v => v && v.trim() !== "") : [];
-let keterkaitanText = (keterkaitanArr.length > 0 ? keterkaitanArr : ["-"])
+        let keterkaitanArr = Array.isArray(data.keterkaitan)
+            ? data.keterkaitan.filter((v) => v && v.trim() !== "")
+            : [];
+        let keterkaitanText = (
+            keterkaitanArr.length > 0 ? keterkaitanArr : ["-"]
+        )
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -479,8 +489,10 @@ let keterkaitanText = (keterkaitanArr.length > 0 ? keterkaitanArr : ["-"])
             titleStyle,
         );
 
-        let peralatanArr = Array.isArray(data.peralatan) ? data.peralatan.filter(v => v && v.trim() !== "") : [];
-let peralatanText = (peralatanArr.length > 0 ? peralatanArr : ["-"])
+        let peralatanArr = Array.isArray(data.peralatan)
+            ? data.peralatan.filter((v) => v && v.trim() !== "")
+            : [];
+        let peralatanText = (peralatanArr.length > 0 ? peralatanArr : ["-"])
             .map((v, i) => `${i + 1}. ${v}`)
             .join("\n");
 
@@ -508,8 +520,12 @@ let peralatanText = (peralatanArr.length > 0 ? peralatanArr : ["-"])
             titleStyle,
         );
 
-        let peringatanArr = Array.isArray(data.peringatan) ? data.peringatan.filter(v => v && v.trim() !== "") : [];
-let peringatanText = (peringatanArr.length > 0 ? peringatanArr : ["-"]).join("\n");
+        let peringatanArr = Array.isArray(data.peringatan)
+            ? data.peringatan.filter((v) => v && v.trim() !== "")
+            : [];
+        let peringatanText = (
+            peringatanArr.length > 0 ? peringatanArr : ["-"]
+        ).join("\n");
 
         graph.insertVertex(
             parent,
@@ -534,8 +550,12 @@ let peringatanText = (peringatanArr.length > 0 ? peringatanArr : ["-"]).join("\n
             titleStyle,
         );
 
-        let pencatatanArr = Array.isArray(data.pencatatan) ? data.pencatatan.filter(v => v && v.trim() !== "") : [];
-let pencatatanText = (pencatatanArr.length > 0 ? pencatatanArr : ["-"]).join("\n");
+        let pencatatanArr = Array.isArray(data.pencatatan)
+            ? data.pencatatan.filter((v) => v && v.trim() !== "")
+            : [];
+        let pencatatanText = (
+            pencatatanArr.length > 0 ? pencatatanArr : ["-"]
+        ).join("\n");
 
         graph.insertVertex(
             parent,
