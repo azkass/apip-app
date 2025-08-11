@@ -2128,8 +2128,8 @@ function initDetailPage() {
 
             // Render seluruh halaman SOP menggunakan pagination seperti pada preview
             renderDetailPages();
-            console.log("data db:", typeof GraphData);
-            console.log("data db:", GraphData);
+            // console.log("data db:", typeof GraphData);
+            console.log("data isi:", GraphData);
         }
     }
 }

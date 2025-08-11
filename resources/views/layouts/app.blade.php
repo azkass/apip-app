@@ -22,7 +22,8 @@
             </div>
 
             <div class="p-2 flex-grow">
-                @if (Auth::user()->role == 'admin')
+                @php $currentRole = Auth::user()->getCurrentRole(); @endphp
+                @if ($currentRole == 'admin')
                     <a href="/dashboard" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
@@ -51,7 +52,7 @@
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
                         <span class="ml-2 hidden sidebar-text">Periode Evaluasi</span>
                     </a>
-                @elseif (Auth::user()->role == 'pjk')
+                @elseif ($currentRole == 'pjk')
                     <a href="/dashboard" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
@@ -76,7 +77,7 @@
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
                         <span class="ml-2 hidden sidebar-text">Periode Evaluasi</span>
                     </a>
-                @elseif (Auth::user()->role == 'perencana')
+                @elseif ($currentRole == 'perencana')
                     <a href="/" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-house sidebar-icon mx-auto fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
@@ -105,7 +106,7 @@
                         <i class="fa-solid fa-calendar-days mx-auto sidebar-icon fa-lg my-4" title="Periode Evaluasi"></i>
                         <span class="ml-2 hidden sidebar-text">Periode Evaluasi</span>
                     </a>
-                @elseif (Auth::user()->role == 'pegawai')
+                @elseif ($currentRole == 'pegawai')
                     <a href="/dashboard" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-house mx-auto sidebar-icon fa-lg my-4" title="Dashboard"></i>
                         <span class="ml-2 hidden sidebar-text">Dashboard</span>
@@ -150,16 +151,23 @@
                         </svg>
                     </button>
 
-                    {{-- Logout --}}
+                    {{-- User Info with Role Switcher --}}
                     @if (Auth::check())
                         <div class="float-right flex items-center space-x-6 text-white">
                             <i class="fa-solid fa-circle-user fa-2xl" style="color: #ffffff;"></i>
                             <div class="text-lg">
                                 <p class="">Hai, {{ Str::title(Auth::user()->name) }}</p>
                             </div>
+
+                            <!-- Role Switcher Dropdown -->
+                            @include('components.role-switcher-dropdown')
+
+                            <!-- Logout Button -->
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="cursor-pointer font-medium"><i class="fa-solid fa-right-from-bracket cursor-pointer"></i> Logout</button>
+                                <button type="submit" class="cursor-pointer font-medium hover:text-gray-200 transition-colors duration-200">
+                                    <i class="fa-solid fa-right-from-bracket cursor-pointer"></i> Logout
+                                </button>
                             </form>
                         </div>
                     @endif
@@ -183,6 +191,15 @@
             @if(session('error'))
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mx-6 mt-2 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('error') }}</span>
+                    <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.style.display='none'">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+            @endif
+
+            @if(session('info'))
+                <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 mx-6 mt-2 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('info') }}</span>
                     <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.style.display='none'">
                         <i class="fa-solid fa-times"></i>
                     </button>

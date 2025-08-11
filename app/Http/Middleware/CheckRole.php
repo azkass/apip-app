@@ -12,14 +12,16 @@ class CheckRole
     {
         // Periksa apakah pengguna sudah login
         if (!Auth::check()) {
-            return redirect('/login');
+            return redirect("/login");
         }
 
         // Periksa role pengguna (bisa multi-role dengan OR, pisah |)
         $user = Auth::user();
-        $roles = explode('|', $role);
-        if (!in_array($user->role, $roles)) {
-            abort(403, 'Mohon Maaf, Anda Tidak Diizinkan'); // Jika role tidak sesuai, tampilkan error 403
+        $currentRole = $user->getCurrentRole(); // Menggunakan active_role atau role default
+
+        $roles = explode("|", $role);
+        if (!in_array($currentRole, $roles)) {
+            abort(403, "Mohon Maaf, Anda Tidak Diizinkan"); // Jika role tidak sesuai, tampilkan error 403
         }
 
         return $next($request);

@@ -156,6 +156,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 // Generate cover SOP menggunakan mxGraph
 function generateCoverMxGraph(data) {
+    console.log("data cover:", data);
     const container = document.getElementById("coverContainer");
     container.innerHTML = "";
 

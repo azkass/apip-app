@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="w-full p-8">
-    <h1 class="text-2xl font-bold mb-4">Daftar Monitoring Evaluasi Prosedur Pengawasan</h1>
+    <h1 class="text-2xl font-bold mb-4">Daftar Evaluasi Prosedur Pengawasan</h1>
     <div class="bg-white rounded-lg">
         <table class="border-collapse w-full">
             <thead class="bg-gray-50">

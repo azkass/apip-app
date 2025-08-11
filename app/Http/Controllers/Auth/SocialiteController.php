@@ -31,6 +31,7 @@ class SocialiteController extends Controller
                     "email" => $socialUser->email,
                     "password" => bcrypt("password"),
                     "google_token" => $socialUser->token,
+                    "active_role" => null, // Set null untuk menggunakan role default
                 ],
             );
             Auth::login($user);
@@ -79,6 +80,33 @@ class SocialiteController extends Controller
         return redirect("/admin/list")->with(
             "success",
             "Edit Role pengguna berhasil diperbarui.",
+        );
+    }
+
+    /**
+     * Switch the current authenticated user's role to 'pegawai'.
+     */
+    public function switchToPegawai(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            abort(403, "Unauthorized");
+        }
+
+        if ($user->getCurrentRole() === "pegawai") {
+            return redirect("/")->with(
+                "success",
+                "Anda sudah berperan sebagai Pegawai.",
+            );
+        }
+
+        $user->active_role = "pegawai";
+        $user->save();
+
+        return redirect("/")->with(
+            "success",
+            "Role berhasil diubah ke Pegawai.",
         );
     }
 }

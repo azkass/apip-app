@@ -17,7 +17,7 @@ class MonevProsedurPengawasanController extends Controller
         $groupedData = MonevProsedurPengawasan::getGroupedData();
         return view("monitoring-evaluasi.index", [
             "groupedData" => $groupedData,
-            "title" => "Monitoring Evaluasi Prosedur Pengawasan",
+            "title" => "Evaluasi Prosedur Pengawasan",
         ]);
     }
 
@@ -71,7 +71,7 @@ class MonevProsedurPengawasanController extends Controller
             "penilaian" => $item->penilaian_penerapan,
             "catatan" => $item->catatan_penilaian,
             "tindakan" => $item->tindakan,
-            "title" => "Detail Monitoring Evaluasi",
+            "title" => "Detail Evaluasi",
         ]);
     }
 

@@ -26,6 +26,12 @@ Route::middleware("auth")->group(function () {
     });
     Route::get("/dashboard", [DashboardController::class, "index"]);
 
+    // Switch role to Pegawai (for authenticated users)
+    Route::post("/switch-role/pegawai", [
+        SocialiteController::class,
+        "switchToPegawai",
+    ])->name("role.switch.pegawai");
+
     // Logout
     Route::post("/logout", [SocialiteController::class, "logout"])->name(
         "logout",
@@ -304,4 +310,22 @@ Route::post("/generate-table", [
 
 Route::get("/test", function () {
     return view("prosedur.create-js-fix");
+});
+
+// Role Switching Routes
+Route::middleware("auth")->group(function () {
+    Route::post("/role-switch", [
+        App\Http\Controllers\RoleSwitchController::class,
+        "switch",
+    ])->name("role.switch");
+    Route::get("/role-switch/original", [
+        App\Http\Controllers\RoleSwitchController::class,
+        "switchToOriginal",
+    ])->name("role.switch.original");
+    Route::get("/role-switch/{role}", [
+        App\Http\Controllers\RoleSwitchController::class,
+        "quickSwitch",
+    ])
+        ->where("role", "admin|perencana|pjk|pegawai")
+        ->name("role.switch.quick");
 });
