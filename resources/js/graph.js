@@ -32,7 +32,7 @@ var falseToSelections = [];
 const scale = 1;
 const pageW = Math.round(14 * 96 * scale); // 1344 px
 const pageH = Math.round(8.5 * 96 * scale); // 612 px
-const MAX_PAGE_HEIGHT = 820;
+const MAX_PAGE_HEIGHT = 790;
 const PAGE_WIDTH = Math.round(14 * 96 * scale); // 14 inch × 96 dpi = 1344 px
 
 /**
@@ -510,9 +510,10 @@ export function setupActivityForm() {
     tableDiv.appendChild(fragment);
     document.getElementById("diagramSection").classList.remove("hidden");
 
-    // Tambahkan event listener ke dropdown shape
+    // Event listener untuk SEMUA DROPDOWN SHAPE
     tableDiv.querySelectorAll('select[id^="gShape-"]').forEach((select) => {
         select.addEventListener("change", (e) => {
+            // Logika disable dropdown lain jika perlu
             const [_, actNum, actorNum] = e.target.id.split("-");
             const selected = e.target.value;
 
@@ -531,8 +532,14 @@ export function setupActivityForm() {
                     }
                 }
             }
+            setupActivityForm(); // PEMANGGILAN REFRESH
+        });
+    });
 
-            setupActivityForm(); // render ulang
+    // TAMBAHKAN: Event listener untuk DROPDOWN "KONDISI SALAH"
+    tableDiv.querySelectorAll('select[id^="falseTo-"]').forEach((select) => {
+        select.addEventListener("change", () => {
+            setupActivityForm(); // PEMANGGILAN REFRESH
         });
     });
 
@@ -748,25 +755,33 @@ export async function preview() {
 // Validasi diagram sebelum preview
 function validateDiagram() {
     // 1. Cek false option: HANYA untuk shape 'condition' (graphShape[i][j] === 'condition')
-    // for (let i = 0; i < nActivity; i++) {
-    //     for (let j = 0; j < nActor; j++) {
-    //         if (graphShape?.[i]?.[j] === 'condition') {
-    //             // Cek apakah dropdown false option ini seharusnya punya opsi
-    //             let hasOption = false;
-    //             for (let row = 2; row < i + 1; row++) {
-    //                 for (let col = 1; col <= nActor; col++) {
-    //                     if (row === i + 1 && col === j + 1) continue;
-    //                     if (shapeSelections?.[row - 1]?.[col - 1] && shapeSelections[row - 1][col - 1] !== "0") {
-    //                         hasOption = true;
-    //                     }
-    //                 }
-    //             }
-    //             if (hasOption && (!falseToSelections[i] || !falseToSelections[i][j] || falseToSelections[i][j] === "")) {
-    //                 return `Error: Aktivitas ${i + 1}, Pelaksana ${actorNames[j] || j + 1} (bentuk "condition") belum memilih tujuan "Tidak".`;
-    //             }
-    //         }
-    //     }
-    // }
+    for (let i = 0; i < nActivity; i++) {
+        for (let j = 0; j < nActor; j++) {
+            if (graphShape?.[i]?.[j] === "condition") {
+                // Cek apakah dropdown false option ini seharusnya punya opsi
+                let hasOption = false;
+                for (let row = 2; row < i + 1; row++) {
+                    for (let col = 1; col <= nActor; col++) {
+                        if (row === i + 1 && col === j + 1) continue;
+                        if (
+                            shapeSelections?.[row - 1]?.[col - 1] &&
+                            shapeSelections[row - 1][col - 1] !== "0"
+                        ) {
+                            hasOption = true;
+                        }
+                    }
+                }
+                if (
+                    hasOption &&
+                    (!falseToSelections[i] ||
+                        !falseToSelections[i][j] ||
+                        falseToSelections[i][j] === "")
+                ) {
+                    return `Error: Aktivitas ${i + 1}, Pelaksana ${actorNames[j] || j + 1} (aktivitas "pilihan") belum memilih tujuan "Tidak".`;
+                }
+            }
+        }
+    }
     // 2. Cek setiap aktor punya minimal satu shape (selain '0')
     for (let j = 0; j < nActor; j++) {
         let found = false;
@@ -781,17 +796,17 @@ function validateDiagram() {
         }
     }
     // 3. Aktivitas terakhir harus punya minimal satu shape 'Selesai' (4)
-    let lastHasFinish = false;
-    for (let j = 0; j < nActor; j++) {
-        if (shapeSelections?.[nActivity - 1]?.[j] === "4") {
-            lastHasFinish = true;
-            break;
-        }
-    }
-    if (!lastHasFinish) {
-        return `Error: Aktivitas terakhir harus memiliki minimal satu pelaksana dengan bentuk 'Selesai'.`;
-    }
-    return null;
+    // let lastHasFinish = false;
+    // for (let j = 0; j < nActor; j++) {
+    //     if (shapeSelections?.[nActivity - 1]?.[j] === "4") {
+    //         lastHasFinish = true;
+    //         break;
+    //     }
+    // }
+    // if (!lastHasFinish) {
+    //     return `Error: Aktivitas terakhir harus memiliki minimal satu pelaksana dengan bentuk 'Selesai'.`;
+    // }
+    // return null;
 }
 
 export function renderDetailPages(captureJson = false) {
@@ -890,12 +905,13 @@ export function draw(container, start, end) {
         // Disables the built-in context menu
         mxEvent.disableContextMenu(container);
 
-        container.style.border = "1px solid #808080";
+        // container.style.border = "1px solid #808080";
 
         // =====================================
         // 2. Setup Graph Utama
         var graph = new mxGraph(container);
         graph.setHtmlLabels(true);
+        graph.setEnabled(false);
         // Graph configure for Contstraint
         graph.disconnectOnMove = false;
         graph.foldingEnabled = false;
@@ -1082,7 +1098,8 @@ export function draw(container, start, end) {
             // Menentukan tinggi setiap baris
             var yHeadTop = 25; // Tinggi bagian atas header
             var yHeadBottom = 55; // Tinggi bagian bawah header
-            var yHead = yHeadTop + yHeadBottom; // Tinggi total header
+            var yNumberRow = 20; // Tinggi baris penomoran kolom
+            var yHead = yHeadTop + yHeadBottom + yNumberRow; // Tinggi total header termasuk penomoran
             var yOffPage = 50; // Tinggi connector off-page
 
             // Menghitung tinggi total tabel
@@ -1145,11 +1162,11 @@ export function draw(container, start, end) {
             var no = graph.insertVertex(
                 lane1,
                 null,
-                "No.",
+                "No",
                 xPointer,
                 yPointer,
                 wNo,
-                yHead,
+                yHeadTop + yHeadBottom,
             );
             xPointer = xPointer + wNo;
             var act = graph.insertVertex(
@@ -1159,7 +1176,7 @@ export function draw(container, start, end) {
                 xPointer,
                 yPointer,
                 wAct,
-                yHead,
+                yHeadTop + yHeadBottom,
             );
             xPointer = xPointer + wAct;
             var actor = graph.insertVertex(
@@ -1169,7 +1186,7 @@ export function draw(container, start, end) {
                 xPointer,
                 yPointer,
                 wActor,
-                yHead,
+                yHeadTop + yHeadBottom,
                 "verticalAlign=top",
             );
             var actorList = [0];
@@ -1192,7 +1209,7 @@ export function draw(container, start, end) {
                 xPointer,
                 yPointer,
                 wMutu,
-                yHead,
+                yHeadTop + yHeadBottom,
                 "verticalAlign=top",
             );
             var syarat = graph.insertVertex(
@@ -1226,11 +1243,112 @@ export function draw(container, start, end) {
             var ket = graph.insertVertex(
                 lane1,
                 null,
-                "Keterangan",
+                "Ket",
                 xPointer,
                 yPointer,
                 wNote,
-                yHead,
+                yHeadTop + yHeadBottom,
+            );
+
+            // Pembuatan baris penomoran kolom (di bawah header)
+            var columnNumber = 1;
+            var xTemp = 0; // Reset xTemp ke posisi awal
+            var yNumberPos = yPointer + yHeadTop + yHeadBottom; // Posisi Y untuk baris penomoran
+
+            // Nomor untuk kolom No
+            var numNo = graph.insertVertex(
+                lane1,
+                null,
+                "(" + columnNumber + ")",
+                xTemp,
+                yNumberPos,
+                wNo,
+                yNumberRow,
+                "align=center;verticalAlign=middle;fontSize=12;fontStyle=1",
+            );
+            xTemp += wNo;
+            columnNumber++;
+
+            // Nomor untuk kolom Aktivitas
+            var numAct = graph.insertVertex(
+                lane1,
+                null,
+                "(" + columnNumber + ")",
+                xTemp,
+                yNumberPos,
+                wAct,
+                yNumberRow,
+                "align=center;verticalAlign=middle;fontSize=12;fontStyle=1",
+            );
+            xTemp += wAct;
+            columnNumber++;
+
+            // Nomor untuk kolom Actor (dinamis)
+            for (var i = 1; i <= nActor; i++) {
+                var numActor = graph.insertVertex(
+                    lane1,
+                    null,
+                    "(" + columnNumber + ")",
+                    xTemp + (i - 1) * wBase,
+                    yNumberPos,
+                    wBase,
+                    yNumberRow,
+                    "align=center;verticalAlign=middle;fontSize=12;fontStyle=1",
+                );
+                columnNumber++;
+            }
+            xTemp += wActor;
+
+            // Nomor untuk kolom Kelengkapan
+            var numKel = graph.insertVertex(
+                lane1,
+                null,
+                "(" + columnNumber + ")",
+                xTemp,
+                yNumberPos,
+                wBase,
+                yNumberRow,
+                "align=center;verticalAlign=middle;fontSize=12;fontStyle=1",
+            );
+            columnNumber++;
+
+            // Nomor untuk kolom Waktu
+            var numWaktu = graph.insertVertex(
+                lane1,
+                null,
+                "(" + columnNumber + ")",
+                xTemp + wBase,
+                yNumberPos,
+                wBase,
+                yNumberRow,
+                "align=center;verticalAlign=middle;fontSize=12;fontStyle=1",
+            );
+            columnNumber++;
+
+            // Nomor untuk kolom Output
+            var numOutput = graph.insertVertex(
+                lane1,
+                null,
+                "(" + columnNumber + ")",
+                xTemp + 2 * wBase,
+                yNumberPos,
+                wBase,
+                yNumberRow,
+                "align=center;verticalAlign=middle;fontSize=12;fontStyle=1",
+            );
+            xTemp += wMutu;
+            columnNumber++;
+
+            // Nomor untuk kolom Keterangan
+            var numKet = graph.insertVertex(
+                lane1,
+                null,
+                "(" + columnNumber + ")",
+                xTemp,
+                yNumberPos,
+                wNote,
+                yNumberRow,
+                "align=center;verticalAlign=middle;fontSize=12;fontStyle=1",
             );
 
             var yTemp = yPointer + yHead; // Posisi Y baru setelah header

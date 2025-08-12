@@ -10,8 +10,8 @@
         </button>
     </div>
 
-    <div class="ml-2 md:ml-16" style="width: 80%; height: 80%;">
-        <div class="container scale-80 origin-top-left">
+    <div class="ml-2 md:ml-16" style="width: 75%; height: 75%;">
+        <div class="container scale-75 origin-top-left">
             <!-- Container untuk cover SOP -->
             <div class="mb-4">
                 <div id="coverContainer"></div>

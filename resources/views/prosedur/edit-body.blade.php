@@ -79,7 +79,7 @@
             </a>
         </div>
         <div id="graphContainerBox" class="">
-            <div id="graphContainer" style="transform: scale(0.8); transform-origin: top left;"></div>
+            <div id="graphContainer" style="transform: scale(0.75); transform-origin: top left;"></div>
         </div>
     </div>
 </div>

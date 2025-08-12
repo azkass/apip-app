@@ -69,6 +69,10 @@
                         <i class="fa-solid fa-tasks mx-auto sidebar-icon fa-lg my-4" title=""></i>
                         <span class="ml-2 hidden sidebar-text">Instrumen Pengawasan</span>
                     </a>
+                    <a href="/regulasi" class="flex items-center py-2 justify-center sidebar-item">
+                        <i class="fa-solid fa-square-poll-vertical mx-auto sidebar-icon fa-lg my-4" title="Regulasi"></i>
+                        <span class="ml-2 hidden sidebar-text">Regulasi</span>
+                    </a>
                     <a href="/monitoring-evaluasi" class="flex items-center py-2 justify-center sidebar-item">
                         <i class="fa-solid fa-clipboard-list mx-auto sidebar-icon fa-lg my-4" title="Evaluasi Prosedur"></i>
                         <span class="ml-2 hidden sidebar-text">Monitoring Evaluasi</span>

@@ -80,8 +80,7 @@ class ProsedurPengawasanController extends Controller
         $prosedurPengawasan = ProsedurPengawasan::show($id);
         return view("prosedur.show", [
             "prosedurPengawasan" => $prosedurPengawasan,
-            "title" =>
-                $prosedurPengawasan->nomor . " - " . $prosedurPengawasan->nama,
+            "title" => $prosedurPengawasan->nama,
         ]);
     }
 
